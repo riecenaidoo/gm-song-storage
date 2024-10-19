@@ -1,0 +1,160 @@
+{
+	"info": {
+		"name": "Song Storage",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Playlist",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"foo\",\r\n    \"songs\": [\r\n        \"abc\",\r\n        \"def\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API}}/playlists",
+							"host": [
+								"{{API}}"
+							],
+							"path": [
+								"playlists"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Playlist",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API}}/playlists/1",
+							"host": [
+								"{{API}}"
+							],
+							"path": [
+								"playlists",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Songs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API}}/playlists/1/songs",
+							"host": [
+								"{{API}}"
+							],
+							"path": [
+								"playlists",
+								"1",
+								"songs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Songs",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    \"ghi\",\r\n    \"zf1\"\r\n]\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API}}/playlists/1/songs",
+							"host": [
+								"{{API}}"
+							],
+							"path": [
+								"playlists",
+								"1",
+								"songs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Songs",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    \"ghi\",\r\n    \"abc\"\r\n]\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API}}/playlists/1/songs",
+							"host": [
+								"{{API}}"
+							],
+							"path": [
+								"playlists",
+								"1",
+								"songs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Name",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "bar",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{{{API}}}}/playlists/1/name",
+							"host": [
+								"{{{{API}}}}"
+							],
+							"path": [
+								"playlists",
+								"1",
+								"name"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -1,9 +1,6 @@
 package com.bobo.storage.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.Set;
 
 @Entity
@@ -13,6 +10,7 @@ public class Playlist {
    * Convenient for use as a <code>PathVariable</code> in endpoints.
    */
   @Id
+  @GeneratedValue
   public int id;
 
   @Column(nullable = false)
