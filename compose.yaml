@@ -1,0 +1,11 @@
+services:
+  db:
+    image: postgres:14.12-bullseye
+    container_name: gm_song_storage
+    ports:
+      - "5050:5432"
+    environment:
+      # [Environment Variables for Postgres Img](https://hub.docker.com/_/postgres)
+      - POSTGRES_PASSWORD=admin
+    volumes:
+      - "./scripts/:/docker-entrypoint-initdb.d/"

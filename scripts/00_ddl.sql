@@ -1,0 +1,1 @@
+create database gm_song_storage;
