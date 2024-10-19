@@ -48,21 +48,12 @@ public class PlaylistRestController {
 
   @PutMapping("{id}/songs")
   public void updateSongs(@PathVariable int id, @RequestBody List<String> songs) {
-    Playlist playlist = playlistService.findById(id);
-    playlist.songs.clear(); // TODO: Handle removing in DB.
-    songs.stream()
-            .map(Song::new)
-            .forEach(playlist.songs::add);
-    playlistService.save(playlist);
+    playlistService.updateSongs(id, songs);
   }
 
   @PatchMapping("{id}/songs")
   public void addSongs(@PathVariable int id, @RequestBody List<String> songs) {
-    Playlist playlist = playlistService.findById(id);
-    songs.stream()
-            .map(Song::new)
-            .forEach(playlist.songs::add);
-    playlistService.save(playlist);
+    playlistService.addSongs(id, songs);
   }
 
 }
