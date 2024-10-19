@@ -39,19 +39,29 @@ public class PlaylistRestController {
             .collect(Collectors.toList());
   }
 
+  @PutMapping("{id}/name")
+  public void updateName(@PathVariable int id, @RequestBody String name) {
+    Playlist playlist = playlistService.findById(id);
+    playlist.name = name;
+    playlistService.save(playlist);
+  }
+
   @PutMapping("{id}/songs")
   public void updateSongs(@PathVariable int id, @RequestBody List<String> songs) {
     Playlist playlist = playlistService.findById(id);
+    playlist.songs.clear(); // TODO: Handle removing in DB.
     songs.stream()
             .map(Song::new)
             .forEach(playlist.songs::add);
     playlistService.save(playlist);
   }
 
-  @PutMapping("{id}/name")
-  public void updateName(@PathVariable int id, @RequestBody String name) {
+  @PatchMapping("{id}/songs")
+  public void addSongs(@PathVariable int id, @RequestBody List<String> songs) {
     Playlist playlist = playlistService.findById(id);
-    playlist.name = name;
+    songs.stream()
+            .map(Song::new)
+            .forEach(playlist.songs::add);
     playlistService.save(playlist);
   }
 
