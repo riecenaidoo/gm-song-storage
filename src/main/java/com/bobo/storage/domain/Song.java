@@ -2,6 +2,7 @@ package com.bobo.storage.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.util.Objects;
 
 @Entity
 public class Song {
@@ -13,14 +14,18 @@ public class Song {
   @Id
   public String url;
 
+  /**
+   * Since we have defined a parameterised constructor, we do not get the default no args constructor
+   * which is required for JPA.
+   */
+  @SuppressWarnings("unused")
   public Song() {
-    // JPA. When Lombok, can replace with @NoArgs Constructor
   }
 
   /**
    * For easy deserialization from a JSON body which would hold these as <code>"songs" : ["url", "url"]</code>.
    */
-  @SuppressWarnings("unusued") // JSON Deserialization, Also for Manual Deserialization
+  @SuppressWarnings("unusued")
   public Song(String url) {
     this.url = url;
   }
@@ -28,4 +33,18 @@ public class Song {
   public String getUrl() {
     return url;
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Song song = (Song) o;
+    return Objects.equals(url, song.url);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(url);
+  }
+
 }
