@@ -1,8 +1,8 @@
-package com.bobo.storage.api.controller;
+package com.bobo.storage.web.api.controller;
 
-import com.bobo.storage.api.port.PlaylistsPort;
-import com.bobo.storage.domain.Playlist;
-import com.bobo.storage.domain.Song;
+import com.bobo.storage.web.api.port.PlaylistsPort;
+import com.bobo.storage.core.domain.Playlist;
+import com.bobo.storage.core.domain.Song;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,10 +1,10 @@
-package com.bobo.storage.service.impl;
+package com.bobo.storage.core.service.impl;
 
-import com.bobo.storage.domain.Playlist;
-import com.bobo.storage.domain.Song;
-import com.bobo.storage.resource.PlaylistRepository;
-import com.bobo.storage.resource.SongRepository;
-import com.bobo.storage.service.PlaylistService;
+import com.bobo.storage.core.domain.Playlist;
+import com.bobo.storage.core.domain.Song;
+import com.bobo.storage.core.resource.PlaylistRepository;
+import com.bobo.storage.core.resource.SongRepository;
+import com.bobo.storage.core.service.PlaylistService;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;

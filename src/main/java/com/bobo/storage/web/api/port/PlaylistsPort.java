@@ -1,6 +1,6 @@
-package com.bobo.storage.api.port;
+package com.bobo.storage.web.api.port;
 
-import com.bobo.storage.domain.Playlist;
+import com.bobo.storage.core.domain.Playlist;
 
 import java.util.Collection;
 

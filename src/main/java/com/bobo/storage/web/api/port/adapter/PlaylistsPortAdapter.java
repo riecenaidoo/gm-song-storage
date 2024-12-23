@@ -1,9 +1,9 @@
-package com.bobo.storage.api.port.adapter;
+package com.bobo.storage.web.api.port.adapter;
 
-import com.bobo.storage.api.port.PlaylistsPort;
-import com.bobo.storage.domain.Playlist;
-import com.bobo.storage.domain.Song;
-import com.bobo.storage.service.PlaylistService;
+import com.bobo.storage.web.api.port.PlaylistsPort;
+import com.bobo.storage.core.domain.Playlist;
+import com.bobo.storage.core.domain.Song;
+import com.bobo.storage.core.service.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

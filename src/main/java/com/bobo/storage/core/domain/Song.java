@@ -1,4 +1,4 @@
-package com.bobo.storage.domain;
+package com.bobo.storage.core.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
