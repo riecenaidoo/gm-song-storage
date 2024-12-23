@@ -1,6 +1,7 @@
 package com.bobo.storage.service;
 
 import com.bobo.storage.domain.Playlist;
+import com.bobo.storage.domain.Song;
 
 import java.util.Collection;
 
@@ -8,18 +9,12 @@ public interface PlaylistService {
 
   Playlist findById(int id);
 
-  void save(Playlist playlist);
+  Playlist save(Playlist playlist);
 
-  default void addSongs(int id, Collection<String> songs) {
-    addSongs(findById(id), songs);
-  }
+  void addSongs(Playlist playlist, Collection<Song> songs);
 
-  void addSongs(Playlist playlist, Collection<String> songs);
+  void updateName(Playlist playlist, String name);
 
-  default void setSongs(int id, Collection<String> songs) {
-    setSongs(findById(id), songs);
-  }
-
-  void setSongs(Playlist playlist, Collection<String> songs);
+  void updateSongs(Playlist playlist, Collection<Song> songs);
 
 }

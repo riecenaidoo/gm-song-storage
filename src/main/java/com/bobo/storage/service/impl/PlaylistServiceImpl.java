@@ -5,11 +5,11 @@ import com.bobo.storage.domain.Song;
 import com.bobo.storage.resource.PlaylistRepository;
 import com.bobo.storage.resource.SongRepository;
 import com.bobo.storage.service.PlaylistService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,7 +19,6 @@ public class PlaylistServiceImpl implements PlaylistService {
 
   private final SongRepository songRepository;
 
-  @Autowired
   public PlaylistServiceImpl(PlaylistRepository playlistRepository, SongRepository songRepository) {
     this.playlistRepository = playlistRepository;
     this.songRepository = songRepository;
@@ -31,16 +30,20 @@ public class PlaylistServiceImpl implements PlaylistService {
   }
 
   @Override
-  public void save(Playlist playlist) {
+  public Playlist save(Playlist playlist) {
     songRepository.saveAll(playlist.songs);
-    playlistRepository.save(playlist);
+    return playlistRepository.save(playlist);
   }
 
   @Override
-  public void addSongs(Playlist playlist, Collection<String> songs) {
-    songs.stream()
-         .map(Song::new)
-         .forEach(playlist.songs::add);
+  public void addSongs(Playlist playlist, Collection<Song> songs) {
+    playlist.songs.addAll(songs);
+    save(playlist);
+  }
+
+  @Override
+  public void updateName(Playlist playlist, String name) {
+    playlist.name = name;
     save(playlist);
   }
 
@@ -49,15 +52,17 @@ public class PlaylistServiceImpl implements PlaylistService {
    * <p>
    * I would prefer not to recreate entities that are already managed in persistence context,
    * but I imagine I don't need to worry about this with the way they have implemented these things.
+   * <p>
+   * TODO: Consider how we expect to handle orphan removal.
    */
   @Override
-  public void setSongs(Playlist playlist, Collection<String> songs) {
+  public void updateSongs(Playlist playlist, Collection<Song> songs) {
     Set<Song> exclusion = playlist.songs.stream()
-                                        .filter(song -> !songs.contains(song.url))
+                                        .filter(Predicate.not(songs::contains))
                                         .collect(Collectors.toSet());
 
     playlist.songs.removeAll(exclusion);
     addSongs(playlist, songs);
-    //    songRepository.deleteAll(exclusion); // TODO: This would be need to be done as orphan removal.
   }
+
 }

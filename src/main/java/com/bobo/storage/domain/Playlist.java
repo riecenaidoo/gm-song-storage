@@ -1,6 +1,8 @@
 package com.bobo.storage.domain;
 
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -17,6 +19,15 @@ public class Playlist {
   public String name;
 
   @ManyToMany
-  public Set<Song> songs;
+  public Set<Song> songs = new HashSet<>();
+
+  public Playlist() {
+
+  }
+
+  public Playlist(String name, Collection<Song> songs) {
+    this.name = name;
+    this.songs.addAll(songs);
+  }
 
 }
