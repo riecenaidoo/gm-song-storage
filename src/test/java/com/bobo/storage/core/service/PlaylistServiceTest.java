@@ -1,11 +1,10 @@
-package com.bobo.storage.service;
+package com.bobo.storage.core.service;
 
 import com.bobo.storage.TestConfig;
 import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.domain.Song;
 import com.bobo.storage.core.resource.PlaylistRepository;
 import com.bobo.storage.core.resource.SongRepository;
-import com.bobo.storage.core.service.PlaylistService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
