@@ -10,16 +10,16 @@ public interface PlaylistService {
 
   void save(Playlist playlist);
 
-  default void updateSongs(int id, Collection<String> songs) {
-    updateSongs(findById(id), songs);
-  }
-
-  void updateSongs(Playlist playlist, Collection<String> songs);
-
   default void addSongs(int id, Collection<String> songs) {
     addSongs(findById(id), songs);
   }
 
   void addSongs(Playlist playlist, Collection<String> songs);
+
+  default void setSongs(int id, Collection<String> songs) {
+    setSongs(findById(id), songs);
+  }
+
+  void setSongs(Playlist playlist, Collection<String> songs);
 
 }

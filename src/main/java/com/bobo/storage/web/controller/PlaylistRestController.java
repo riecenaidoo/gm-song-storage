@@ -6,6 +6,7 @@ import com.bobo.storage.service.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,27 +34,25 @@ public class PlaylistRestController {
 
   @GetMapping("{id}/songs")
   public List<String> fetchSongs(@PathVariable int id) {
-    return playlistService.findById(id)
-            .songs.stream()
-            .map((Song::getUrl))
-            .collect(Collectors.toList());
+    return fetch(id).songs.stream()
+                          .map((Song::getUrl)).collect(Collectors.toList());
+  }
+
+  @PatchMapping("{id}/songs")
+  public void updateSongs(@PathVariable int id, @RequestBody Collection<String> songs) {
+    playlistService.addSongs(id, songs);
   }
 
   @PutMapping("{id}/name")
-  public void updateName(@PathVariable int id, @RequestBody String name) {
-    Playlist playlist = playlistService.findById(id);
+  public void replaceName(@PathVariable int id, @RequestBody String name) {
+    Playlist playlist = fetch(id);
     playlist.name = name;
     playlistService.save(playlist);
   }
 
   @PutMapping("{id}/songs")
-  public void updateSongs(@PathVariable int id, @RequestBody List<String> songs) {
-    playlistService.updateSongs(id, songs);
-  }
-
-  @PatchMapping("{id}/songs")
-  public void addSongs(@PathVariable int id, @RequestBody List<String> songs) {
-    playlistService.addSongs(id, songs);
+  public void replaceSongs(@PathVariable int id, @RequestBody Collection<String> songs) {
+    playlistService.setSongs(id, songs);
   }
 
 }

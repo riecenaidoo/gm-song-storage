@@ -37,25 +37,27 @@ public class PlaylistServiceImpl implements PlaylistService {
   }
 
   @Override
-  public void updateSongs(Playlist playlist, Collection<String> songs) {
-    Set<Song> exclusion = playlist.songs.stream()
-            .filter(song -> !songs.contains(song.url))
-            .collect(Collectors.toSet());
-
-    playlist.songs.removeAll(exclusion);
-    songs.stream()
-            .map(Song::new)
-            .forEach(playlist.songs::add);
-
-    save(playlist);
-    //    songRepository.deleteAll(exclusion); // TODO: This would be need to be done as orphan removal.
-  }
-
-  @Override
   public void addSongs(Playlist playlist, Collection<String> songs) {
     songs.stream()
-            .map(Song::new)
-            .forEach(playlist.songs::add);
+         .map(Song::new)
+         .forEach(playlist.songs::add);
     save(playlist);
+  }
+
+  /**
+   * Now I could just use <code>= new HashSet()</code>, but where would be the fun in that?
+   * <p>
+   * I would prefer not to recreate entities that are already managed in persistence context,
+   * but I imagine I don't need to worry about this with the way they have implemented these things.
+   */
+  @Override
+  public void setSongs(Playlist playlist, Collection<String> songs) {
+    Set<Song> exclusion = playlist.songs.stream()
+                                        .filter(song -> !songs.contains(song.url))
+                                        .collect(Collectors.toSet());
+
+    playlist.songs.removeAll(exclusion);
+    addSongs(playlist, songs);
+    //    songRepository.deleteAll(exclusion); // TODO: This would be need to be done as orphan removal.
   }
 }
