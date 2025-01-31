@@ -42,14 +42,14 @@ public class PlaylistsController {
     playlists.updateSongs(id, songs);
   }
 
-  @PutMapping("{id}/name")
-  public void replaceName(@PathVariable int id, @RequestBody String name) {
-    playlists.replaceName(id, name);
-  }
-
   @PutMapping("{id}/songs")
   public void replaceSongs(@PathVariable int id, @RequestBody Collection<String> songs) {
     playlists.replaceSongs(id, songs);
+  }
+
+  @PutMapping("{id}/name")
+  public void replaceName(@PathVariable int id, @RequestBody String name) {
+    playlists.replaceName(id, name);
   }
 
 }

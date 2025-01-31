@@ -15,11 +15,11 @@ public class Playlist {
   @GeneratedValue
   public int id;
 
-  @Column(nullable = false)
-  public String name;
-
   @ManyToMany
   public Set<Song> songs = new HashSet<>();
+
+  @Column(nullable = false)
+  public String name;
 
   public Playlist() {
 

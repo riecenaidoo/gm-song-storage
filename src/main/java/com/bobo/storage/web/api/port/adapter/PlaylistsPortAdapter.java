@@ -37,13 +37,13 @@ public class PlaylistsPortAdapter implements PlaylistsPort {
   }
 
   @Override
-  public void replaceName(int id, String name) {
-    service.updateName(findById(id), name);
+  public void replaceSongs(int id, Collection<String> songUrls) {
+    service.updateSongs(findById(id), songsOf(songUrls));
   }
 
   @Override
-  public void replaceSongs(int id, Collection<String> songUrls) {
-    service.updateSongs(findById(id), songsOf(songUrls));
+  public void replaceName(int id, String name) {
+    service.updateName(findById(id), name);
   }
 
   // ------ Helpers for Fluency ------

@@ -41,12 +41,6 @@ public class PlaylistServiceImpl implements PlaylistService {
     save(playlist);
   }
 
-  @Override
-  public void updateName(Playlist playlist, String name) {
-    playlist.name = name;
-    save(playlist);
-  }
-
   /**
    * Now I could just use <code>= new HashSet()</code>, but where would be the fun in that?
    * <p>
@@ -63,6 +57,12 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     playlist.songs.removeAll(exclusion);
     addSongs(playlist, songs);
+  }
+
+  @Override
+  public void updateName(Playlist playlist, String name) {
+    playlist.name = name;
+    save(playlist);
   }
 
 }

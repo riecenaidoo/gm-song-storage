@@ -12,8 +12,8 @@ public interface PlaylistsPort {
 
   void updateSongs(int id, Collection<String> songs);
 
-  void replaceName(int id, String name);
-
   void replaceSongs(int id, Collection<String> songs);
+
+  void replaceName(int id, String name);
 
 }
