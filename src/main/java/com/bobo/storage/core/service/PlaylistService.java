@@ -7,8 +7,6 @@ import java.util.Collection;
 
 public interface PlaylistService {
 
-  Playlist findById(int id);
-
   Playlist save(Playlist playlist);
 
   void addSongs(Playlist playlist, Collection<Song> songs);

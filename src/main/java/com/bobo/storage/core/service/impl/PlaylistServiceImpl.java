@@ -2,8 +2,8 @@ package com.bobo.storage.core.service.impl;
 
 import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.domain.Song;
-import com.bobo.storage.core.resource.PlaylistRepository;
-import com.bobo.storage.core.resource.SongRepository;
+import com.bobo.storage.core.resource.access.PlaylistRepository;
+import com.bobo.storage.core.resource.access.SongRepository;
 import com.bobo.storage.core.service.PlaylistService;
 import org.springframework.stereotype.Service;
 
@@ -22,11 +22,6 @@ public class PlaylistServiceImpl implements PlaylistService {
   public PlaylistServiceImpl(PlaylistRepository playlistRepository, SongRepository songRepository) {
     this.playlistRepository = playlistRepository;
     this.songRepository = songRepository;
-  }
-
-  @Override
-  public Playlist findById(int id) {
-    return playlistRepository.findById(id).orElseThrow(() -> new RuntimeException("404"));
   }
 
   @Override

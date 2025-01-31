@@ -1,5 +1,6 @@
 package com.bobo.storage.web.api.port.adapter;
 
+import com.bobo.storage.core.resource.query.PlaylistQueryRepository;
 import com.bobo.storage.web.api.port.PlaylistsPort;
 import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.domain.Song;
@@ -16,14 +17,17 @@ public class PlaylistsPortAdapter implements PlaylistsPort {
 
   private final PlaylistService service;
 
+  private final PlaylistQueryRepository query;
+
   @Autowired
-  public PlaylistsPortAdapter(PlaylistService service) {
+  public PlaylistsPortAdapter(PlaylistService service, PlaylistQueryRepository query) {
     this.service = service;
+    this.query = query;
   }
 
   @Override
   public Playlist findById(int id) {
-    return service.findById(id);
+    return query.findById(id).orElseThrow(() -> new RuntimeException("404"));
   }
 
   @Override
