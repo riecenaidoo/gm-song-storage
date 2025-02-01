@@ -1,6 +1,6 @@
 package com.bobo.storage.core.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
