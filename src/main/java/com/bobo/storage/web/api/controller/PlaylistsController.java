@@ -22,7 +22,7 @@ public class PlaylistsController {
   }
 
   @PostMapping
-  public int create(@RequestBody String name, Collection<String> songs) {
+  public int create(@RequestBody String name, @RequestBody Collection<String> songs) {
     return playlists.create(name, songs).id;
   }
 
