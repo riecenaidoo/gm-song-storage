@@ -1,6 +1,7 @@
 package com.bobo.storage.core.domain;
 
 import jakarta.persistence.*;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -8,18 +9,11 @@ import java.util.Set;
 @Entity
 public class Playlist {
 
-  /**
-   * Convenient for use as a <code>PathVariable</code> in endpoints.
-   */
-  @Id
-  @GeneratedValue
-  public int id;
+  private int id;
 
-  @ManyToMany
-  public Set<Song> songs = new HashSet<>();
+  private Set<Song> songs;
 
-  @Column(nullable = false)
-  public String name;
+  private String name;
 
   public Playlist() {
 
@@ -27,7 +21,39 @@ public class Playlist {
 
   public Playlist(String name, Collection<Song> songs) {
     this.name = name;
-    this.songs.addAll(songs);
+    this.songs = new HashSet<>(songs);
+  }
+
+  /**
+   * Convenient for use as a <code>PathVariable</code> in endpoints.
+   */
+  @Id
+  @GeneratedValue
+  public int getId() {
+    return id;
+  }
+
+  @SuppressWarnings("unused")
+  protected void setId(int id) {
+    this.id = id;
+  }
+
+  @ManyToMany
+  public Set<Song> getSongs() {
+    return songs;
+  }
+
+  public void setSongs(Collection<Song> songs) {
+    this.songs = new HashSet<>(songs);
+  }
+
+  @Column(nullable = false)
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 
 }

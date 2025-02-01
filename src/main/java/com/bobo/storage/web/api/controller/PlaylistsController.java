@@ -24,7 +24,7 @@ public class PlaylistsController {
 
   @PostMapping
   public int create(@RequestBody PlaylistsCreateRequest request) {
-    return playlists.create(request.name, request.songs).id;
+    return playlists.create(request.name, request.songs).getId();
   }
 
   @GetMapping("{id}")
@@ -34,7 +34,7 @@ public class PlaylistsController {
 
   @GetMapping("{id}/songs")
   public List<String> getSongs(@PathVariable int id) {
-    return get(id).songs.stream()
+    return get(id).getSongs().stream()
                         .map((Song::getUrl)).collect(Collectors.toList());
   }
 

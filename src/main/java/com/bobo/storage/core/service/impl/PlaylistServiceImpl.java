@@ -26,13 +26,13 @@ public class PlaylistServiceImpl implements PlaylistService {
 
   @Override
   public Playlist save(Playlist playlist) {
-    songRepository.saveAll(playlist.songs);
+    songRepository.saveAll(playlist.getSongs());
     return playlistRepository.save(playlist);
   }
 
   @Override
   public void addSongs(Playlist playlist, Collection<Song> songs) {
-    playlist.songs.addAll(songs);
+    playlist.getSongs().addAll(songs);
     save(playlist);
   }
 
@@ -46,17 +46,17 @@ public class PlaylistServiceImpl implements PlaylistService {
    */
   @Override
   public void updateSongs(Playlist playlist, Collection<Song> songs) {
-    Set<Song> exclusion = playlist.songs.stream()
-                                        .filter(Predicate.not(songs::contains))
-                                        .collect(Collectors.toSet());
+    Set<Song> exclusion = playlist.getSongs().stream()
+                                  .filter(Predicate.not(songs::contains))
+                                  .collect(Collectors.toSet());
 
-    playlist.songs.removeAll(exclusion);
+    playlist.getSongs().removeAll(exclusion);
     addSongs(playlist, songs);
   }
 
   @Override
   public void updateName(Playlist playlist, String name) {
-    playlist.name = name;
+    playlist.setName(name);
     save(playlist);
   }
 

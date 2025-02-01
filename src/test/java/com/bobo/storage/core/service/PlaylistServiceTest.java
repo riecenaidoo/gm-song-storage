@@ -5,6 +5,7 @@ import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.domain.Song;
 import com.bobo.storage.core.resource.access.PlaylistRepository;
 import com.bobo.storage.core.resource.access.SongRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,8 +50,8 @@ class PlaylistServiceTest implements TestConfig {
    */
   @Test
   void addingExistingSongsShouldNotCreateDuplicates() {
-    playlist[0].songs = songs();
-    playlist[1].songs = songs();
+    playlist[0].setSongs(songs());
+    playlist[1].setSongs(songs());
 
     playlistService.save(playlist[0]);
     playlistService.save(playlist[1]);
@@ -62,7 +63,7 @@ class PlaylistServiceTest implements TestConfig {
 
   @Test
   void updatingSongsInPlaylistWithExistingSongsShouldNotCauseDuplication() {
-    playlist[0].songs = songs();
+    playlist[0].setSongs(songs());
     playlistService.save(playlist[0]);
 
     playlistService.updateSongs(playlist[0], songs());
@@ -70,7 +71,7 @@ class PlaylistServiceTest implements TestConfig {
     Assertions.assertEquals(1, playlistRepository.findAll().size(), "Given");
 
     Assertions.assertEquals(songURLs.size(), songRepository.findAll().size());
-    Assertions.assertEquals(songURLs.size(), playlist[0].songs.size());
+    Assertions.assertEquals(songURLs.size(), playlist[0].getSongs().size());
   }
 
   // ------ Testing Support ------
@@ -82,7 +83,7 @@ class PlaylistServiceTest implements TestConfig {
     playlist = new Playlist[numOfPlaylists];
     for (int i = 0; i < playlist.length; i++) {
       playlist[i] = new Playlist();
-      playlist[i].name = "";
+      playlist[i].setName("");
     }
   }
 
