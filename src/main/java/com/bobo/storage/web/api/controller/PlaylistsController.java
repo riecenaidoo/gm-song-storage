@@ -3,6 +3,7 @@ package com.bobo.storage.web.api.controller;
 import com.bobo.storage.web.api.port.PlaylistsPort;
 import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.domain.Song;
+import com.bobo.storage.web.api.request.PlaylistsCreateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,8 +23,8 @@ public class PlaylistsController {
   }
 
   @PostMapping
-  public int create(@RequestBody String name, @RequestBody Collection<String> songs) {
-    return playlists.create(name, songs).id;
+  public int create(@RequestBody PlaylistsCreateRequest request) {
+    return playlists.create(request.name, request.songs).id;
   }
 
   @GetMapping("{id}")
