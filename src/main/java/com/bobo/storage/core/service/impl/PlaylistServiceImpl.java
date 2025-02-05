@@ -6,6 +6,7 @@ import com.bobo.storage.core.resource.access.PlaylistRepository;
 import com.bobo.storage.core.resource.access.SongRepository;
 import com.bobo.storage.core.service.PlaylistService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Set;
@@ -25,12 +26,14 @@ public class PlaylistServiceImpl implements PlaylistService {
   }
 
   @Override
+  @Transactional
   public Playlist save(Playlist playlist) {
-    songRepository.saveAll(playlist.getSongs());
+    playlist.setSongs(songRepository.saveAll(playlist.getSongs()));
     return playlistRepository.save(playlist);
   }
 
   @Override
+  @Transactional
   public void addSongs(Playlist playlist, Collection<Song> songs) {
     playlist.getSongs().addAll(songs);
     save(playlist);
@@ -45,6 +48,7 @@ public class PlaylistServiceImpl implements PlaylistService {
    * TODO: Consider how we expect to handle orphan removal.
    */
   @Override
+  @Transactional
   public void updateSongs(Playlist playlist, Collection<Song> songs) {
     Set<Song> exclusion = playlist.getSongs().stream()
                                   .filter(Predicate.not(songs::contains))
@@ -55,6 +59,7 @@ public class PlaylistServiceImpl implements PlaylistService {
   }
 
   @Override
+  @Transactional
   public void updateName(Playlist playlist, String name) {
     playlist.setName(name);
     save(playlist);
