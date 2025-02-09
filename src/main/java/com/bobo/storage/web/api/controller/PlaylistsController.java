@@ -7,10 +7,7 @@ import com.bobo.storage.core.service.PlaylistService;
 import com.bobo.storage.web.api.request.PlaylistsCreateRequest;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -73,6 +70,7 @@ public class PlaylistsController {
    * @return distinct collection of <code>Song</code>(s) objects. They are not yet managed entities.
    */
   private Set<Song> songsOf(Collection<String> urls) {
+    if (Objects.isNull(urls)) return Collections.emptySet();
     return urls.stream()
                .map(Song::new)
                .collect(Collectors.toSet());
