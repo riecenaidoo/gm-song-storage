@@ -1,14 +1,15 @@
 package com.bobo.storage.web.api.controller;
 
-import com.bobo.storage.core.resource.query.PlaylistQueryRepository;
-import com.bobo.storage.core.service.PlaylistService;
 import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.domain.Song;
+import com.bobo.storage.core.resource.query.PlaylistQueryRepository;
+import com.bobo.storage.core.service.PlaylistService;
 import com.bobo.storage.web.api.request.PlaylistsCreateRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -18,11 +19,11 @@ public class PlaylistsController {
 
   private final PlaylistService service;
 
-  private final PlaylistQueryRepository query;
+  private final PlaylistQueryRepository playlists;
 
-  public PlaylistsController(PlaylistService service, PlaylistQueryRepository query) {
+  public PlaylistsController(PlaylistService service, PlaylistQueryRepository playlists) {
     this.service = service;
-    this.query = query;
+    this.playlists = playlists;
   }
 
   @PostMapping
@@ -31,30 +32,35 @@ public class PlaylistsController {
     return playlist.getId();
   }
 
+  @GetMapping
+  public Collection<Playlist> getPlaylists() {
+    return playlists.findAll();
+  }
+
   @GetMapping("{id}")
-  public Playlist get(@PathVariable int id) {
-    return query.findById(id).orElseThrow(() -> new RuntimeException("404"));
+  public Playlist getPlaylist(@PathVariable int id) {
+    return playlists.findById(id).orElseThrow(() -> new RuntimeException("404"));
   }
 
   @GetMapping("{id}/songs")
   public List<String> getSongs(@PathVariable int id) {
-    return get(id).getSongs().stream()
-                  .map((Song::getUrl)).collect(Collectors.toList());
+    return getPlaylist(id).getSongs().stream()
+                          .map((Song::getUrl)).collect(Collectors.toList());
   }
 
   @PatchMapping("{id}/songs")
   public void updateSongs(@PathVariable int id, @RequestBody Collection<String> songs) {
-    service.updateSongs(get(id), songsOf(songs));
+    service.updateSongs(getPlaylist(id), songsOf(songs));
   }
 
   @PutMapping("{id}/songs")
   public void replaceSongs(@PathVariable int id, @RequestBody Collection<String> songs) {
-    service.addSongs(get(id), songsOf(songs));
+    service.addSongs(getPlaylist(id), songsOf(songs));
   }
 
   @PutMapping("{id}/name")
-  public void replaceName(@PathVariable int id, @RequestBody String name) {
-    service.updateName(get(id), name);
+  public void replaceName(@PathVariable int id, @RequestBody Map<String, String> request) {
+    service.updateName(getPlaylist(id), request.get("name"));
   }
 
   // ------ Helpers for Fluency ------
