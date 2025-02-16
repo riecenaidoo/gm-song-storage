@@ -11,8 +11,6 @@ public interface PlaylistService {
 
   void addSongs(Playlist playlist, Collection<Song> songs);
 
-  void updateSongs(Playlist playlist, Collection<Song> songs);
-
   void updateName(Playlist playlist, String name);
 
 }

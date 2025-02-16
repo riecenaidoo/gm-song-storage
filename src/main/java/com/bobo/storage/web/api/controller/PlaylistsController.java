@@ -44,11 +44,6 @@ public class PlaylistsController {
     return getPlaylist(id).getSongs();
   }
 
-  @PatchMapping("{id}/songs")
-  public void updateSongs(@PathVariable int id, @RequestBody Collection<String> songs) {
-    service.updateSongs(getPlaylist(id), songsOf(songs));
-  }
-
   @PutMapping("{id}/songs")
   public void replaceSongs(@PathVariable int id, @RequestBody Collection<String> songs) {
     service.addSongs(getPlaylist(id), songsOf(songs));
