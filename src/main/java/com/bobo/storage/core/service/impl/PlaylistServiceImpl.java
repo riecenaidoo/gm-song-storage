@@ -39,6 +39,16 @@ public class PlaylistServiceImpl implements PlaylistService {
     save(playlist);
   }
 
+  /**
+   * TODO: Consider orphan removal.
+   */
+  @Override
+  @Transactional
+  public void removeSongs(Playlist playlist, Collection<Song> songs) {
+    playlist.getSongs().removeAll(songs);
+    save(playlist);
+  }
+
   @Override
   @Transactional
   public void updateName(Playlist playlist, String name) {

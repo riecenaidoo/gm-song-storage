@@ -57,14 +57,19 @@ public class PlaylistsController {
    */
   @PatchMapping("{id}/songs")
   public ResponseEntity<Void> updateSongs(@PathVariable int id, @RequestBody PlaylistsSongsPatchRequest request) {
+    final Playlist playlist = getPlaylist(id);
+    final Set<Song> songs = songsOf(request.urls);
     switch (request.op) {
       case ADD -> {
-        long existingSongs = songs.count();
-        service.addSongs(getPlaylist(id), songsOf(request.urls));
-        return ResponseEntity.status((songs.count() == existingSongs ? 200 : 201)).build();
+        long existingSongs = this.songs.count();
+        service.addSongs(playlist, songs);
+        return ResponseEntity.status((this.songs.count() == existingSongs ? 200 : 201)).build();
       }
+      case REMOVE -> service.removeSongs(playlist, songs);
       default -> throw new RuntimeException("501");
     }
+
+    return ResponseEntity.ok().build();
   }
 
   @PutMapping("{id}/name")
