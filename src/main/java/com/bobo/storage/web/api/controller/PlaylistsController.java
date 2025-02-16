@@ -40,9 +40,8 @@ public class PlaylistsController {
   }
 
   @GetMapping("{id}/songs")
-  public List<String> getSongs(@PathVariable int id) {
-    return getPlaylist(id).getSongs().stream()
-                          .map((Song::getUrl)).collect(Collectors.toList());
+  public Set<Song> getSongs(@PathVariable int id) {
+    return getPlaylist(id).getSongs();
   }
 
   @PatchMapping("{id}/songs")
