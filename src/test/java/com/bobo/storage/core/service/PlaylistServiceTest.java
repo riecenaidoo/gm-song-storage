@@ -65,7 +65,7 @@ class PlaylistServiceTest implements TestConfig {
     playlist[0].setSongs(songs());
     playlistService.save(playlist[0]);
 
-    playlistService.updateSongs(playlist[0], songs());
+    playlistService.addSongs(playlist[0], songs());
 
     Assertions.assertEquals(1, playlistRepository.findAll().size(), "Given");
 

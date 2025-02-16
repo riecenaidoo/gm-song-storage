@@ -3,8 +3,11 @@ package com.bobo.storage.web.api.controller;
 import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.domain.Song;
 import com.bobo.storage.core.resource.query.PlaylistQueryRepository;
+import com.bobo.storage.core.resource.query.SongQueryRepository;
 import com.bobo.storage.core.service.PlaylistService;
 import com.bobo.storage.web.api.request.PlaylistsCreateRequest;
+import com.bobo.storage.web.api.request.PlaylistsSongsPatchRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -18,9 +21,12 @@ public class PlaylistsController {
 
   private final PlaylistQueryRepository playlists;
 
-  public PlaylistsController(PlaylistService service, PlaylistQueryRepository playlists) {
+  private final SongQueryRepository songs;
+
+  public PlaylistsController(PlaylistService service, PlaylistQueryRepository playlists, SongQueryRepository songs) {
     this.service = service;
     this.playlists = playlists;
+    this.songs = songs;
   }
 
   @PostMapping
@@ -44,9 +50,21 @@ public class PlaylistsController {
     return getPlaylist(id).getSongs();
   }
 
-  @PutMapping("{id}/songs")
-  public void replaceSongs(@PathVariable int id, @RequestBody Collection<String> songs) {
-    service.addSongs(getPlaylist(id), songsOf(songs));
+  /**
+   * Race Condition: If another request causes creation of songs, this would respond with 201?
+   * <p>
+   * TODO Figure out how to write a test for that?
+   */
+  @PatchMapping("{id}/songs")
+  public ResponseEntity<Void> updateSongs(@PathVariable int id, @RequestBody PlaylistsSongsPatchRequest request) {
+    switch (request.op) {
+      case ADD -> {
+        long existingSongs = songs.count();
+        service.addSongs(getPlaylist(id), songsOf(request.urls));
+        return ResponseEntity.status((songs.count() == existingSongs ? 200 : 201)).build();
+      }
+      default -> throw new RuntimeException("501");
+    }
   }
 
   @PutMapping("{id}/name")
