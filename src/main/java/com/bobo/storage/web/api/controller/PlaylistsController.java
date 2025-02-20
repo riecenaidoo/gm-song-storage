@@ -77,6 +77,11 @@ public class PlaylistsController {
     service.updateName(getPlaylist(id), request.get("name"));
   }
 
+  @DeleteMapping("{id}")
+  public void deletePlaylist(@PathVariable int id){
+    service.delete(getPlaylist(id));
+  }
+
   // ------ Helpers for Fluency ------
 
   /**

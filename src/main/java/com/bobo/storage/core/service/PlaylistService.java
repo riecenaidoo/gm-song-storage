@@ -15,4 +15,6 @@ public interface PlaylistService {
 
   void updateName(Playlist playlist, String name);
 
+  void delete(Playlist playlist);
+
 }

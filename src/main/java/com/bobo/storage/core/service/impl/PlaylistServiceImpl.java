@@ -13,12 +13,12 @@ import java.util.Collection;
 @Service
 public class PlaylistServiceImpl implements PlaylistService {
 
-  private final PlaylistRepository playlistRepository;
+  private final PlaylistRepository repository;
 
   private final SongRepository songRepository;
 
   public PlaylistServiceImpl(PlaylistRepository playlistRepository, SongRepository songRepository) {
-    this.playlistRepository = playlistRepository;
+    this.repository = playlistRepository;
     this.songRepository = songRepository;
   }
 
@@ -26,7 +26,7 @@ public class PlaylistServiceImpl implements PlaylistService {
   @Transactional
   public Playlist save(Playlist playlist) {
     playlist.setSongs(songRepository.saveAll(playlist.getSongs()));
-    return playlistRepository.save(playlist);
+    return repository.save(playlist);
   }
 
   /**
@@ -54,6 +54,15 @@ public class PlaylistServiceImpl implements PlaylistService {
   public void updateName(Playlist playlist, String name) {
     playlist.setName(name);
     save(playlist);
+  }
+
+  /**
+   * TODO: Consider marking inactive rather than removing.
+   */
+  @Override
+  @Transactional
+  public void delete(Playlist playlist) {
+    repository.delete(playlist);
   }
 
 }
