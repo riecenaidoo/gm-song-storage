@@ -52,8 +52,8 @@ class PlaylistServiceTest implements TestConfig {
     playlist[0].setSongs(songs());
     playlist[1].setSongs(songs());
 
-    playlistService.save(playlist[0]);
-    playlistService.save(playlist[1]);
+    playlistService.create(playlist[0]);
+    playlistService.create(playlist[1]);
 
     Assertions.assertEquals(2, playlistRepository.findAll().size(), "Given");
 
@@ -63,7 +63,7 @@ class PlaylistServiceTest implements TestConfig {
   @Test
   void updatingSongsInPlaylistWithExistingSongsShouldNotCauseDuplication() {
     playlist[0].setSongs(songs());
-    playlistService.save(playlist[0]);
+    playlistService.create(playlist[0]);
 
     playlistService.addSongs(playlist[0], songs());
 

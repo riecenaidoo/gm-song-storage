@@ -31,7 +31,7 @@ public class PlaylistsController {
 
   @PostMapping
   public int create(@RequestBody PlaylistsCreateRequest request) {
-    Playlist playlist = service.save(new Playlist(request.name, songsOf(request.songs)));
+    Playlist playlist = service.create(new Playlist(request.name, songsOf(request.songs)));
     return playlist.getId();
   }
 

@@ -9,7 +9,7 @@ import java.util.Set;
 @Entity
 public class Playlist {
 
-  private int id;
+  private Integer id;
 
   private Set<Song> songs;
 
@@ -29,12 +29,12 @@ public class Playlist {
    */
   @Id
   @GeneratedValue
-  public int getId() {
+  public Integer getId() {
     return id;
   }
 
   @SuppressWarnings("unused")
-  protected void setId(int id) {
+  protected void setId(Integer id) {
     this.id = id;
   }
 

@@ -7,7 +7,12 @@ import java.util.Collection;
 
 public interface PlaylistService {
 
-  Playlist save(Playlist playlist);
+  /**
+   * Create a new <code>Playlist</code>.
+   *
+   * @throws RuntimeException if the <code>Playlist</code> already exists.
+   */
+  Playlist create(Playlist playlist) throws RuntimeException;
 
   void addSongs(Playlist playlist, Collection<Song> songs);
 

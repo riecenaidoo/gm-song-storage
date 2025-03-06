@@ -24,9 +24,9 @@ public class PlaylistServiceImpl implements PlaylistService {
 
   @Override
   @Transactional
-  public Playlist save(Playlist playlist) {
-    playlist.setSongs(songRepository.saveAll(playlist.getSongs()));
-    return repository.save(playlist);
+  public Playlist create(Playlist playlist) {
+    if(playlist.getId() != null) throw new RuntimeException("Already an Entity");
+    return save(playlist);
   }
 
   /**
@@ -63,6 +63,13 @@ public class PlaylistServiceImpl implements PlaylistService {
   @Transactional
   public void delete(Playlist playlist) {
     repository.delete(playlist);
+  }
+
+  // Implementation Details
+
+  private Playlist save(Playlist playlist) {
+    playlist.setSongs(songRepository.saveAll(playlist.getSongs()));
+    return repository.save(playlist);
   }
 
 }
