@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 
 @Service
-public class PlaylistServiceImpl implements PlaylistService {
+public class PlaylistServiceImpl implements PlaylistService, ServiceImpl<Playlist> {
 
   private final PlaylistRepository repository;
 
@@ -25,7 +25,7 @@ public class PlaylistServiceImpl implements PlaylistService {
   @Override
   @Transactional
   public Playlist create(Playlist playlist) {
-    if(playlist.getId() != null) throw new RuntimeException("Already an Entity");
+    if (playlist.getId() != null) throw new RuntimeException("Already an Entity");
     return save(playlist);
   }
 
@@ -35,6 +35,7 @@ public class PlaylistServiceImpl implements PlaylistService {
   @Override
   @Transactional
   public void addSongs(Playlist playlist, Collection<Song> songs) {
+    playlist = retrieve(playlist);
     playlist.getSongs().addAll(songs);
     save(playlist);
   }
@@ -45,6 +46,7 @@ public class PlaylistServiceImpl implements PlaylistService {
   @Override
   @Transactional
   public void removeSongs(Playlist playlist, Collection<Song> songs) {
+    playlist = retrieve(playlist);
     playlist.getSongs().removeAll(songs);
     save(playlist);
   }
@@ -52,6 +54,7 @@ public class PlaylistServiceImpl implements PlaylistService {
   @Override
   @Transactional
   public void updateName(Playlist playlist, String name) {
+    playlist = retrieve(playlist);
     playlist.setName(name);
     save(playlist);
   }
@@ -62,10 +65,16 @@ public class PlaylistServiceImpl implements PlaylistService {
   @Override
   @Transactional
   public void delete(Playlist playlist) {
+    playlist = retrieve(playlist);
     repository.delete(playlist);
   }
 
   // Implementation Details
+
+  @Override
+  public Playlist retrieve(Playlist entity) throws RuntimeException {
+    return repository.findById(entity.getId()).orElseThrow();
+  }
 
   private Playlist save(Playlist playlist) {
     playlist.setSongs(songRepository.saveAll(playlist.getSongs()));

@@ -78,7 +78,7 @@ public class PlaylistsController {
   }
 
   @DeleteMapping("{id}")
-  public void deletePlaylist(@PathVariable int id){
+  public void deletePlaylist(@PathVariable int id) {
     service.delete(getPlaylist(id));
   }
 
