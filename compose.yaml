@@ -9,7 +9,7 @@ services:
       - POSTGRES_PASSWORD=admin
     volumes:
       # This is where the DDL would go, for now it just is a placeholder.
-      - "./scripts/:/docker-entrypoint-initdb.d/"
+      - "./core/src/main/sql/:/docker-entrypoint-initdb.d/"
   api:
     build:
       dockerfile: "Dockerfile"

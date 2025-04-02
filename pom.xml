@@ -7,6 +7,12 @@
     <groupId>com.bobo</groupId>
     <artifactId>song-storage</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <modules>
+        <module>core</module>
+        <module>web</module>
+        <module>application</module>
+    </modules>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -18,55 +24,5 @@
     <properties>
         <java.version>17</java.version>
     </properties>
-
-    <dependencies>
-        <!--        Persistence-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-        <dependency>
-            <!--        Driver-->
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <!--        /Persistence-->
-
-        <!--        Web App / REST Controllers-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <!--        /Web App / REST Controllers-->
-
-        <!--        Testing-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.mockito</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <!--            In Memory DB-->
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <!--            /Testing-->
-    </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>
