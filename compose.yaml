@@ -21,5 +21,6 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/gm_song_storage
       # We are not mounting volumes to persist the data, we will be recreating each time anyway.
       - SPRING.JPA.GENERATE-DDL=true
+      - SPRING.JPA.OPEN-IN-VIEW=false
     depends_on:
       - db
