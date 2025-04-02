@@ -6,6 +6,7 @@ import com.bobo.storage.core.resource.query.PlaylistQueryRepository;
 import com.bobo.storage.core.resource.query.SongQueryRepository;
 import com.bobo.storage.core.service.PlaylistService;
 import com.bobo.storage.web.api.request.PlaylistsCreateRequest;
+import com.bobo.storage.web.api.request.PlaylistsPutNameRequest;
 import com.bobo.storage.web.api.request.PlaylistsSongsPatchRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -73,8 +74,8 @@ public class PlaylistsController {
   }
 
   @PutMapping("{id}/name")
-  public void replaceName(@PathVariable int id, @RequestBody Map<String, String> request) {
-    service.updateName(getPlaylist(id), request.get("name"));
+  public void renamePlaylist(@PathVariable int id, @RequestBody PlaylistsPutNameRequest request) {
+    service.updateName(getPlaylist(id), request.name());
   }
 
   @DeleteMapping("{id}")

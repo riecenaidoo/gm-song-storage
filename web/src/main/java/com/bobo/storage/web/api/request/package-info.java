@@ -6,7 +6,8 @@
  * <p>
  * Style:
  * <ol>
- *   <li>Request must begin with the name of the resource it is associated with.</li>
+ *   <li>Request name must begin with the name of the resource the request is targeting,
+ *   immediately followed the HTTP verb it is associated with.</li>
  *   <li>Request objects are plain data objects.
  *   Controlling access and mutation is not necessary, their fields may be public.
  *   This would mean the default constructor is sufficient.</li>
