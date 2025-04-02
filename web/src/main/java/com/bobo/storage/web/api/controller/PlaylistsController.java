@@ -11,7 +11,10 @@ import com.bobo.storage.web.api.request.PlaylistsSongsPatchRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -32,7 +35,7 @@ public class PlaylistsController {
 
   @PostMapping
   public int create(@RequestBody PlaylistsCreateRequest request) {
-    Playlist playlist = service.create(new Playlist(request.name, songsOf(request.songs)));
+    Playlist playlist = service.create(new Playlist(request.name(), songsOf(request.songs())));
     return playlist.getId();
   }
 
@@ -59,8 +62,8 @@ public class PlaylistsController {
   @PatchMapping("{id}/songs")
   public ResponseEntity<Void> updateSongs(@PathVariable int id, @RequestBody PlaylistsSongsPatchRequest request) {
     final Playlist playlist = getPlaylist(id);
-    final Set<Song> songs = songsOf(request.urls);
-    switch (request.op) {
+    final Set<Song> songs = songsOf(request.urls());
+    switch (request.op()) {
       case ADD -> {
         long existingSongs = this.songs.count();
         service.addSongs(playlist, songs);
