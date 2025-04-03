@@ -15,8 +15,8 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"var playlist_id = pm.response.text();\r",
-									"pm.environment.set(\"playlist_id\", playlist_id);"
+									"var playlist_id = pm.response.json();\r",
+									"pm.environment.set(\"playlist_id\", playlist_id.id);"
 								],
 								"type": "text/javascript",
 								"packages": {}

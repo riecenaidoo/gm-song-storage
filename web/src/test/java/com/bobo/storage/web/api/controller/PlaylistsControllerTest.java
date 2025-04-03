@@ -23,7 +23,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-//@UnitTest // TODO Package Core tests to get access to the helper annotations, object creators?
+/* TODO [housekeeping]
+    Annotate this with @UnitTest. I'd need access to utilities from the Core module to do so.
+    I think I would add a test (lifetime?) dependency on the Core module's test jar (might need to package it too).
+ */
 @WebMvcTest(PlaylistsController.class)
 class PlaylistsControllerTest {
 
@@ -58,9 +61,9 @@ class PlaylistsControllerTest {
     String expectedBody = objectMapper.writeValueAsString(expectedResponse);
 
     // Stubbing; When
-    /*
-      PlaylistMother in the same (test) package as Playlist would give access to #setId, which I marked protected.
-      For now, stubbing the getId() is good enough.
+    /* TODO [housekeeping]
+        PlaylistMother in the same (test) package as Playlist would give access to #setId, which I marked protected.
+        For now, stubbing the getId() is good enough.
      */
     when(service.create(any())).thenAnswer(invocation -> {
       Playlist playlist = invocation.getArgument(0);
@@ -70,6 +73,10 @@ class PlaylistsControllerTest {
     });
 
     // Then
+    /* TODO [housekeeping]
+        This endpoint name needs to match the one in the controller, so there might be a time when I should pull
+        out the API paths to some sort of configuration/standard location.
+     */
     mockMvc.perform(post("/api/v1/playlists").contentType(MediaType.APPLICATION_JSON).content(body))
            .andExpect(status().isOk())
            .andExpect(content().contentType(MediaType.APPLICATION_JSON))

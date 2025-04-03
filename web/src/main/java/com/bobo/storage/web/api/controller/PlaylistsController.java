@@ -8,6 +8,7 @@ import com.bobo.storage.core.service.PlaylistService;
 import com.bobo.storage.web.api.request.PlaylistsCreateRequest;
 import com.bobo.storage.web.api.request.PlaylistsPutNameRequest;
 import com.bobo.storage.web.api.request.PlaylistsSongsPatchRequest;
+import com.bobo.storage.web.api.response.PlaylistResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,9 +35,10 @@ public class PlaylistsController {
   }
 
   @PostMapping
-  public int create(@RequestBody PlaylistsCreateRequest request) {
+  public ResponseEntity<PlaylistResponse> create(@RequestBody PlaylistsCreateRequest request) {
     Playlist playlist = service.create(new Playlist(request.name(), songsOf(request.songs())));
-    return playlist.getId();
+    PlaylistResponse response = new PlaylistResponse(playlist);
+    return ResponseEntity.ok(response);
   }
 
   @GetMapping
