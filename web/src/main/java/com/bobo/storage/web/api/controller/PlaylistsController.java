@@ -11,7 +11,9 @@ import com.bobo.storage.web.api.request.PlaylistsSongsPatchRequest;
 import com.bobo.storage.web.api.response.PlaylistResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
@@ -38,7 +40,9 @@ public class PlaylistsController {
   public ResponseEntity<PlaylistResponse> create(@RequestBody PlaylistsCreateRequest request) {
     Playlist playlist = service.create(new Playlist(request.name(), songsOf(request.songs())));
     PlaylistResponse response = new PlaylistResponse(playlist);
-    return ResponseEntity.ok(response);
+    URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path(String.format("/%d", playlist.getId())).build()
+                                         .toUri();
+    return ResponseEntity.created(uri).body(response);
   }
 
   @GetMapping

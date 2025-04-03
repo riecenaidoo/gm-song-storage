@@ -4,6 +4,7 @@ import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.resource.query.PlaylistQueryRepository;
 import com.bobo.storage.core.resource.query.SongQueryRepository;
 import com.bobo.storage.core.service.PlaylistService;
+import com.bobo.storage.web.TestConfig;
 import com.bobo.storage.web.api.request.PlaylistsCreateRequest;
 import com.bobo.storage.web.api.response.PlaylistResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,8 +21,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /* TODO [housekeeping]
     Annotate this with @UnitTest. I'd need access to utilities from the Core module to do so.
@@ -52,13 +52,16 @@ class PlaylistsControllerTest {
 
   @Test
   void playlistCanBeCreatedWithoutSongs() throws Exception {
+    final int id = 1;
+
     // Given
     PlaylistsCreateRequest request = new PlaylistsCreateRequest("foo", null);
-    PlaylistResponse expectedResponse = new PlaylistResponse(1, "foo", List.of());
+    PlaylistResponse expectedResponse = new PlaylistResponse(id, "foo", List.of());
 
     ObjectMapper objectMapper = new ObjectMapper();
     String body = objectMapper.writeValueAsString(request);
     String expectedBody = objectMapper.writeValueAsString(expectedResponse);
+    String expectedUri = String.format("%s/api/v1/playlists/%d", TestConfig.testSchemeAuthority(), id);
 
     // Stubbing; When
     /* TODO [housekeeping]
@@ -68,7 +71,7 @@ class PlaylistsControllerTest {
     when(service.create(any())).thenAnswer(invocation -> {
       Playlist playlist = invocation.getArgument(0);
       playlist = spy(playlist);
-      when(playlist.getId()).thenReturn(1);
+      when(playlist.getId()).thenReturn(id);
       return playlist;
     });
 
@@ -77,8 +80,11 @@ class PlaylistsControllerTest {
         This endpoint name needs to match the one in the controller, so there might be a time when I should pull
         out the API paths to some sort of configuration/standard location.
      */
-    mockMvc.perform(post("/api/v1/playlists").contentType(MediaType.APPLICATION_JSON).content(body))
-           .andExpect(status().isOk())
+    mockMvc.perform(post("/api/v1/playlists").with(TestConfig::testSchemeAuthority)
+                                             .contentType(MediaType.APPLICATION_JSON)
+                                             .content(body))
+           .andExpect(status().isCreated())
+           .andExpect(header().string("Location", expectedUri))
            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
            .andExpect(content().json(expectedBody));
   }
