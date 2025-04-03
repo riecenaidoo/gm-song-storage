@@ -51,6 +51,23 @@
 					"response": []
 				},
 				{
+					"name": "Playlists",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API}}/playlists",
+							"host": [
+								"{{API}}"
+							],
+							"path": [
+								"playlists"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Playlist",
 					"request": {
 						"method": "GET",
@@ -88,13 +105,13 @@
 					"response": []
 				},
 				{
-					"name": "Add Songs",
+					"name": "Songs, Add",
 					"request": {
 						"method": "PATCH",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\r\n    \"ghi\",\r\n    \"zf1\"\r\n]\r\n",
+							"raw": "{\r\n    \"op\": \"ADD\",\r\n    \"urls\": [\r\n        \"ghi\",\r\n        \"zf1\"\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -116,13 +133,13 @@
 					"response": []
 				},
 				{
-					"name": "Update Songs",
+					"name": "Songs, Remove",
 					"request": {
-						"method": "PUT",
+						"method": "PATCH",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\r\n    \"ghi\",\r\n    \"abc\"\r\n]\r\n",
+							"raw": "{\r\n    \"op\": \"REMOVE\",\r\n    \"urls\": [\r\n        \"ghi\",\r\n        \"def\"\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -144,7 +161,7 @@
 					"response": []
 				},
 				{
-					"name": "Update Name",
+					"name": "Name",
 					"request": {
 						"method": "PUT",
 						"header": [],
@@ -166,6 +183,42 @@
 								"playlists",
 								"{{playlist_id}}",
 								"name"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (200 <= pm.response.code && pm.response.code < 300){\r",
+									"    pm.environment.set(\"playlist_id\", undefined);    \r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{API}}/playlists/{{playlist_id}}",
+							"host": [
+								"{{API}}"
+							],
+							"path": [
+								"playlists",
+								"{{playlist_id}}"
 							]
 						}
 					},
