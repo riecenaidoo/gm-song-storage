@@ -3,6 +3,9 @@ package com.bobo.storage.core.domain;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * A {@link Supplier} of a type of {@code Domain} object.
@@ -20,5 +23,17 @@ import java.util.function.Supplier;
  * @see BeforeEach
  */
 public interface Mother<T> extends Supplier<T> {
+
+  /**
+   * Convenience method to supply {@code n} children with the {@code Mother}'s current configuration.
+   *
+   * @param n number of children to create.
+   * @return stream of children.
+   * @see Stream#toList()
+   * @see Collectors#toSet()
+   */
+  default Stream<T> get(int n) {
+    return IntStream.range(1, n + 1).mapToObj((i) -> this.get());
+  }
 
 }

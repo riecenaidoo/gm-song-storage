@@ -1,7 +1,7 @@
 package com.bobo.storage.core.domain;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.Random;
 import java.util.function.Supplier;
@@ -34,7 +34,7 @@ public class PlaylistMother implements Mother<Playlist> {
 
     Integer id = Objects.isNull(ids) ? null : ids.get();
     String name = Objects.isNull(names) ? "" : names.get();
-    Collection<Song> songs = Objects.isNull(this.songs) ? List.of() : this.songs.get();
+    Collection<Song> songs = Objects.isNull(this.songs) ? Collections.emptySet() : this.songs.get();
 
     playlist.setId(id);
     playlist.setName(name);
