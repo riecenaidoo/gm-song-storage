@@ -15,7 +15,15 @@ public class Playlist {
 
   private String name;
 
-  public Playlist() {
+  /**
+   * JSR 338: Java Persistence API (JPA) Specification (v.2.2):
+   * <p>
+   * 2.1 The Entity Class:
+   * "The entity class must have a no-arg constructor.
+   * The entity class may have other constructors as well.
+   * The no-arg constructor must be public or protected."
+   */
+  protected Playlist() {
 
   }
 
@@ -33,7 +41,10 @@ public class Playlist {
     return id;
   }
 
-  @SuppressWarnings("unused")
+  /**
+   * This property (mutator) will be used dynamically by the JPA provider to populate this object
+   * after construction via the no-args constructor.
+   */
   protected void setId(Integer id) {
     this.id = id;
   }
