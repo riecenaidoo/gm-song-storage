@@ -1,6 +1,7 @@
 package com.bobo.storage.web.api.controller;
 
 import com.bobo.storage.core.domain.Playlist;
+import com.bobo.storage.core.domain.PlaylistMother;
 import com.bobo.storage.core.resource.query.PlaylistQueryRepository;
 import com.bobo.storage.core.resource.query.SongQueryRepository;
 import com.bobo.storage.core.service.PlaylistService;
@@ -18,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -64,15 +64,9 @@ class PlaylistsControllerTest {
     String expectedUri = String.format("%s/api/v1/playlists/%d", TestConfig.testSchemeAuthority(), id);
 
     // Stubbing; When
-    /* TODO [housekeeping]
-        PlaylistMother in the same (test) package as Playlist would give access to #setId, which I marked protected.
-        For now, stubbing the getId() is good enough.
-     */
     when(service.create(any())).thenAnswer(invocation -> {
       Playlist playlist = invocation.getArgument(0);
-      playlist = spy(playlist);
-      when(playlist.getId()).thenReturn(id);
-      return playlist;
+      return PlaylistMother.setId(playlist, id);
     });
 
     // Then
