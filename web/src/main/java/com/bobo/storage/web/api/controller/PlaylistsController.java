@@ -40,14 +40,17 @@ public class PlaylistsController {
   public ResponseEntity<PlaylistResponse> create(@RequestBody PlaylistsCreateRequest request) {
     Playlist playlist = service.create(new Playlist(request.name(), songsOf(request.songs())));
     PlaylistResponse response = new PlaylistResponse(playlist);
-    URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path(String.format("/%d", playlist.getId())).build()
-                                         .toUri();
+    URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
+                                         .path(String.format("/%d", playlist.getId()))
+                                         .build().toUri();
     return ResponseEntity.created(uri).body(response);
   }
 
   @GetMapping
-  public Collection<Playlist> getPlaylists() {
-    return playlists.findAll();
+  public ResponseEntity<PlaylistResponse[]> getPlaylists() {
+    Collection<Playlist> playlists = this.playlists.findAll();
+    PlaylistResponse[] response = playlists.stream().map(PlaylistResponse::new).toArray(PlaylistResponse[]::new);
+    return ResponseEntity.ok(response);
   }
 
   @GetMapping("{id}")
