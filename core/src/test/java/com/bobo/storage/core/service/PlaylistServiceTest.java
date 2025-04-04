@@ -2,6 +2,7 @@ package com.bobo.storage.core.service;
 
 import com.bobo.storage.IntegrationTest;
 import com.bobo.storage.core.domain.Playlist;
+import com.bobo.storage.core.domain.PlaylistMother;
 import com.bobo.storage.core.domain.Song;
 import com.bobo.storage.core.resource.access.PlaylistRepository;
 import com.bobo.storage.core.resource.access.SongRepository;
@@ -10,8 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @IntegrationTest
 class PlaylistServiceTest {
@@ -24,13 +25,7 @@ class PlaylistServiceTest {
 
   //  ------ Testing Data ------
 
-  private final Set<String> songURLs = Set.of("a", "b", "c");
-
-  /**
-   * While 'playlists' would be more conventional, I prefer how the usage reads with singular:
-   * <code>playlist[0]</code>, <code>playlist[1]</code>.
-   */
-  private Playlist[] playlist;
+  private PlaylistMother playlists;
 
   @Autowired
   PlaylistServiceTest(PlaylistService playlistService, PlaylistRepository playlistRepository, SongRepository songRepository) {
@@ -41,7 +36,7 @@ class PlaylistServiceTest {
 
   @BeforeEach
   void setUp() {
-    playlists(2);
+    this.playlists = new PlaylistMother().withNames().withSongs();
   }
 
   /**
@@ -50,48 +45,36 @@ class PlaylistServiceTest {
    */
   @Test
   void addingExistingSongsShouldNotCreateDuplicates() {
-    playlist[0].setSongs(songs());
-    playlist[1].setSongs(songs());
+    // Given
+    Playlist playlist = playlists.get();
+    Playlist playlistWithSameSongs = playlists.withSongs(playlist::getSongs).get();
 
-    playlistService.create(playlist[0]);
-    playlistService.create(playlist[1]);
+    // When
+    playlistService.create(playlist);
+    playlistService.create(playlistWithSameSongs);
 
-    Assertions.assertEquals(2, playlistRepository.findAll().size(), "Given");
+    // Assuming
+    Assertions.assertEquals(2, playlistRepository.findAll().size(), "Test Assumption Failed");
 
-    Assertions.assertEquals(songURLs.size(), songRepository.findAll().size());
+    // Then
+    Assertions.assertEquals(playlist.getSongs().size(), songRepository.findAll().size());
   }
 
   @Test
   void updatingSongsInPlaylistWithExistingSongsShouldNotCauseDuplication() {
-    playlist[0].setSongs(songs());
-    playlistService.create(playlist[0]);
+    // Given
+    Playlist playlist = playlists.get();
+    playlistService.create(playlist);
 
-    playlistService.addSongs(playlist[0], songs());
+    // When
+    Set<Song> songs = playlist.getSongs();
+    playlistService.addSongs(playlist, new ArrayList<>(songs));
 
-    Assertions.assertEquals(1, playlistRepository.findAll().size(), "Given");
+    // Assuming
+    Assertions.assertEquals(1, playlistRepository.findAll().size(), "Test Assumption Failed");
 
-    Assertions.assertEquals(songURLs.size(), songRepository.findAll().size());
-    Assertions.assertEquals(songURLs.size(), playlist[0].getSongs().size());
-  }
-
-  // ------ Testing Support ------
-
-  /**
-   * @param numOfPlaylists set up a number of <code>Playlist</code> object(s) that can be accessed via <code>playlist[...]</code>.
-   */
-  private void playlists(int numOfPlaylists) {
-    playlist = new Playlist[numOfPlaylists];
-    for (int i = 0; i < playlist.length; i++) {
-      playlist[i] = new Playlist();
-      playlist[i].setName("");
-    }
-  }
-
-  /**
-   * @return new <code>Song</code> objects from configured <code>songURLs</code>.
-   */
-  private Set<Song> songs() {
-    return songURLs.stream().map(Song::new).collect(Collectors.toSet());
+    // Then
+    Assertions.assertEquals(songs.size(), songRepository.findAll().size());
   }
 
 }
