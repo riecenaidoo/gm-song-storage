@@ -9,6 +9,7 @@ import com.bobo.storage.web.api.request.PlaylistsCreateRequest;
 import com.bobo.storage.web.api.request.PlaylistsPutNameRequest;
 import com.bobo.storage.web.api.request.PlaylistsSongsPatchRequest;
 import com.bobo.storage.web.api.response.PlaylistResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -36,6 +37,11 @@ public class PlaylistsController {
     this.songs = songs;
   }
 
+  /**
+   * @param request to create a {@code Playlist}.
+   * @return a {@code ResponseEntity} containing the {@code Playlist} that was created.
+   * @see HttpStatus#CREATED
+   */
   @PostMapping
   public ResponseEntity<PlaylistResponse> create(@RequestBody PlaylistsCreateRequest request) {
     Playlist playlist = service.create(new Playlist(request.name(), songsOf(request.songs())));
@@ -46,6 +52,9 @@ public class PlaylistsController {
     return ResponseEntity.created(uri).body(response);
   }
 
+  /**
+   * @return a {@code ResponseEntity} containing an {@code Array} of zero or more {@code Playlist}(s).
+   */
   @GetMapping
   public ResponseEntity<PlaylistResponse[]> getPlaylists() {
     Collection<Playlist> playlists = this.playlists.findAll();
@@ -58,7 +67,7 @@ public class PlaylistsController {
     return playlists.findById(id).orElseThrow(() -> new RuntimeException("404"));
   }
 
-  @GetMapping("{id}/songs")
+  @GetMapping("/{id}/songs")
   public Set<Song> getSongs(@PathVariable int id) {
     return getPlaylist(id).getSongs();
   }
@@ -68,7 +77,7 @@ public class PlaylistsController {
    * <p>
    * TODO Figure out how to write a test for that?
    */
-  @PatchMapping("{id}/songs")
+  @PatchMapping("/{id}/songs")
   public ResponseEntity<Void> updateSongs(@PathVariable int id, @RequestBody PlaylistsSongsPatchRequest request) {
     final Playlist playlist = getPlaylist(id);
     final Set<Song> songs = songsOf(request.urls());
@@ -85,12 +94,12 @@ public class PlaylistsController {
     return ResponseEntity.ok().build();
   }
 
-  @PutMapping("{id}/name")
+  @PutMapping("/{id}/name")
   public void renamePlaylist(@PathVariable int id, @RequestBody PlaylistsPutNameRequest request) {
     service.updateName(getPlaylist(id), request.name());
   }
 
-  @DeleteMapping("{id}")
+  @DeleteMapping("/{id}")
   public void deletePlaylist(@PathVariable int id) {
     service.delete(getPlaylist(id));
   }

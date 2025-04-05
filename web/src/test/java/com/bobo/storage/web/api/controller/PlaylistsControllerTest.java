@@ -30,10 +30,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-/* TODO [housekeeping]
-    Annotate this with @UnitTest. I'd need access to utilities from the Core module to do so.
-    I think I would add a test (lifetime?) dependency on the Core module's test jar (might need to package it too).
- */
+// TODO [housekeeping] Annotate this with the @UnitTest for the Web module.
 @WebMvcTest(PlaylistsController.class)
 class PlaylistsControllerTest {
 
@@ -54,6 +51,14 @@ class PlaylistsControllerTest {
 
   private final ObjectMapper objectMapper = new ObjectMapper();
 
+  /**
+   * To be used for creating arbitrary values that will <b>never</b> change during the scope of the test they were
+   * created within.
+   * <p>
+   * Mark such values {@code final} where possible to declare the intention.
+   */
+  private final Random random = new Random();
+
   @Autowired
   PlaylistsControllerTest(MockMvc mockMvc) {
     this.mockMvc = mockMvc;
@@ -68,14 +73,9 @@ class PlaylistsControllerTest {
 
     @Test
     void playlistCanBeCreatedWithoutSongs() throws Exception {
-      // Stubbing
-      final int id = 1;
-      when(service.create(any())).thenAnswer(invocation -> {
-        Playlist playlist = invocation.getArgument(0);
-        return PlaylistMother.setId(playlist, id);
-      });
-
       // Given
+      final int id = random.nextInt(100);
+
       PlaylistsCreateRequest request = new PlaylistsCreateRequest("foo", null);
       String requestPayload = objectMapper.writeValueAsString(request);
 
@@ -83,11 +83,17 @@ class PlaylistsControllerTest {
       String expectedPayload = objectMapper.writeValueAsString(expectedResponse);
       String expectedURI = String.format("%s/api/v1/playlists/%d", TestConfig.testSchemeAuthority(), id);
 
+      // Stubbing
+      when(service.create(any())).thenAnswer(invocation -> {
+        Playlist playlist = invocation.getArgument(0);
+        return PlaylistMother.setId(playlist, id);
+      });
+
       // When
-    /* TODO [housekeeping]
-        This endpoint name needs to match the one in the controller, so there might be a time when I should pull
-        out the API paths to some sort of configuration/standard location.
-     */
+      /* TODO [housekeeping]
+          This endpoint name needs to match the one in the controller, so there might be a time when I should pull
+          out the API paths to some sort of configuration/standard location.
+       */
       mockMvc.perform(post("/api/v1/playlists").with(TestConfig::testSchemeAuthority)
                                                .contentType(MediaType.APPLICATION_JSON)
                                                .content(requestPayload))
@@ -107,6 +113,29 @@ class PlaylistsControllerTest {
   @Nested
   class GetPlaylists {
 
+    @Test
+    void thereArePlaylists() throws Exception {
+      // Given
+      final int numPlaylists = random.nextInt(1, 50);
+
+      Set<Playlist> allPlaylists = new PlaylistMother(random).withAll().get(numPlaylists)
+                                                             .collect(Collectors.toSet());
+
+      PlaylistResponse[] expectedResponse = allPlaylists.stream().map(PlaylistResponse::new)
+                                                        .toArray(PlaylistResponse[]::new);
+      String expectedPayload = objectMapper.writeValueAsString(expectedResponse);
+
+      // Stubbing
+      when(playlists.findAll()).thenReturn(allPlaylists);
+
+      // When
+      mockMvc.perform(get("/api/v1/playlists"))
+             // Then
+             .andExpect(status().isOk())
+             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+             .andExpect(content().json(expectedPayload));
+    }
+
     /**
      * Figuring out the status code for this case was interesting.
      * <p>
@@ -124,34 +153,12 @@ class PlaylistsControllerTest {
      */
     @Test
     void thereAreNoPlaylists() throws Exception {
-      // Stubbing
-      when(playlists.findAll()).thenReturn(Collections.emptySet());
-
       // Given
       PlaylistResponse[] expectedResponse = new PlaylistResponse[0];
       String expectedPayload = objectMapper.writeValueAsString(expectedResponse);
 
-      // When
-      mockMvc.perform(get("/api/v1/playlists"))
-             // Then
-             .andExpect(status().isOk())
-             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-             .andExpect(content().json(expectedPayload));
-    }
-
-    @Test
-    void thereArePlaylists() throws Exception {
       // Stubbing
-      Random random = new Random();
-      Set<Playlist> allPlaylists = new PlaylistMother().withIds().withNames().withSongs()
-                                                       // TODO [housekeeping] Consider a withAll() signature.
-                                                       .get(random.nextInt(1, 50)).collect(Collectors.toSet());
-      when(playlists.findAll()).thenReturn(allPlaylists);
-
-      // Given
-      PlaylistResponse[] expectedResponse = allPlaylists.stream().map(PlaylistResponse::new)
-                                                        .toArray(PlaylistResponse[]::new);
-      String expectedPayload = objectMapper.writeValueAsString(expectedResponse);
+      when(playlists.findAll()).thenReturn(Collections.emptySet());
 
       // When
       mockMvc.perform(get("/api/v1/playlists"))
