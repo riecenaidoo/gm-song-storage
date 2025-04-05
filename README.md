@@ -1,39 +1,16 @@
-# Gamemaster Song Storage
+A basic CRUD application to **store** and **organise** (*URLs to*) Songs.
 
-## Quick Commands
+The planned features include:
+- Creating Playlists of Songs.
+- Organising Playlists into Catalogues.
+- Tagging Catalogues, Playlists and Songs.
+- Separating Catalogues by Profiles.
 
-### Dry Run
+The planned extensions to the basic CRUD operations include:
+- Fetching metadata (title, artist(s), run length) of Songs.
+- Flagging Songs whose links no longer exist, or are invalid.
+- Finding alternate links (YouTube, Deezer, Spotify) to Songs.
 
-```
-mvn clean package -Dmaven.test.skip=true
-```
+The purpose is to expose a RESTful API for the Gamemaster Soundboard, and potentially **automate** some of the housekeeping tasks I did to manage my song collection. 
 
-```
-docker compose up -d --build
-```
-
-### Dev
-
-```
-mvn dependency::sources
-```
-
-```
-docker-compose logs db
-```
-
-```
-docker-compose logs api
-```
-
-## TODO
-
-The `Dockerfile` should be multi-stage, it should be able to build the package using the mvn image,
-then include only the artifact in the final image. I tried this before, but something failed with the Spring app packaging,
-something about a final step that happens after it is packaged.
-
-The other issue was figuring out how to mount a volume in the first stage for mvn.
-
-- https://hub.docker.com/_/maven
-- https://docs.docker.com/build/building/multi-stage/
-- https://docs.spring.io/spring-boot/maven-plugin/build-image.html
+It is decoupled from the Gamemaster Soundboard because this service is useful for more than just what I need as a Gamemaster. It would be handy for organising personal playlists as well - especially when it comes to older, or more niche music which aren't all available on particular platform, but I want to build a playlist around.
