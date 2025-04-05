@@ -43,6 +43,11 @@ public class PlaylistMother implements Mother<Playlist> {
     return playlist;
   }
 
+  @Override
+  public PlaylistMother withAll() {
+    return this.withIds().withNames().withSongs();
+  }
+
   public PlaylistMother withIds(Supplier<Integer> ids) {
     this.ids = ids;
     return this;

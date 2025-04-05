@@ -36,4 +36,15 @@ public interface Mother<T> extends Supplier<T> {
     return IntStream.range(1, n + 1).mapToObj((i) -> this.get());
   }
 
+  /**
+   * Configure the {@code Mother} to create children with <b>all</b> their fields populated with mock data.
+   * <p>
+   * This is always equivalent to chaining all the {@code Mother}'s {@code with...()} methods.
+   * This means all <b>previous</b> configurations would be overridden.
+   * <p>
+   * A {@code Mother} is primarily a unit-testing utility. Prefer configuring the {@code Mother} explicitly using
+   * her {@code with...(...)} methods, to be more declarative about what you are testing.
+   */
+  Mother<T> withAll();
+
 }
