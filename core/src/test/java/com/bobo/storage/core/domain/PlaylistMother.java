@@ -9,13 +9,30 @@ import java.util.stream.IntStream;
 
 public class PlaylistMother implements Mother<Playlist> {
 
-  private final Random random = new Random();
+  private final Random random;
 
   private Supplier<Integer> ids;
 
   private Supplier<String> names;
 
   private Supplier<Collection<Song>> songs;
+
+  /**
+   * Unless otherwise configured, a {@code PlaylistMother} uses randomness to generate mock data.
+   * If your test has an instance of {@link Random}, you should share it with the {@code PlaylistMother}.
+   * <p>
+   * This is also provided if you need to {@code seed} the generation of the mock data for
+   * reproducing failures.
+   *
+   * @param random to use when generating mock data.
+   */
+  public PlaylistMother(Random random) {
+    this.random = random;
+  }
+
+  public PlaylistMother() {
+    this(new Random());
+  }
 
   public static Playlist setId(Playlist playlist, Integer id) {
     playlist.setId(id);
