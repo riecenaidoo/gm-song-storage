@@ -20,11 +20,13 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -166,6 +168,48 @@ class PlaylistsControllerTest {
              .andExpect(status().isOk())
              .andExpect(content().contentType(MediaType.APPLICATION_JSON))
              .andExpect(content().json(expectedPayload));
+    }
+
+  }
+
+  /**
+   * @see PlaylistsController#getPlaylist(int)
+   */
+  @DisplayName("GET /playlists/{id}")
+  @Nested
+  class GetPlaylist {
+
+    @Test
+    void thereIsAPlaylist() throws Exception {
+      // Given
+      Playlist playlist = new PlaylistMother(random).withAll().get();
+
+      PlaylistResponse expectedResponse = new PlaylistResponse(playlist);
+      String expectedPayload = objectMapper.writeValueAsString(expectedResponse);
+
+      // Stubbing
+      when(playlists.findById(anyInt())).thenReturn(Optional.of(playlist));
+
+      // When
+      mockMvc.perform(get("/api/v1/playlists/{id}", playlist.getId()))
+             // Then
+             .andExpect(status().isOk())
+             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+             .andExpect(content().json(expectedPayload));
+    }
+
+    @Test
+    void thereIsNoPlaylist() throws Exception {
+      // Given
+      final int id = random.nextInt(100);
+
+      // Stubbing
+      when(playlists.findById(anyInt())).thenReturn(Optional.empty());
+
+      // When
+      mockMvc.perform(get("/api/v1/playlists/{id}", id))
+             // Then
+             .andExpect(status().isNotFound());
     }
 
   }

@@ -15,10 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -62,14 +59,22 @@ public class PlaylistsController {
     return ResponseEntity.ok(response);
   }
 
-  @GetMapping("{id}")
-  public Playlist getPlaylist(@PathVariable int id) {
-    return playlists.findById(id).orElseThrow(() -> new RuntimeException("404"));
+  /**
+   * @param id of a {@code Playlist}
+   * @return a {@code ResponseEntity} containing the {@code Playlist}, if it exists.
+   * @see HttpStatus#NOT_FOUND
+   * @see ResponseEntity#of(Optional)
+   */
+  @GetMapping("/{id}")
+  public ResponseEntity<PlaylistResponse> getPlaylist(@PathVariable int id) {
+    Optional<Playlist> playlist = playlists.findById(id);
+    Optional<PlaylistResponse> response = playlist.map(PlaylistResponse::new);
+    return ResponseEntity.of(response);
   }
 
   @GetMapping("/{id}/songs")
   public Set<Song> getSongs(@PathVariable int id) {
-    return getPlaylist(id).getSongs();
+    return findById(id).getSongs();
   }
 
   /**
@@ -79,7 +84,7 @@ public class PlaylistsController {
    */
   @PatchMapping("/{id}/songs")
   public ResponseEntity<Void> updateSongs(@PathVariable int id, @RequestBody PlaylistsSongsPatchRequest request) {
-    final Playlist playlist = getPlaylist(id);
+    final Playlist playlist = findById(id);
     final Set<Song> songs = songsOf(request.urls());
     switch (request.op()) {
       case ADD -> {
@@ -96,12 +101,12 @@ public class PlaylistsController {
 
   @PutMapping("/{id}/name")
   public void renamePlaylist(@PathVariable int id, @RequestBody PlaylistsPutNameRequest request) {
-    service.updateName(getPlaylist(id), request.name());
+    service.updateName(findById(id), request.name());
   }
 
   @DeleteMapping("/{id}")
   public void deletePlaylist(@PathVariable int id) {
-    service.delete(getPlaylist(id));
+    service.delete(findById(id));
   }
 
   // ------ Helpers for Fluency ------
@@ -118,6 +123,20 @@ public class PlaylistsController {
     return urls.stream()
                .map(Song::new)
                .collect(Collectors.toSet());
+  }
+
+  /**
+   * Added as patch in the interim to prevent breaking other controllers.
+   * Will be revised or removed entirely.
+   *
+   * @throws RuntimeException if a {@link Playlist} with the given {@code id} does not exist.
+   * @see HttpStatus#NOT_FOUND
+   */
+  @Deprecated
+  private Playlist findById(int id) throws RuntimeException {
+    Optional<Playlist> playlist = playlists.findById(id);
+    if (playlist.isPresent()) return playlist.get();
+    throw new RuntimeException(String.format("404: Playlist (id: %d) does not exist.", id));
   }
 
 }
