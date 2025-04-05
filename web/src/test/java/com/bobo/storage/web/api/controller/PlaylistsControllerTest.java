@@ -119,8 +119,8 @@ class PlaylistsControllerTest {
      * <p>
      * And so, I settled on this: The resource still exists, it is just empty.
      *
-     * @link <a href="https://www.rfc-editor.org/rfc/rfc9110.html#section-15.5.5">404 Not Found</a>
-     * @link <a href="https://www.rfc-editor.org/rfc/rfc9110.html#section-15.3.5">204 No Content</a>
+     * @see <a href="https://www.rfc-editor.org/rfc/rfc9110.html#section-15.5.5">Internet Standard (RFC9110) HTTP Semantics > 404 Not Found</a>
+     * @see <a href="https://www.rfc-editor.org/rfc/rfc9110.html#section-15.3.5">Internet Standard (RFC9110) HTTP Semantics > 204 No Content</a>
      */
     @Test
     void thereAreNoPlaylists() throws Exception {
