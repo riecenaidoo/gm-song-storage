@@ -6,10 +6,9 @@ import com.bobo.storage.core.resource.query.PlaylistQueryRepository;
 import com.bobo.storage.core.resource.query.SongQueryRepository;
 import com.bobo.storage.core.service.PlaylistService;
 import com.bobo.storage.web.TestConfig;
-import com.bobo.storage.web.api.request.PlaylistsCreateRequest;
+import com.bobo.storage.web.api.request.PlaylistsPostRequest;
 import com.bobo.storage.web.api.request.PlaylistsPutNameRequest;
 import com.bobo.storage.web.api.response.PlaylistResponse;
-import com.bobo.storage.web.api.response.SongResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -70,7 +69,7 @@ class PlaylistsControllerTest {
   }
 
   /**
-   * @see PlaylistsController#create(PlaylistsCreateRequest)
+   * @see PlaylistsController#create(PlaylistsPostRequest)
    */
   @DisplayName("POST /playlists")
   @Nested
@@ -81,14 +80,13 @@ class PlaylistsControllerTest {
       // Given
       final int id = random.nextInt(100);
 
-      // TODO [design] allow protected construction from a Playlist. See additional notes on #verfiy assertion.
-      //  with the reasoning being that I want to leverage PlaylistMother who will always produce valid Playlists.
-      //  when the constraints are added to Playlist, I do not want to update minor things like the values I passed into
-      //  the constructor of this request being invalid.
-      PlaylistsCreateRequest request = new PlaylistsCreateRequest("foo", null);
+      PlaylistsPostRequest request = new PlaylistsPostRequest("foo", null);
       String requestPayload = objectMapper.writeValueAsString(request);
 
-      PlaylistResponse expectedResponse = new PlaylistResponse(id, "foo", new SongResponse[]{});
+      Playlist requestedPlaylist = request.toCreate();
+      PlaylistMother.setId(requestedPlaylist, id);
+
+      PlaylistResponse expectedResponse = new PlaylistResponse(requestedPlaylist);
       String expectedPayload = objectMapper.writeValueAsString(expectedResponse);
       String expectedURI = String.format("%s/api/v1/playlists/%d", TestConfig.testSchemeAuthority(), id);
 
@@ -112,11 +110,7 @@ class PlaylistsControllerTest {
              .andExpect(content().contentType(MediaType.APPLICATION_JSON))
              .andExpect(content().json(expectedPayload));
 
-      // TODO [design] If PlaylistsCreateRequest was responsible for produce the Playlist,
-      //  we would be able to more accurately assert that a Playlist equal to the one produced by our Request is
-      //  passed into the service.
-      //  When stubbing and when verifying, we could use request#toPlaylist().
-      verify(service, times(1)).create(any(Playlist.class));
+      verify(service, times(1)).create(requestedPlaylist);
     }
 
   }

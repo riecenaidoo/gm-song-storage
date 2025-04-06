@@ -31,7 +31,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"foo\",\r\n    \"songs\": [\r\n        \"abc\",\r\n        \"def\"\r\n    ]\r\n}",
+							"raw": "{\r\n    \"name\": \"foo\",\r\n    \"urls\": [\r\n        \"abc\",\r\n        \"def\"\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

@@ -5,7 +5,7 @@ import com.bobo.storage.core.domain.Song;
 import com.bobo.storage.core.resource.query.PlaylistQueryRepository;
 import com.bobo.storage.core.resource.query.SongQueryRepository;
 import com.bobo.storage.core.service.PlaylistService;
-import com.bobo.storage.web.api.request.PlaylistsCreateRequest;
+import com.bobo.storage.web.api.request.PlaylistsPostRequest;
 import com.bobo.storage.web.api.request.PlaylistsPutNameRequest;
 import com.bobo.storage.web.api.request.PlaylistsSongsPatchRequest;
 import com.bobo.storage.web.api.response.PlaylistResponse;
@@ -40,8 +40,9 @@ public class PlaylistsController {
    * @see HttpStatus#CREATED
    */
   @PostMapping
-  public ResponseEntity<PlaylistResponse> create(@RequestBody PlaylistsCreateRequest request) {
-    Playlist playlist = service.create(new Playlist(request.name(), songsOf(request.songs())));
+  public ResponseEntity<PlaylistResponse> create(@RequestBody PlaylistsPostRequest request) {
+    Playlist playlist = request.toCreate();
+    playlist = service.create(playlist);
     PlaylistResponse response = new PlaylistResponse(playlist);
     URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
                                          .path(String.format("/%d", playlist.getId()))
