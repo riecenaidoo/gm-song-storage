@@ -7,12 +7,15 @@ import com.bobo.storage.core.resource.query.SongQueryRepository;
 import com.bobo.storage.core.service.PlaylistService;
 import com.bobo.storage.web.TestConfig;
 import com.bobo.storage.web.api.request.PlaylistsCreateRequest;
+import com.bobo.storage.web.api.request.PlaylistsPutNameRequest;
 import com.bobo.storage.web.api.response.PlaylistResponse;
 import com.bobo.storage.web.api.response.SongResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.HttpStatus;
@@ -28,7 +31,7 @@ import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -210,6 +213,82 @@ class PlaylistsControllerTest {
       mockMvc.perform(get("/api/v1/playlists/{id}", id))
              // Then
              .andExpect(status().isNotFound());
+    }
+
+  }
+
+  /**
+   * @see PlaylistsController#renamePlaylist(int, PlaylistsPutNameRequest)
+   */
+  @DisplayName("POST /playlists{id}/name")
+  @Nested
+  class PutPlaylistName {
+
+    /**
+     * TODO [api] Once there are actually business rules in place for the {@link PlaylistService},
+     *  I may need to test that a {@code 200 Ok} is returned with a payload containing the {@code name} (?),
+     *  in the even the {@code Service} has had to format it (trim, title case, etc.).
+     */
+    @Test
+    void thereIsAPlaylistAndItIsRenamed() throws Exception {
+      // Given
+      final int id = random.nextInt(100);
+
+      PlaylistMother mother = new PlaylistMother(random);
+      Playlist playlist = mother.withAll().get();
+
+      String arbitraryValidName = mother.get().getName();
+      PlaylistsPutNameRequest request = new PlaylistsPutNameRequest(arbitraryValidName);
+      String requestPayload = objectMapper.writeValueAsString(request);
+
+      // Stubbing
+      when(playlists.findById(anyInt())).thenReturn(Optional.ofNullable(playlist));
+      // service#updateName(Playlist,String):void
+
+      // When
+      mockMvc.perform(put("/api/v1/playlists/{id}/name", id).contentType(MediaType.APPLICATION_JSON)
+                                                            .content(requestPayload))
+             // Then
+             .andExpect(status().isNoContent())
+             .andExpect(header().doesNotExist("content-type"));
+
+      verify(service, times(1)).updateName(playlist, request.name());
+    }
+
+    /**
+     * I think {@code 400 Bad Request} is more appropriate here than {@code 404 Not Found} because the target resource
+     * is a {@code Playlist#name}, not the {@code Playlist} itself. If the target resource {@code #name} did not exist,
+     * that would be fine because this is a {@code PUT}; it would be created and respond with {@code 201 Created}.
+     * <p>
+     * However, {@code #name} will always exist for a {@code Playlist} in our domain.
+     * <p>
+     * Requesting an update on a {@code Playlist} that doesn't exist would be a {@code 400 Bad Request},
+     * because responding with {@code 404 Not Found} does not make sense for a {@code PUT}.
+     * I would expect the server to create it, if it didn't exist.
+     * The issue is not that {@code Playlist#name} (the target resource of the request) does not exist,
+     * but that this is an invalid URI.
+     * <p>
+     * TODO [housekeeping] Use {@link ParameterizedTest} to programmatically test this for all sub-routes asserting
+     *  a {@code Playlist} exists. The {@link ValueSource} would just be all these routes. However, I may need to
+     *  think about if that would be worth it as I'd also need to optionally pass in the {@code Request} object.
+     */
+    @Test
+    void thereIsNoPlaylist() throws Exception {
+      // Given
+      final int id = random.nextInt(100);
+
+      String arbitraryValidName = new PlaylistMother(random).withNames().get().getName();
+      PlaylistsPutNameRequest request = new PlaylistsPutNameRequest(arbitraryValidName);
+      String requestPayload = objectMapper.writeValueAsString(request);
+
+      // Stubbing
+      when(playlists.findById(anyInt())).thenReturn(Optional.empty());
+
+      // When
+      mockMvc.perform(put("/api/v1/playlists/{id}/name", id).contentType(MediaType.APPLICATION_JSON)
+                                                            .content(requestPayload))
+             // Then
+             .andExpect(status().isBadRequest());
     }
 
   }

@@ -99,9 +99,23 @@ public class PlaylistsController {
     return ResponseEntity.ok().build();
   }
 
+  /**
+   * @param id      of a {@code Playlist} that must exist, or {@code 400 Bad Request} ({@code 404 Not Found} would imply
+   *                the target resource, {@code name} does not exist which is inaccurate).
+   * @param request to update a {@code Playlist#name}.
+   * @return a {@code ResponseEntity} with {@code 204 No Content} if the {@code name} was updated.
+   */
   @PutMapping("/{id}/name")
-  public void renamePlaylist(@PathVariable int id, @RequestBody PlaylistsPutNameRequest request) {
-    service.updateName(findById(id), request.name());
+  public ResponseEntity<Void> renamePlaylist(@PathVariable int id, @RequestBody PlaylistsPutNameRequest request) {
+    Optional<Playlist> playlist = playlists.findById(id);
+    ResponseEntity<Void> response;
+    if (playlist.isPresent()) {
+      service.updateName(playlist.get(), request.name());
+      response = ResponseEntity.noContent().build();
+    } else {
+      response = ResponseEntity.badRequest().build();
+    }
+    return response;
   }
 
   /**
