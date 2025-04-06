@@ -81,6 +81,10 @@ class PlaylistsControllerTest {
       // Given
       final int id = random.nextInt(100);
 
+      // TODO [design] allow protected construction from a Playlist. See additional notes on #verfiy assertion.
+      //  with the reasoning being that I want to leverage PlaylistMother who will always produce valid Playlists.
+      //  when the constraints are added to Playlist, I do not want to update minor things like the values I passed into
+      //  the constructor of this request being invalid.
       PlaylistsCreateRequest request = new PlaylistsCreateRequest("foo", null);
       String requestPayload = objectMapper.writeValueAsString(request);
 
@@ -107,6 +111,12 @@ class PlaylistsControllerTest {
              .andExpect(header().string("Location", expectedURI))
              .andExpect(content().contentType(MediaType.APPLICATION_JSON))
              .andExpect(content().json(expectedPayload));
+
+      // TODO [design] If PlaylistsCreateRequest was responsible for produce the Playlist,
+      //  we would be able to more accurately assert that a Playlist equal to the one produced by our Request is
+      //  passed into the service.
+      //  When stubbing and when verifying, we could use request#toPlaylist().
+      verify(service, times(1)).create(any(Playlist.class));
     }
 
   }
@@ -330,6 +340,8 @@ class PlaylistsControllerTest {
              .andExpect(status().isNoContent())
              // TODO [api] Figure out the right way to test there is no returned content.
              .andExpect(header().doesNotExist("content-type"));
+
+      verify(service, times(1)).delete(playlist);
     }
 
     @Test
