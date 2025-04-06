@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -28,8 +29,7 @@ import java.util.stream.Collectors;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 // TODO [housekeeping] Annotate this with the @UnitTest for the Web module.
@@ -208,6 +208,61 @@ class PlaylistsControllerTest {
 
       // When
       mockMvc.perform(get("/api/v1/playlists/{id}", id))
+             // Then
+             .andExpect(status().isNotFound());
+    }
+
+  }
+
+  /**
+   * The {@link PlaylistService#delete(Playlist)} is still slim. I don't have many cases to test against yet.
+   * When it is revised with further words and potential exception cases, then I will need to update this test.
+   *
+   * @see PlaylistsController#deletePlaylist(int)
+   */
+  @DisplayName("DELETE /playlists/{id}")
+  @Nested
+  class DeletePlaylist {
+
+    /**
+     * {@code 204 No Content} seems the most appropriate here because I have no status
+     * or messages to provide for this action currently.
+     * <p>
+     * I do wonder if I should then do a {@code GET} request and assert I get a {@code 404 Not Found},
+     * but that would then be testing the {@link PlaylistService#delete(Playlist)} method.
+     *
+     * @see <a href="https://www.rfc-editor.org/rfc/rfc9110.html#section-9.3.5">HTTP Semantics > DELETE</a>
+     * @see HttpStatus#NO_CONTENT
+     */
+    @Test
+    void thereIsAPlaylistAndItIsDeleted() throws Exception {
+      // Given
+      final int id = random.nextInt(100);
+
+      Playlist playlist = new PlaylistMother(random).withAll().withIds(() -> id).get();
+
+      // Stubbing
+      when(playlists.findById(anyInt())).thenReturn(Optional.of(playlist));
+      // service#delete(Playlist): void
+
+      // When
+      mockMvc.perform(delete("/api/v1/playlists/{id}", id))
+             // Then
+             .andExpect(status().isNoContent())
+             // TODO [api] Figure out the right way to test there is no returned content.
+             .andExpect(header().doesNotExist("content-type"));
+    }
+
+    @Test
+    void thereIsNoPlaylist() throws Exception {
+      // Given
+      final int id = random.nextInt(100); // TODO [housekeeping, low] helper #id()?
+
+      // Stubbing
+      when(playlists.findById(anyInt())).thenReturn(Optional.empty());
+
+      // When
+      mockMvc.perform(delete("/api/v1/playlists/{id}", id))
              // Then
              .andExpect(status().isNotFound());
     }

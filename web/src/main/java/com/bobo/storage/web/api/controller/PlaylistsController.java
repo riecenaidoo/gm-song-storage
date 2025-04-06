@@ -104,9 +104,27 @@ public class PlaylistsController {
     service.updateName(findById(id), request.name());
   }
 
+  /**
+   * @param id of a {@code Playlist}
+   * @return a {@code ResponseEntity} with {@code 204 No Content},
+   * or {@code 404 Not Found} if the {@code Playlist} does not exist.
+   * @see HttpStatus#NO_CONTENT
+   * @see HttpStatus#NOT_FOUND
+   */
   @DeleteMapping("/{id}")
-  public void deletePlaylist(@PathVariable int id) {
-    service.delete(findById(id));
+  public ResponseEntity<Void> deletePlaylist(@PathVariable int id) {
+    Optional<Playlist> playlist = playlists.findById(id);
+    ResponseEntity<Void> response;
+    if (playlist.isPresent()) {
+      service.delete(playlist.get());
+      response = ResponseEntity.noContent().build();
+    } else {
+      // TODO [api] Add problem detail of 'Playlist (id: %d) does not exist.' (?)
+      //  but if I do that I would have to change the method return type (ResponseEntity<Void> -> ResponseEntity<?>)
+      response = ResponseEntity.notFound().build();
+    }
+
+    return response;
   }
 
   // ------ Helpers for Fluency ------
