@@ -16,7 +16,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/v1/playlists")
@@ -86,7 +85,7 @@ public class PlaylistsController {
   @PatchMapping("/{id}/songs")
   public ResponseEntity<Void> updateSongs(@PathVariable int id, @RequestBody PlaylistsSongsPatchRequest request) {
     final Playlist playlist = findById(id);
-    final Set<Song> songs = songsOf(request.urls());
+    final Collection<Song> songs = request.songs();
     switch (request.op()) {
       case ADD -> {
         long existingSongs = this.songs.count();
@@ -143,20 +142,6 @@ public class PlaylistsController {
   }
 
   // ------ Helpers for Fluency ------
-
-  /**
-   * The <code>songs</code> parameters in this controller represent the <code>Song.url</code> field
-   * of the <code>Song</code> entity.
-   *
-   * @param urls to map to <code>Song</code>(s)
-   * @return distinct collection of <code>Song</code>(s) objects. They are not yet managed entities.
-   */
-  private Set<Song> songsOf(Collection<String> urls) {
-    if (Objects.isNull(urls)) return Collections.emptySet();
-    return urls.stream()
-               .map(Song::new)
-               .collect(Collectors.toSet());
-  }
 
   /**
    * Added as patch in the interim to prevent breaking other controllers.
