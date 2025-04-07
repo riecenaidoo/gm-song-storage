@@ -4,39 +4,37 @@ import com.bobo.storage.IntegrationTest;
 import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.domain.PlaylistMother;
 import com.bobo.storage.core.domain.Song;
+import com.bobo.storage.core.domain.SongMother;
 import com.bobo.storage.core.resource.access.PlaylistRepository;
 import com.bobo.storage.core.resource.access.SongRepository;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @IntegrationTest
-class PlaylistServiceTest {
+class PlaylistServiceIT {
 
-  private final PlaylistService playlistService;
+  private final PlaylistService service;
 
-  private final PlaylistRepository playlistRepository;
+  private final PlaylistRepository repository;
 
   private final SongRepository songRepository;
 
   //  ------ Testing Data ------
 
-  private PlaylistMother playlists;
+  private final Random random = new Random();
 
   @Autowired
-  PlaylistServiceTest(PlaylistService playlistService, PlaylistRepository playlistRepository, SongRepository songRepository) {
-    this.playlistService = playlistService;
-    this.playlistRepository = playlistRepository;
+  PlaylistServiceIT(PlaylistService service, PlaylistRepository repository, SongRepository songRepository) {
+    this.service = service;
+    this.repository = repository;
     this.songRepository = songRepository;
-  }
-
-  @BeforeEach
-  void setUp() {
-    this.playlists = new PlaylistMother().withNames().withSongs();
   }
 
   /**
@@ -46,32 +44,34 @@ class PlaylistServiceTest {
   @Test
   void addingExistingSongsShouldNotCreateDuplicates() {
     // Given
-    Playlist playlist = playlists.get();
-    Playlist playlistWithSameSongs = playlists.withSongs(playlist::getSongs).get();
+    final int numSongs = random.nextInt(1, 10);
+    final int numPlaylists = random.nextInt(1, 10);
+    final Collection<Song> songs = new SongMother(random).withAll().get(numSongs).collect(Collectors.toSet());
+
+    Collection<Playlist> playlists = new PlaylistMother(random).withSongs(() -> songs).get(numPlaylists).toList();
 
     // When
-    playlistService.create(playlist);
-    playlistService.create(playlistWithSameSongs);
+    playlists.forEach(service::create);
 
     // Assuming
-    Assertions.assertEquals(2, playlistRepository.findAll().size(), "Test Assumption Failed");
+    Assertions.assertEquals(numPlaylists, repository.findAll().size(), "Test Assumption Failed");
 
     // Then
-    Assertions.assertEquals(playlist.getSongs().size(), songRepository.findAll().size());
+    Assertions.assertEquals(numSongs, songRepository.findAll().size());
   }
 
   @Test
   void updatingSongsInPlaylistWithExistingSongsShouldNotCauseDuplication() {
     // Given
-    Playlist playlist = playlists.get();
-    playlistService.create(playlist);
+    Playlist playlist = new PlaylistMother(random).withSongs().get();
+    service.create(playlist);
 
     // When
     Set<Song> songs = playlist.getSongs();
-    playlistService.addSongs(playlist, new ArrayList<>(songs));
+    service.addSongs(playlist, new ArrayList<>(songs));
 
     // Assuming
-    Assertions.assertEquals(1, playlistRepository.findAll().size(), "Test Assumption Failed");
+    Assertions.assertEquals(1, repository.findAll().size(), "Test Assumption Failed");
 
     // Then
     Assertions.assertEquals(songs.size(), songRepository.findAll().size());
