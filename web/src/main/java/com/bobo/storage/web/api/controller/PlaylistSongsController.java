@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.Optional;
-import java.util.Set;
 
 @Controller(resource = Song.class, respondsWith = SongResponse.class)
 @RequestMapping("api/v1/playlists/{id}/songs")
@@ -32,8 +31,25 @@ public class PlaylistSongsController {
   }
 
   @GetMapping
-  public Set<Song> getSongs(@PathVariable int id) {
-    return findById(id).getSongs();
+  public ResponseEntity<SongResponse[]> getSongs(@PathVariable int id) {
+    Optional<Playlist> playlist = playlists.findById(id);
+    if (playlist.isPresent()) {
+      SongResponse[] songs = playlist.get().getSongs().stream()
+                                     .map(SongResponse::new).toArray(SongResponse[]::new);
+      return ResponseEntity.ok(songs);
+    } else {
+      /*  TODO [design]
+          This situation represents an exception to the normal flow of this method,
+          and in fact all controller methods serving sub resources. Though this controller could possible
+          'handle' this situation by returning the appropriate ResponseEntity, this is better done using an ExceptionHandler
+          and throwing the appropriate exception for this circumstance.
+
+          I would probably want a signature in like #get that throws an 'AssertedResourceNotFound',
+          that I can map to 400 Bad Request.
+          TODO [housekeeping] I think I have another note like this elsewhere already.
+       */
+      return ResponseEntity.badRequest().build();   // Another pain point with this is that the generically typed return is a lie now.
+    }
   }
 
   /**
