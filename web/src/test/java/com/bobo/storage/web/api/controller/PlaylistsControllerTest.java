@@ -3,7 +3,6 @@ package com.bobo.storage.web.api.controller;
 import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.domain.PlaylistMother;
 import com.bobo.storage.core.resource.query.PlaylistQueryRepository;
-import com.bobo.storage.core.resource.query.SongQueryRepository;
 import com.bobo.storage.core.service.PlaylistService;
 import com.bobo.storage.web.TestConfig;
 import com.bobo.storage.web.api.request.PlaylistsPostRequest;
@@ -45,9 +44,6 @@ class PlaylistsControllerTest {
 
   @MockitoBean
   private PlaylistQueryRepository playlists;
-
-  @MockitoBean
-  private SongQueryRepository songs;
 
   // Test Utilities
 
