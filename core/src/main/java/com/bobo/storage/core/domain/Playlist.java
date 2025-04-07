@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -30,6 +31,17 @@ public class Playlist {
   public Playlist(String name, Collection<Song> songs) {
     this.name = name;
     this.songs = new HashSet<>(songs);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (!(o instanceof Playlist playlist)) return false;
+    return Objects.equals(songs, playlist.songs) && Objects.equals(name, playlist.name);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(songs, name);
   }
 
   /**
