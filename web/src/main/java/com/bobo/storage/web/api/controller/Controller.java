@@ -1,0 +1,31 @@
+package com.bobo.storage.web.api.controller;
+
+import org.springframework.web.bind.annotation.RestController;
+
+import java.lang.annotation.*;
+
+/**
+ * A stereotyped {@link RestController} that services exactly one resource,
+ * and responds with a consistent representation for the resource,
+ * when a response is necessary.
+ * <p>
+ * The name of the {@code Controller} must reflect the name of the resource it serves.
+ * If the resource is a subresource, the name must be prefaced by the first parent of the resource.
+ */
+@Target({ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@RestController
+public @interface Controller {
+
+  /**
+   * @return the type of resource the {@code Controller} handles requests for.
+   */
+  Class<?> resource();
+
+  /**
+   * @return the representation of the resource the {@code Controller} will serve, when requested.
+   */
+  Class<?> respondsWith();
+
+}
