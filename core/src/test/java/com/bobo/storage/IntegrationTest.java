@@ -12,11 +12,11 @@ import static java.lang.annotation.ElementType.TYPE;
 /**
  * <ol>
  *   <li>
- *     <code>@ActiveProfiles</code> to use the <code>test</code> profile, which I believe is a default configuration from Spring.
- *     I am using this so the tests use <code>application-test.properties</code>.
+ *    {@link UnitTest} because the intention is to compose these annotations,
+ *    with {@code UnitTest} being the base configuration and the rest building upon that configuration.
  *   </li>
  *   <li>
- *     <code>@Transactional</code> is specified to configure tests to run within a transaction and be rolled back after the test is executed.
+ *     {@link Transactional} is specified to configure tests to run within a transaction and be rolled back after the test is executed.
  *   </li>
  * </ol>
  */

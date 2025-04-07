@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 // TODO [housekeeping] Annotate this with the @UnitTest for the Web module.
 @WebMvcTest(PlaylistsController.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class PlaylistsControllerTest {
 
   // Mock Dependencies
