@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class PlaylistMother implements Mother<Playlist> {
+public class PlaylistMother implements EntityMother<Playlist> {
 
   private final Random random;
 
@@ -38,17 +38,6 @@ public class PlaylistMother implements Mother<Playlist> {
     this(new Random());
   }
 
-  public static Playlist setId(Playlist playlist, Integer id) {
-    playlist.setId(id);
-    return playlist;
-  }
-
-  @SuppressWarnings("unused")
-  public static Playlist setId(Playlist playlist) {
-    Random random = new Random();
-    return PlaylistMother.setId(playlist, random.nextInt());
-  }
-
   @Override
   public Playlist get() {
     Playlist playlist = new Playlist();
@@ -69,12 +58,18 @@ public class PlaylistMother implements Mother<Playlist> {
     return this.withIds().withNames().withSongs();
   }
 
+  @Override
+  public Playlist setId(Playlist playlist) {
+    return EntityMother.setId(playlist, random.nextInt());
+  }
+
+  @Override
   public PlaylistMother withIds(Supplier<Integer> ids) {
     this.ids = ids;
     return this;
   }
 
-  @SuppressWarnings("unused")
+  @Override
   public PlaylistMother withIds() {
     return withIds(this.random::nextInt);
   }

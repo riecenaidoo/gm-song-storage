@@ -1,5 +1,6 @@
 package com.bobo.storage.web.api.controller;
 
+import com.bobo.storage.core.domain.EntityMother;
 import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.domain.PlaylistMother;
 import com.bobo.storage.core.resource.query.PlaylistQueryRepository;
@@ -82,7 +83,7 @@ class PlaylistsControllerTest {
       String requestPayload = objectMapper.writeValueAsString(request);
 
       Playlist requestedPlaylist = request.toCreate();
-      PlaylistMother.setId(requestedPlaylist, id);
+      EntityMother.setId(requestedPlaylist, id);
 
       PlaylistResponse expectedResponse = new PlaylistResponse(requestedPlaylist);
       String expectedPayload = objectMapper.writeValueAsString(expectedResponse);
@@ -91,7 +92,7 @@ class PlaylistsControllerTest {
       // Stubbing
       when(service.create(any())).thenAnswer(invocation -> {
         Playlist playlist = invocation.getArgument(0);
-        return PlaylistMother.setId(playlist, id);
+        return EntityMother.setId(playlist, id);
       });
 
       // When

@@ -1,6 +1,8 @@
 package com.bobo.storage.core.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToMany;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -8,21 +10,14 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-public class Playlist {
-
-  private Integer id;
+public class Playlist extends DomainEntity {
 
   private Set<Song> songs;
 
   private String name;
 
   /**
-   * JSR 338: Java Persistence API (JPA) Specification (v.2.2):
-   * <p>
-   * 2.1 The Entity Class:
-   * "The entity class must have a no-arg constructor.
-   * The entity class may have other constructors as well.
-   * The no-arg constructor must be public or protected."
+   * @see DomainEntity#DomainEntity()
    */
   protected Playlist() {
 
@@ -42,23 +37,6 @@ public class Playlist {
   @Override
   public int hashCode() {
     return Objects.hash(songs, name);
-  }
-
-  /**
-   * Convenient for use as a <code>PathVariable</code> in endpoints.
-   */
-  @Id
-  @GeneratedValue
-  public Integer getId() {
-    return id;
-  }
-
-  /**
-   * This property (mutator) will be used dynamically by the JPA provider to populate this object
-   * after construction via the no-args constructor.
-   */
-  protected void setId(Integer id) {
-    this.id = id;
   }
 
   @ManyToMany

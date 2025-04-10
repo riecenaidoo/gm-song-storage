@@ -4,9 +4,11 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class SongMother implements Mother<Song> {
+public class SongMother implements EntityMother<Song> {
 
   private final Random random;
+
+  private Supplier<Integer> ids;
 
   private Supplier<String> urls;
 
@@ -38,8 +40,10 @@ public class SongMother implements Mother<Song> {
   public Song get() {
     Song song = new Song();
 
+    Integer id = Objects.isNull(ids) ? null : ids.get();
     String url = Objects.isNull(urls) ? "" : urls.get();
 
+    song.setId(id);
     song.setUrl(url);
 
     return song;
@@ -48,6 +52,22 @@ public class SongMother implements Mother<Song> {
   @Override
   public SongMother withAll() {
     return this.withUrls();
+  }
+
+  @Override
+  public Song setId(Song song) {
+    return EntityMother.setId(song, random.nextInt());
+  }
+
+  @Override
+  public SongMother withIds(Supplier<Integer> ids) {
+    this.ids = ids;
+    return this;
+  }
+
+  @Override
+  public SongMother withIds() {
+    return withIds(this.random::nextInt);
   }
 
   public SongMother withUrls(Supplier<String> urls) {
