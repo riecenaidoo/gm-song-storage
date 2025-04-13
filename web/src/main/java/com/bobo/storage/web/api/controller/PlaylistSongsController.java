@@ -3,11 +3,9 @@ package com.bobo.storage.web.api.controller;
 import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.domain.Song;
 import com.bobo.storage.core.resource.query.PlaylistQueryRepository;
-import com.bobo.storage.core.resource.query.SongQueryRepository;
 import com.bobo.storage.core.service.PlaylistService;
 import com.bobo.storage.web.api.request.PlaylistSongsPatchRequest;
 import com.bobo.storage.web.api.response.SongResponse;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,12 +20,9 @@ public class PlaylistSongsController {
 
   private final PlaylistQueryRepository playlists;
 
-  private final SongQueryRepository songs;
-
-  public PlaylistSongsController(PlaylistService service, PlaylistQueryRepository playlists, SongQueryRepository songs) {
+  public PlaylistSongsController(PlaylistService service, PlaylistQueryRepository playlists) {
     this.service = service;
     this.playlists = playlists;
-    this.songs = songs;
   }
 
   @GetMapping
@@ -48,46 +43,34 @@ public class PlaylistSongsController {
           that I can map to 400 Bad Request.
           TODO [housekeeping] I think I have another note like this elsewhere already.
        */
-      return ResponseEntity.badRequest().build();   // Another pain point with this is that the generically typed return is a lie now.
+      return ResponseEntity.badRequest()
+                           .build();   // Another pain point with this is that the generically typed return is a lie now.
     }
   }
 
   /**
-   * Race Condition: If another request causes creation of songs, this would respond with 201?
-   * <p>
-   * TODO Figure out how to write a test for that?
-   */
-  @PatchMapping
-  public ResponseEntity<Void> updateSongs(@PathVariable int id, @RequestBody PlaylistSongsPatchRequest request) {
-    final Playlist playlist = findById(id);
-    final Collection<Song> songs = request.songs();
-    switch (request.op()) {
-      case ADD -> {
-        long existingSongs = this.songs.count();
-        service.addSongs(playlist, songs);
-        return ResponseEntity.status((this.songs.count() == existingSongs ? 200 : 201)).build();
-      }
-      case REMOVE -> service.removeSongs(playlist, songs);
-      default -> throw new RuntimeException("501");
-    }
-
-    return ResponseEntity.ok().build();
-  }
-
-  // ------ Helpers for Fluency ------
-
-  /**
-   * Added as patch in the interim to prevent breaking other controllers.
-   * Will be revised or removed entirely.
-   *
-   * @throws RuntimeException if a {@link Playlist} with the given {@code id} does not exist.
-   * @see HttpStatus#NOT_FOUND
+   * {@code PATCH#ADD} and {@code PATCH#REMOVE} might not be what I should be using for this,
+   * perhaps I should be doing {@code POST}?
    */
   @Deprecated
-  private Playlist findById(int id) throws RuntimeException {
-    Optional<Playlist> playlist = playlists.findById(id);
-    if (playlist.isPresent()) return playlist.get();
-    throw new RuntimeException(String.format("404: Playlist (id: %d) does not exist.", id));
+  @PatchMapping
+  public ResponseEntity<Void> updateSongs(@PathVariable int id, @RequestBody PlaylistSongsPatchRequest request) {
+    final Optional<Playlist> assertedPlaylist = playlists.findById(id);
+    if (assertedPlaylist.isPresent()) {
+      Playlist playlist = assertedPlaylist.get();
+
+      final Collection<Song> songs = request.songs();
+      switch (request.op()) {
+        case ADD -> service.addSongs(playlist, songs);
+        case REMOVE -> service.removeSongs(playlist, songs);
+        default -> {
+          return ResponseEntity.badRequest().build(); // TODO Some generic error for this; unsupported operation?
+        }
+      }
+
+      return ResponseEntity.ok().build();
+    }
+    return ResponseEntity.badRequest().build();
   }
 
 }
