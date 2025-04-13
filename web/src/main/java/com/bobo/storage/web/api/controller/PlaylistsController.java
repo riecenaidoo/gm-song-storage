@@ -6,6 +6,7 @@ import com.bobo.storage.core.service.PlaylistService;
 import com.bobo.storage.web.api.request.PlaylistsPostRequest;
 import com.bobo.storage.web.api.request.PlaylistsPutNameRequest;
 import com.bobo.storage.web.api.response.PlaylistResponse;
+import com.bobo.storage.web.exception.AssertedResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -67,22 +68,17 @@ public class PlaylistsController {
   }
 
   /**
-   * @param id      of a {@code Playlist} that must exist, or {@code 400 Bad Request} ({@code 404 Not Found} would imply
-   *                the target resource, {@code name} does not exist which is inaccurate).
-   * @param request to update a {@code Playlist#name}.
-   * @return a {@code ResponseEntity} with {@code 204 No Content} if the {@code name} was updated.
+   * @param id      of a {@code Playlist} that must exist.
+   * @param request containing the new {@code Playlist#name}.
+   * @return a {@code ResponseEntity} with {@code 204 No Content}, if the {@code name} was successfully updated.
    */
   @PutMapping("/{id}/name")
-  public ResponseEntity<Void> renamePlaylist(@PathVariable int id, @RequestBody PlaylistsPutNameRequest request) {
-    Optional<Playlist> playlist = playlists.findById(id);
-    ResponseEntity<Void> response;
-    if (playlist.isPresent()) {
-      service.updateName(playlist.get(), request.name());
-      response = ResponseEntity.noContent().build();
-    } else {
-      response = ResponseEntity.badRequest().build();
-    }
-    return response;
+  public ResponseEntity<Void> renamePlaylist(@PathVariable int id, @RequestBody PlaylistsPutNameRequest request)
+          throws AssertedResourceNotFoundException {
+    Playlist playlist = playlists.findById(id)
+                                 .orElseThrow(() -> new AssertedResourceNotFoundException(Playlist.class, id));
+    service.updateName(playlist, request.name());
+    return ResponseEntity.noContent().build();
   }
 
   /**
