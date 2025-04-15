@@ -3,6 +3,7 @@ package com.bobo.storage.web.api.controller;
 import com.bobo.storage.core.domain.EntityMother;
 import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.domain.PlaylistMother;
+import com.bobo.storage.core.resource.query.AssertedResourceNotFoundException;
 import com.bobo.storage.core.resource.query.PlaylistQueryRepository;
 import com.bobo.storage.core.service.PlaylistService;
 import com.bobo.storage.web.TestConfig;
@@ -245,7 +246,7 @@ class PlaylistsControllerTest {
       String requestPayload = objectMapper.writeValueAsString(request);
 
       // Stubbing
-      when(playlists.findById(anyInt())).thenReturn(Optional.ofNullable(playlist));
+      when(playlists.get(id)).thenReturn(playlist);
       // service#updateName(Playlist,String):void
 
       // When
@@ -285,7 +286,7 @@ class PlaylistsControllerTest {
       String requestPayload = objectMapper.writeValueAsString(request);
 
       // Stubbing
-      when(playlists.findById(anyInt())).thenReturn(Optional.empty());
+      when(playlists.get(id)).thenThrow(AssertedResourceNotFoundException.class);
 
       // When
       mockMvc.perform(put("/api/v1/playlists/{id}/name", id).contentType(MediaType.APPLICATION_JSON)

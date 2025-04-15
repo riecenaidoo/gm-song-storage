@@ -6,7 +6,7 @@ import com.bobo.storage.core.resource.query.PlaylistQueryRepository;
 import com.bobo.storage.core.service.PlaylistService;
 import com.bobo.storage.web.api.request.PlaylistSongsPatchRequest;
 import com.bobo.storage.web.api.response.SongResponse;
-import com.bobo.storage.web.exception.AssertedResourceNotFoundException;
+import com.bobo.storage.core.resource.query.AssertedResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,8 +27,7 @@ public class PlaylistSongsController {
 
   @GetMapping
   public ResponseEntity<SongResponse[]> getSongs(@PathVariable int id) throws AssertedResourceNotFoundException {
-    Playlist playlist = playlists.findById(id)
-                                 .orElseThrow(() -> new AssertedResourceNotFoundException(Playlist.class, id));
+    Playlist playlist = playlists.get(id);
     SongResponse[] songs = playlist.getSongs().stream()
                                    .map(SongResponse::new).toArray(SongResponse[]::new);
     return ResponseEntity.ok(songs);
@@ -42,8 +41,7 @@ public class PlaylistSongsController {
   @PatchMapping
   public ResponseEntity<Void> updateSongs(@PathVariable int id, @RequestBody PlaylistSongsPatchRequest request)
           throws AssertedResourceNotFoundException {
-    Playlist playlist = playlists.findById(id)
-                                 .orElseThrow(() -> new AssertedResourceNotFoundException(Playlist.class, id));
+    Playlist playlist = playlists.get(id);
     Collection<Song> songs = request.songs();
     switch (request.op()) {
       case ADD -> service.addSongs(playlist, songs);

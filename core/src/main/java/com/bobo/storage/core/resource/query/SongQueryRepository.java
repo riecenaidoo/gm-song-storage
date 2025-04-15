@@ -6,6 +6,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SongQueryRepository extends QueryRepository<Song, Integer> {
 
-  long count();
+  @Override
+  default Class<Song> resource() {
+    return Song.class;
+  }
 
 }

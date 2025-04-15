@@ -6,7 +6,7 @@ import com.bobo.storage.core.service.PlaylistService;
 import com.bobo.storage.web.api.request.PlaylistsPostRequest;
 import com.bobo.storage.web.api.request.PlaylistsPutNameRequest;
 import com.bobo.storage.web.api.response.PlaylistResponse;
-import com.bobo.storage.web.exception.AssertedResourceNotFoundException;
+import com.bobo.storage.core.resource.query.AssertedResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -75,8 +75,7 @@ public class PlaylistsController {
   @PutMapping("/{id}/name")
   public ResponseEntity<Void> renamePlaylist(@PathVariable int id, @RequestBody PlaylistsPutNameRequest request)
           throws AssertedResourceNotFoundException {
-    Playlist playlist = playlists.findById(id)
-                                 .orElseThrow(() -> new AssertedResourceNotFoundException(Playlist.class, id));
+    Playlist playlist = playlists.get(id);
     service.updateName(playlist, request.name());
     return ResponseEntity.noContent().build();
   }

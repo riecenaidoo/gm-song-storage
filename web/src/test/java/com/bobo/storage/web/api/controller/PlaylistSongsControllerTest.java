@@ -4,6 +4,7 @@ import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.domain.PlaylistMother;
 import com.bobo.storage.core.domain.Song;
 import com.bobo.storage.core.domain.SongMother;
+import com.bobo.storage.core.resource.query.AssertedResourceNotFoundException;
 import com.bobo.storage.core.resource.query.PlaylistQueryRepository;
 import com.bobo.storage.core.resource.query.SongQueryRepository;
 import com.bobo.storage.core.service.PlaylistService;
@@ -23,10 +24,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -86,7 +85,7 @@ class PlaylistSongsControllerTest {
       String expectedPayload = objectMapper.writeValueAsString(expectedResponse);
 
       // Stubbing
-      when(playlists.findById(playlist.getId())).thenReturn(Optional.of(playlist));
+      when(playlists.get(playlist.getId())).thenReturn(playlist);
 
       // When
       mockMvc.perform(get("/api/v1/playlists/{id}/songs", playlist.getId()))
@@ -105,7 +104,7 @@ class PlaylistSongsControllerTest {
       String expectedPayload = objectMapper.writeValueAsString(expectedResponse);
 
       // Stubbing
-      when(playlists.findById(playlist.getId())).thenReturn(Optional.of(playlist));
+      when(playlists.get(playlist.getId())).thenReturn(playlist);
 
       // When
       mockMvc.perform(get("/api/v1/playlists/{id}/songs", playlist.getId()))
@@ -127,7 +126,7 @@ class PlaylistSongsControllerTest {
       final int id = random.nextInt(100);
 
       // Stubbing
-      when(playlists.findById(anyInt())).thenReturn(Optional.empty());
+      when(playlists.get(id)).thenThrow(AssertedResourceNotFoundException.class);
 
       // When
       mockMvc.perform(get("/api/v1/playlists/{id}/songs", id))
@@ -156,7 +155,7 @@ class PlaylistSongsControllerTest {
       String payload = objectMapper.writeValueAsString(request);
 
       // Stubbing
-      when(playlists.findById(id)).thenReturn(Optional.of(playlist));
+      when(playlists.get(id)).thenReturn(playlist);
 
       // When
       mockMvc.perform(patch("/api/v1/playlists/{id}/songs", id).contentType(MediaType.APPLICATION_JSON)
@@ -180,7 +179,7 @@ class PlaylistSongsControllerTest {
       String payload = objectMapper.writeValueAsString(request);
 
       // Stubbing
-      when(playlists.findById(id)).thenReturn(Optional.of(playlist));
+      when(playlists.get(id)).thenReturn(playlist);
 
       // When
       mockMvc.perform(patch("/api/v1/playlists/{id}/songs", id).contentType(MediaType.APPLICATION_JSON)
