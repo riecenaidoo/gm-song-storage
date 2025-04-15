@@ -4,7 +4,7 @@ import com.bobo.storage.core.domain.Song;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SongQueryRepository extends QueryRepository<Song, String>{
+public interface SongQueryRepository extends QueryRepository<Song, Integer> {
 
   long count();
 
