@@ -14,8 +14,10 @@ public interface PlaylistService {
    */
   Playlist create(Playlist playlist) throws RuntimeException;
 
+  @Deprecated
   void addSongs(Playlist playlist, Collection<Song> songs);
 
+  @Deprecated
   void removeSongs(Playlist playlist, Collection<Song> songs);
 
   void updateName(Playlist playlist, String name);

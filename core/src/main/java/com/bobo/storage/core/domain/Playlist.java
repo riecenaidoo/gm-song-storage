@@ -12,6 +12,7 @@ import java.util.Set;
 @Entity
 public class Playlist extends DomainEntity {
 
+  @Deprecated
   private Set<Song> songs;
 
   private String name;
@@ -23,7 +24,7 @@ public class Playlist extends DomainEntity {
 
   }
 
-  public Playlist(String name, Collection<Song> songs) {
+  public Playlist(String name, @Deprecated Collection<Song> songs) {
     this.name = name;
     this.songs = new HashSet<>(songs);
   }
@@ -39,11 +40,13 @@ public class Playlist extends DomainEntity {
     return Objects.hash(songs, name);
   }
 
+  @Deprecated
   @ManyToMany
   public Set<Song> getSongs() {
     return songs;
   }
 
+  @Deprecated
   public void setSongs(Collection<Song> songs) {
     this.songs = new HashSet<>(songs);
   }
