@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.util.HashSet;
 import java.util.Set;
 
-@UnitTest
+@UnitTest(Song.class)
 class SongTest {
 
   @Test
