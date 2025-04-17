@@ -13,6 +13,7 @@ import java.util.function.Supplier;
  *
  * @see Optional#orElseThrow(Supplier)
  */
+@Deprecated
 public class AssertedResourceNotFoundException extends Exception {
 
   private final String resourceName;

@@ -29,6 +29,7 @@ public interface QueryRepository<T extends TechnicalID<ID>, ID> extends Reposito
    * @return the asserted {@code Resource}.
    * @throws AssertedResourceNotFoundException if such a {@code Resource} did not exist.
    */
+  @Deprecated
   default T get(ID id) throws AssertedResourceNotFoundException {
     return findById(id).orElseThrow(() -> new AssertedResourceNotFoundException(resource(), id));
   }
