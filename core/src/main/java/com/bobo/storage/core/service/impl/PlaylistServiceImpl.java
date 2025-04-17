@@ -60,6 +60,11 @@ public class PlaylistServiceImpl implements PlaylistService, ServiceImpl<Playlis
     save(playlist);
   }
 
+  @Override
+  public Playlist update(Playlist playlist) {
+    return repository.save(playlist);
+  }
+
   /**
    * TODO: Consider marking inactive rather than removing.
    */
