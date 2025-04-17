@@ -4,10 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class Playlist extends DomainEntity {
@@ -24,9 +21,14 @@ public class Playlist extends DomainEntity {
 
   }
 
+  @Deprecated
   public Playlist(String name, @Deprecated Collection<Song> songs) {
     this.name = name;
     this.songs = new HashSet<>(songs);
+  }
+
+  public Playlist(String name) {
+    this(name, Collections.emptySet());
   }
 
   @Override
