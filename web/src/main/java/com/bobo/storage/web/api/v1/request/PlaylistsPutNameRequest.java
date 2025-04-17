@@ -1,4 +1,4 @@
-package com.bobo.storage.web.api.request;
+package com.bobo.storage.web.api.v1.request;
 
 public record PlaylistsPutNameRequest(String name) {
 

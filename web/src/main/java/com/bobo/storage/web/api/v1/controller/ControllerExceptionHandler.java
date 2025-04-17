@@ -1,4 +1,4 @@
-package com.bobo.storage.web.api.controller;
+package com.bobo.storage.web.api.v1.controller;
 
 import com.bobo.storage.core.resource.query.AssertedResourceNotFoundException;
 import org.springframework.http.ResponseEntity;

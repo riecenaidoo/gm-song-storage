@@ -1,11 +1,11 @@
-package com.bobo.storage.web.api.controller;
+package com.bobo.storage.web.api.v1.controller;
 
 import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.domain.Song;
 import com.bobo.storage.core.resource.query.PlaylistQueryRepository;
 import com.bobo.storage.core.service.PlaylistService;
-import com.bobo.storage.web.api.request.PlaylistSongsPatchRequest;
-import com.bobo.storage.web.api.response.SongResponse;
+import com.bobo.storage.web.api.v1.request.PlaylistSongsPatchRequest;
+import com.bobo.storage.web.api.v1.response.SongResponse;
 import com.bobo.storage.core.resource.query.AssertedResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

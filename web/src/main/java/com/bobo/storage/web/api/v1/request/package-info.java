@@ -15,4 +15,4 @@
  *
  * @see org.springframework.web.bind.annotation.RequestBody
  */
-package com.bobo.storage.web.api.request;
+package com.bobo.storage.web.api.v1.request;

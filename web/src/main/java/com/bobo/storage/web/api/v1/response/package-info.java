@@ -12,4 +12,4 @@
  * I have burnt my hand like that once before, unfortunately it was not an obvious break.
  * It did not break the build for the frontend, just the UI in several places.
  */
-package com.bobo.storage.web.api.response;
+package com.bobo.storage.web.api.v1.response;

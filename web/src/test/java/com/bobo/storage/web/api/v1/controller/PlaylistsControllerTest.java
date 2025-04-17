@@ -1,4 +1,4 @@
-package com.bobo.storage.web.api.controller;
+package com.bobo.storage.web.api.v1.controller;
 
 import com.bobo.storage.core.domain.EntityMother;
 import com.bobo.storage.core.domain.Playlist;
@@ -7,9 +7,9 @@ import com.bobo.storage.core.resource.query.AssertedResourceNotFoundException;
 import com.bobo.storage.core.resource.query.PlaylistQueryRepository;
 import com.bobo.storage.core.service.PlaylistService;
 import com.bobo.storage.web.TestConfig;
-import com.bobo.storage.web.api.request.PlaylistsPostRequest;
-import com.bobo.storage.web.api.request.PlaylistsPutNameRequest;
-import com.bobo.storage.web.api.response.PlaylistResponse;
+import com.bobo.storage.web.api.v1.request.PlaylistsPostRequest;
+import com.bobo.storage.web.api.v1.request.PlaylistsPutNameRequest;
+import com.bobo.storage.web.api.v1.response.PlaylistResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
