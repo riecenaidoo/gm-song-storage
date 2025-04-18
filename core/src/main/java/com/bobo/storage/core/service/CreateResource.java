@@ -5,9 +5,11 @@ import com.bobo.storage.core.domain.TechnicalID;
 public interface CreateResource<T extends TechnicalID<?>> {
 
   /**
-   * @param resource to create; must not have an assigned {@code id}.
+   * Creates a {@code Resource}. It will be assigned a {@link  TechnicalID}.
+   *
+   * @param resource to create; must not already have an assigned {@code id}.
    * @return the created {@code Resource}. Equivalent to {@code resource}. Not guaranteed to be the same {@code Object}.
-   * @throws IllegalArgumentException if {@code resource} has a {@link TechnicalID} assigned.
+   * @throws IllegalArgumentException if {@code resource} had an {@code id} assigned.
    */
   T create(T resource) throws IllegalArgumentException;
 

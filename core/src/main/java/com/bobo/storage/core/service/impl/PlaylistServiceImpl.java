@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.Objects;
 
 @Service
 public class PlaylistServiceImpl implements PlaylistService, ServiceImpl<Playlist> {
@@ -25,7 +26,7 @@ public class PlaylistServiceImpl implements PlaylistService, ServiceImpl<Playlis
   @Override
   @Transactional
   public Playlist create(Playlist playlist) {
-    if (playlist.getId() != null) throw new RuntimeException("Already an Entity");
+    if (Objects.nonNull(playlist.getId())) throw new IllegalArgumentException();
     return save(playlist);
   }
 

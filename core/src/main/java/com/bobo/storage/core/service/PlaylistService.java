@@ -5,14 +5,7 @@ import com.bobo.storage.core.domain.Song;
 
 import java.util.Collection;
 
-public interface PlaylistService {
-
-  /**
-   * Create a new <code>Playlist</code>.
-   *
-   * @throws RuntimeException if the <code>Playlist</code> already exists.
-   */
-  Playlist create(Playlist playlist) throws RuntimeException;
+public interface PlaylistService extends CreateResource<Playlist>{
 
   @Deprecated
   void addSongs(Playlist playlist, Collection<Song> songs);
