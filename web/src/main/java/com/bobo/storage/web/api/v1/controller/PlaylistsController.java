@@ -1,20 +1,20 @@
 package com.bobo.storage.web.api.v1.controller;
 
 import com.bobo.storage.core.domain.Playlist;
+import com.bobo.storage.core.resource.query.AssertedResourceNotFoundException;
 import com.bobo.storage.core.resource.query.PlaylistQueryRepository;
 import com.bobo.storage.core.service.PlaylistService;
 import com.bobo.storage.web.api.v1.request.PlaylistsPostRequest;
 import com.bobo.storage.web.api.v1.request.PlaylistsPutNameRequest;
 import com.bobo.storage.web.api.v1.response.PlaylistResponse;
-import com.bobo.storage.core.resource.query.AssertedResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Controller(resource = Playlist.class, respondsWith = PlaylistResponse.class)
 @RequestMapping("api/v1/playlists")
@@ -49,8 +49,8 @@ public class PlaylistsController {
    */
   @GetMapping
   public ResponseEntity<PlaylistResponse[]> getPlaylists() {
-    Collection<Playlist> playlists = this.playlists.findAll();
-    PlaylistResponse[] response = playlists.stream().map(PlaylistResponse::new).toArray(PlaylistResponse[]::new);
+    Stream<Playlist> playlists = this.playlists.findAll();
+    PlaylistResponse[] response = playlists.map(PlaylistResponse::new).toArray(PlaylistResponse[]::new);
     return ResponseEntity.ok(response);
   }
 

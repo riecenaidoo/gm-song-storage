@@ -24,11 +24,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Collections;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.Random;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -127,15 +126,14 @@ class PlaylistsControllerTest {
       // Given
       final int numPlaylists = random.nextInt(1, 50);
 
-      Set<Playlist> allPlaylists = new PlaylistMother(random).withAll().get(numPlaylists)
-                                                             .collect(Collectors.toSet());
+      Collection<Playlist> allPlaylists = new PlaylistMother(random).withAll().get(numPlaylists).toList();
 
       PlaylistResponse[] expectedResponse = allPlaylists.stream().map(PlaylistResponse::new)
                                                         .toArray(PlaylistResponse[]::new);
       String expectedPayload = objectMapper.writeValueAsString(expectedResponse);
 
       // Stubbing
-      when(playlists.findAll()).thenReturn(allPlaylists);
+      when(playlists.findAll()).thenReturn(allPlaylists.stream());
 
       // When
       mockMvc.perform(get("/api/v1/playlists"))
@@ -167,7 +165,7 @@ class PlaylistsControllerTest {
       String expectedPayload = objectMapper.writeValueAsString(expectedResponse);
 
       // Stubbing
-      when(playlists.findAll()).thenReturn(Collections.emptySet());
+      when(playlists.findAll()).thenReturn(Stream.empty());
 
       // When
       mockMvc.perform(get("/api/v1/playlists"))
