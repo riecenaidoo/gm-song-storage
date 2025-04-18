@@ -1,5 +1,6 @@
 package com.bobo.storage.web.api.v1.controller;
 
+import com.bobo.semantic.UnitTest;
 import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.domain.PlaylistMother;
 import com.bobo.storage.core.domain.Song;
@@ -8,9 +9,9 @@ import com.bobo.storage.core.resource.query.AssertedResourceNotFoundException;
 import com.bobo.storage.core.resource.query.PlaylistQueryRepository;
 import com.bobo.storage.core.resource.query.SongQueryRepository;
 import com.bobo.storage.core.service.PlaylistService;
-import com.bobo.storage.web.api.v1.request.PatchOperation;
 import com.bobo.storage.web.api.v1.request.PlaylistSongsPatchRequest;
 import com.bobo.storage.web.api.v1.response.SongResponse;
+import com.bobo.storage.web.semantic.PatchOperation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -31,8 +32,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(PlaylistSongsController.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@WebMvcTest(PlaylistSongsController.class)
+@UnitTest(PlaylistSongsController.class)
 class PlaylistSongsControllerTest {
 
   // Mock Dependencies

@@ -1,6 +1,4 @@
-package com.bobo.storage.core.domain;
-
-import org.junit.jupiter.api.BeforeEach;
+package com.bobo.semantic;
 
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -8,7 +6,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
- * A {@link Supplier} of a type of {@code Domain} object.
+ * A configurable, chainable {@link Supplier} of a type of {@code Object}.
  * <p>
  * A {@code Mother} is knowledgeable about the needs (invariants) of her children,
  * and will produce well-formed objects for the purpose of testing, unless otherwise instructed.
@@ -19,8 +17,7 @@ import java.util.stream.Stream;
  * <p>
  * A {@code Mother} is not guaranteed to be immutable; instances should not be reused between tests.
  *
- * @param <T> the type of children ({@code Domain} objects) of this {@code Mother}.
- * @see BeforeEach
+ * @param <T> the type of the {@code Mother}'s child.
  */
 public interface Mother<T> extends Supplier<T> {
 

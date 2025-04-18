@@ -1,6 +1,7 @@
 package com.bobo.storage.web.api.v2.request;
 
 import com.bobo.storage.core.domain.Playlist;
+import com.bobo.storage.web.semantic.PatchRequest;
 
 import java.util.Optional;
 

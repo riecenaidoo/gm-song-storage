@@ -1,5 +1,6 @@
 package com.bobo.storage.web.api.v2.controller;
 
+import com.bobo.semantic.UnitTest;
 import com.bobo.storage.core.domain.EntityMother;
 import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.domain.PlaylistMother;
@@ -36,6 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @WebMvcTest(PlaylistsController.class)
+@UnitTest(PlaylistsController.class)
 class PlaylistsControllerTest {
 
   // Mock Dependencies

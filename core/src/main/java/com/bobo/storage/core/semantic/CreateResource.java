@@ -1,6 +1,6 @@
-package com.bobo.storage.core.service;
+package com.bobo.storage.core.semantic;
 
-import com.bobo.storage.core.domain.TechnicalID;
+import com.bobo.semantic.TechnicalID;
 
 public interface CreateResource<T extends TechnicalID<?>> {
 

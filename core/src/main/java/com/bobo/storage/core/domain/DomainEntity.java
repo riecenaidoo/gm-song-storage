@@ -1,5 +1,6 @@
 package com.bobo.storage.core.domain;
 
+import com.bobo.semantic.TechnicalID;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;

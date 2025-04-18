@@ -2,18 +2,19 @@ package com.bobo.storage.web.api.v1.controller;
 
 import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.domain.Song;
+import com.bobo.storage.core.resource.query.AssertedResourceNotFoundException;
 import com.bobo.storage.core.resource.query.PlaylistQueryRepository;
 import com.bobo.storage.core.service.PlaylistService;
 import com.bobo.storage.web.api.v1.request.PlaylistSongsPatchRequest;
 import com.bobo.storage.web.api.v1.response.SongResponse;
-import com.bobo.storage.core.resource.query.AssertedResourceNotFoundException;
+import com.bobo.storage.web.semantic.ResourceController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
-@Controller(resource = Song.class, respondsWith = SongResponse.class)
 @RequestMapping("api/v1/playlists/{id}/songs")
+@ResourceController(resource = Song.class, respondsWith = SongResponse.class)
 public class PlaylistSongsController {
 
   private final PlaylistService service;

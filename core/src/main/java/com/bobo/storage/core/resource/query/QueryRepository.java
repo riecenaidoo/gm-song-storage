@@ -1,6 +1,6 @@
 package com.bobo.storage.core.resource.query;
 
-import com.bobo.storage.core.domain.TechnicalID;
+import com.bobo.semantic.TechnicalID;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.Repository;
 

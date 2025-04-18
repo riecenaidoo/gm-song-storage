@@ -1,6 +1,6 @@
 package com.bobo.storage.core.service.impl;
 
-import com.bobo.storage.UnitTest;
+import com.bobo.semantic.UnitTest;
 import com.bobo.storage.core.domain.EntityMother;
 import com.bobo.storage.core.domain.Song;
 import com.bobo.storage.core.domain.SongMother;

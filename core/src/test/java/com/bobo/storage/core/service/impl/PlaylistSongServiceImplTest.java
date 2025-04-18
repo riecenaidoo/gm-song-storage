@@ -1,6 +1,7 @@
 package com.bobo.storage.core.service.impl;
 
-import com.bobo.storage.UnitTest;
+
+import com.bobo.semantic.UnitTest;
 import com.bobo.storage.core.domain.PlaylistSong;
 import com.bobo.storage.core.domain.PlaylistSongMother;
 import com.bobo.storage.core.resource.access.PlaylistSongRepository;

@@ -2,6 +2,7 @@ package com.bobo.storage.web.api.v1.request;
 
 import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.domain.Song;
+import com.bobo.storage.web.semantic.CreateRequest;
 
 import java.util.Collection;
 import java.util.Collections;

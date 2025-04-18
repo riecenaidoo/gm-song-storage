@@ -1,4 +1,4 @@
-package com.bobo.storage.web.api.v1.controller;
+package com.bobo.storage.web.semantic;
 
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,7 +16,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @RestController
-public @interface Controller {
+public @interface ResourceController {
 
   /**
    * @return the type of resource the {@code Controller} handles requests for.

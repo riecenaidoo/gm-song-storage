@@ -2,10 +2,11 @@ package com.bobo.storage.core.service;
 
 import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.domain.Song;
+import com.bobo.storage.core.semantic.CreateResource;
 
 import java.util.Collection;
 
-public interface PlaylistService extends CreateResource<Playlist>{
+public interface PlaylistService extends CreateResource<Playlist> {
 
   @Deprecated
   void addSongs(Playlist playlist, Collection<Song> songs);

@@ -1,5 +1,6 @@
 package com.bobo.storage.core.resource.query;
 
+import com.bobo.semantic.IntegrationTest;
 import com.bobo.storage.core.domain.*;
 import com.bobo.storage.core.resource.access.PlaylistRepository;
 import com.bobo.storage.core.resource.access.PlaylistSongRepository;
@@ -8,11 +9,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.repository.Repository;
 
 import java.util.Collection;
 import java.util.Random;
 
 @DataJpaTest
+@IntegrationTest({PlaylistSongQueryRepository.class, Repository.class})
 class PlaylistSongQueryRepositoryIT {
 
   // Test Utilities

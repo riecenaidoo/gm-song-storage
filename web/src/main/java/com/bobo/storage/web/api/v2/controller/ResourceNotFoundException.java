@@ -1,6 +1,6 @@
 package com.bobo.storage.web.api.v2.controller;
 
-import com.bobo.storage.core.domain.TechnicalID;
+import com.bobo.semantic.TechnicalID;
 import com.bobo.storage.core.resource.query.AssertedResourceNotFoundException;
 
 import java.util.Optional;

@@ -3,10 +3,10 @@ package com.bobo.storage.web.api.v2.controller;
 import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.resource.query.PlaylistQueryRepository;
 import com.bobo.storage.core.service.PlaylistService;
-import com.bobo.storage.web.api.v1.controller.Controller;
 import com.bobo.storage.web.api.v2.request.PlaylistsCreateRequest;
 import com.bobo.storage.web.api.v2.request.PlaylistsPatchRequest;
 import com.bobo.storage.web.api.v2.response.PlaylistResponse;
+import com.bobo.storage.web.semantic.ResourceController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 
 @Component("v2 Playlists Controller") // TODO rm after v1 is rm
 @RequestMapping("/api/v2/playlists")
-@Controller(resource = Playlist.class, respondsWith = PlaylistResponse.class)
+@ResourceController(resource = Playlist.class, respondsWith = PlaylistResponse.class)
 public class PlaylistsController {
 
   private final PlaylistQueryRepository playlists;

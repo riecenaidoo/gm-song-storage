@@ -1,6 +1,6 @@
 package com.bobo.storage.core.service;
 
-import com.bobo.storage.IntegrationTest;
+import com.bobo.storage.TestConfig;
 import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.domain.PlaylistMother;
 import com.bobo.storage.core.domain.Song;
@@ -10,6 +10,9 @@ import com.bobo.storage.core.resource.access.SongRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,7 +20,15 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@IntegrationTest
+/**
+ * Marked for removal.
+ * <p>
+ * {@link PlaylistService} is undergoing changes for v2. These tests are deprecated.
+ */
+@Transactional
+@ActiveProfiles("test")
+@SpringBootTest(classes = TestConfig.class)
+@Deprecated
 class PlaylistServiceIT {
 
   private final PlaylistService service;

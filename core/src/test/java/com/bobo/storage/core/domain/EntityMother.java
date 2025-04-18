@@ -1,9 +1,11 @@
 package com.bobo.storage.core.domain;
 
+import com.bobo.semantic.Mother;
+
 import java.util.function.Supplier;
 
 /**
- * A Supplier of a type of {@code DomainEntity}.
+ * A {@code Mother} of a {@link DomainEntity}.
  *
  * @see Mother
  */

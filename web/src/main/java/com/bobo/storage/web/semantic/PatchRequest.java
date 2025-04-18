@@ -1,4 +1,4 @@
-package com.bobo.storage.web.api.v2.request;
+package com.bobo.storage.web.semantic;
 
 import org.springframework.http.HttpMethod;
 

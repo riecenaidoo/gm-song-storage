@@ -1,6 +1,6 @@
 package com.bobo.storage.core.domain;
 
-import com.bobo.storage.UnitTest;
+import com.bobo.semantic.UnitTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

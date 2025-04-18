@@ -14,6 +14,11 @@
     <dependencies>
         <dependency>
             <groupId>com.bobo</groupId>
+            <artifactId>semantic</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.bobo</groupId>
             <artifactId>core</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -26,6 +31,15 @@
         <!--        /Web App / REST Controllers-->
 
         <!--        Testing-->
+        <dependency>
+            <groupId>com.bobo</groupId>
+            <artifactId>semantic</artifactId>
+            <version>${project.version}</version>
+            <classifier>tests</classifier>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>com.bobo</groupId>
             <artifactId>core</artifactId>

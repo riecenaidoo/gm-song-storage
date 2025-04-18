@@ -1,4 +1,4 @@
-package com.bobo.storage.core.domain;
+package com.bobo.semantic;
 
 /**
  * Has a technical identifier.

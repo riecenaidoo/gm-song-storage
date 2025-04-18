@@ -7,6 +7,7 @@ import com.bobo.storage.core.service.PlaylistService;
 import com.bobo.storage.web.api.v1.request.PlaylistsPostRequest;
 import com.bobo.storage.web.api.v1.request.PlaylistsPutNameRequest;
 import com.bobo.storage.web.api.v1.response.PlaylistResponse;
+import com.bobo.storage.web.semantic.ResourceController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +17,8 @@ import java.net.URI;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-@Controller(resource = Playlist.class, respondsWith = PlaylistResponse.class)
 @RequestMapping("api/v1/playlists")
+@ResourceController(resource = Playlist.class, respondsWith = PlaylistResponse.class)
 public class PlaylistsController {
 
   private final PlaylistService service;

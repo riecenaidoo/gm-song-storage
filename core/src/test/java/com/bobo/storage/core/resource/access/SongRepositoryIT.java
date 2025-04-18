@@ -1,12 +1,13 @@
 package com.bobo.storage.core.resource.access;
 
-import com.bobo.storage.IntegrationTest;
+import com.bobo.semantic.IntegrationTest;
 import com.bobo.storage.core.domain.Song;
 import com.bobo.storage.core.domain.SongMother;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.repository.Repository;
 
 import java.util.Random;
 
@@ -17,14 +18,9 @@ import java.util.Random;
  * <p>
  * They probably would only be necessary to re-run if I change the domain model, otherwise they can be skipped.
  * TODO Figure out if I could define a test suite?
- * <p>
- * TODO [housekeeping] revise {@link IntegrationTest} annotation.
- * <p>
- * This is an {@code IntegrationTest} but I can't use my annotation because tried to compose {@link IntegrationTest},
- * a better idea would be to just use the {@code Test} annotations to document expectations for tests, conventions,
- * standards, etc.
  */
 @DataJpaTest
+@IntegrationTest({SongRepository.class, Repository.class})
 class SongRepositoryIT {
 
   // Test Utilities

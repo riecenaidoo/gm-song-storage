@@ -12,6 +12,7 @@
         <module>core</module>
         <module>web</module>
         <module>application</module>
+        <module>semantic</module>
     </modules>
 
     <parent>

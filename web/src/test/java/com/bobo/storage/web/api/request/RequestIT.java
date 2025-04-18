@@ -1,5 +1,6 @@
 package com.bobo.storage.web.api.request;
 
+import com.bobo.semantic.IntegrationTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import org.junit.jupiter.api.Assertions;
@@ -20,6 +21,7 @@ import java.util.Optional;
  */
 @ContextConfiguration(classes = {JacksonAutoConfiguration.class})
 @ExtendWith(SpringExtension.class)
+@IntegrationTest({ObjectMapper.class, JacksonAutoConfiguration.class})
 class RequestIT {
 
   private final ObjectMapper mapper;
