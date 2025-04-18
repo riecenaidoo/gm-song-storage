@@ -31,6 +31,17 @@ public class Playlist extends DomainEntity {
     this(name, Collections.emptySet());
   }
 
+  /**
+   * Copy constructor.
+   * <p>
+   * The {@link TechnicalID} is never copied.
+   *
+   * @param playlist to copy.
+   */
+  public Playlist(Playlist playlist){
+    this(playlist.getName(), playlist.getSongs());
+  }
+
   @Override
   public boolean equals(Object o) {
     if (!(o instanceof Playlist playlist)) return false;
