@@ -9,11 +9,6 @@ import java.util.stream.Stream;
 @Repository
 public interface PlaylistQueryRepository extends QueryRepository<Playlist, Integer> {
 
-  @Override
-  default Class<Playlist> resource() {
-    return Playlist.class;
-  }
-
   /**
    * Note: This works fine for now because it is a simple select all,
    * but having the return type be a stream actually makes this a streaming query which must be handled differently.

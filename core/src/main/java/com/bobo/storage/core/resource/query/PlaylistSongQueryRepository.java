@@ -9,11 +9,6 @@ import java.util.List;
 @Repository
 public interface PlaylistSongQueryRepository extends QueryRepository<PlaylistSong, Integer> {
 
-  @Override
-  default Class<PlaylistSong> resource() {
-    return PlaylistSong.class;
-  }
-
   List<PlaylistSong> findAllByPlaylist(Playlist playlist);
 
 }

@@ -3,15 +3,11 @@ package com.bobo.storage.core.domain;
 import com.bobo.semantic.TechnicalID;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
 
-import java.util.*;
+import java.util.Objects;
 
 @Entity
 public class Playlist extends DomainEntity {
-
-  @Deprecated
-  private Set<Song> songs;
 
   private String name;
 
@@ -22,14 +18,8 @@ public class Playlist extends DomainEntity {
 
   }
 
-  @Deprecated
-  public Playlist(String name, @Deprecated Collection<Song> songs) {
-    this.name = name;
-    this.songs = new HashSet<>(songs);
-  }
-
   public Playlist(String name) {
-    this(name, Collections.emptySet());
+    this.name = name;
   }
 
   /**
@@ -39,30 +29,19 @@ public class Playlist extends DomainEntity {
    *
    * @param playlist to copy.
    */
-  public Playlist(Playlist playlist){
-    this(playlist.getName(), playlist.getSongs());
+  public Playlist(Playlist playlist) {
+    this(playlist.getName());
   }
 
   @Override
   public boolean equals(Object o) {
     if (!(o instanceof Playlist playlist)) return false;
-    return Objects.equals(songs, playlist.songs) && Objects.equals(name, playlist.name);
+    return Objects.equals(name, playlist.name);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(songs, name);
-  }
-
-  @Deprecated
-  @ManyToMany
-  public Set<Song> getSongs() {
-    return songs;
-  }
-
-  @Deprecated
-  public void setSongs(Collection<Song> songs) {
-    this.songs = new HashSet<>(songs);
+    return Objects.hash(name);
   }
 
   @Column(nullable = false)
