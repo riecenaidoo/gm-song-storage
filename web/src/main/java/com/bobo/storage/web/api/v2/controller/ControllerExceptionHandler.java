@@ -28,15 +28,44 @@ public class ControllerExceptionHandler {
    *     e.g. {@code /playlists/1/songs/4} implying the {@code Playlist} with the id {@code 1} exists, but it did not.
    *   </li>
    * </ul>
-   *
-   * @see <a href="https://www.rfc-editor.org/rfc/rfc9110.html#section-15.5.5">404 Not Found</a>
    */
   @ExceptionHandler(ResourceNotFoundException.class)
   public ProblemDetail resourceNotFound(ResourceNotFoundException resourceNotFound) {
+    String detail = "The %s(ID:%s) resource in the request path does not exist.".formatted(
+            resourceNotFound.getResourceName(),
+            resourceNotFound.getIdentifier()
+    );
+
+    return notFound(detail);
+  }
+
+  /**
+   * {@code 404 Not Found} if a {@code Subresource} exists,
+   * but does not match the scope implied by the parent {@code Resource} in the URI.
+   * <ol>
+   *   <li>
+   *     e.g. {@code DELETE /playlists/1/songs/4} requesting a {@code DELETE} operation on the {@code PlaylistSong}
+   *     with the id {@code 4}, which does exist, but not as a subresource of the {@code Playlist} with the id {@code 1}.
+   *   </li>
+   * </ol>
+   */
+  @ExceptionHandler(SubresourceMismatchException.class)
+  public ProblemDetail subresourceMismatch(SubresourceMismatchException subresourceMismatch) {
+    String detail = "The %s(ID:%s) resource in the request path does not exist within the %s(ID:%s) resource.".formatted(
+            subresourceMismatch.getSubResourceName(),
+            subresourceMismatch.getSubResourceIdentifier(),
+            subresourceMismatch.getResourceName(),
+            subresourceMismatch.getIdentifier()
+    );
+
+    return notFound(detail);
+  }
+
+  /**
+   * @see <a href="https://www.rfc-editor.org/rfc/rfc9110.html#section-15.5.5">404 Not Found</a>
+   */
+  private ProblemDetail notFound(String detail) {
     ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
-    String detail = String.format("The %s(ID:%s) resource in the request path does not exist.",
-                                  resourceNotFound.getResourceName(),
-                                  resourceNotFound.getIdentifier());
     problemDetail.setDetail(detail);
     problemDetail.setType(URI.create("https://www.rfc-editor.org/rfc/rfc9110.html#section-15.5.5"));
 

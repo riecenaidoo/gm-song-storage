@@ -55,7 +55,7 @@ class PlaylistSongQueryRepositoryIT {
     accessRepository.save(new PlaylistSong(playlist, song));
 
     // When
-    Collection<PlaylistSong> playlistSongs = queryRepository.findAllByPlaylist(playlist).toList();
+    Collection<PlaylistSong> playlistSongs = queryRepository.findAllByPlaylist(playlist);
 
     // Then
     Assertions.assertEquals(1, playlistSongs.size());

@@ -4,7 +4,7 @@ import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.domain.PlaylistSong;
 import org.springframework.stereotype.Repository;
 
-import java.util.stream.Stream;
+import java.util.List;
 
 @Repository
 public interface PlaylistSongQueryRepository extends QueryRepository<PlaylistSong, Integer> {
@@ -14,6 +14,6 @@ public interface PlaylistSongQueryRepository extends QueryRepository<PlaylistSon
     return PlaylistSong.class;
   }
 
-  Stream<PlaylistSong> findAllByPlaylist(Playlist playlist);
+  List<PlaylistSong> findAllByPlaylist(Playlist playlist);
 
 }
