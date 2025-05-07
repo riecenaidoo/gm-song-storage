@@ -49,8 +49,8 @@ class PlaylistSongQueryRepositoryIT {
   @Test
   void findAllByPlaylist() {
     // Given
-    Playlist playlist = playlistRepository.save(new PlaylistMother(random).withNames().get());
-    Song song = songRepository.save(new SongMother(random).withAll().get());
+    Playlist playlist = playlistRepository.save(new PlaylistMother(random).get());
+    Song song = songRepository.save(new SongMother(random).get());
 
     accessRepository.save(new PlaylistSong(playlist, song));
 

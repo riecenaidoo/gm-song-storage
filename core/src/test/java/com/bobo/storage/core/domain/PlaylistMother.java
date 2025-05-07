@@ -101,7 +101,7 @@ public class PlaylistMother implements EntityMother<Playlist> {
   }
 
   public PlaylistMother withSongs() {
-    return withSongs(new SongMother(random).withAll(), () -> this.random.nextInt(1, 10));
+    return withSongs(new SongMother(random), () -> this.random.nextInt(1, 10));
   }
 
 }

@@ -57,7 +57,7 @@ class PlaylistServiceIT {
     // Given
     final int numSongs = random.nextInt(1, 10);
     final int numPlaylists = random.nextInt(1, 10);
-    final Collection<Song> songs = new SongMother(random).withAll().get(numSongs).collect(Collectors.toSet());
+    final Collection<Song> songs = new SongMother(random).get(numSongs).collect(Collectors.toSet());
 
     Collection<Playlist> playlists = new PlaylistMother(random).withSongs(() -> songs).get(numPlaylists).toList();
 

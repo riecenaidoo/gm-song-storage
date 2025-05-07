@@ -44,9 +44,7 @@ public class PlaylistSongMother implements EntityMother<PlaylistSong> {
 
   @Override
   public PlaylistSongMother withAll() {
-    // Currently, no additional state that needs to be set.
-    // The other fields are required and initialised by default in the get.
-    return this;
+    return this.withIds();
   }
 
   @Override

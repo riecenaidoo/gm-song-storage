@@ -51,7 +51,7 @@ public class SongMother implements EntityMother<Song> {
 
   @Override
   public SongMother withAll() {
-    return this.withUrls();
+    return this.withIds().withUrls();
   }
 
   @Override
