@@ -32,8 +32,8 @@ public class PlaylistSongMother implements EntityMother<PlaylistSong> {
     PlaylistSong playlistSong = new PlaylistSong();
 
     Integer id = Objects.isNull(ids) ? null : ids.get();
-    Playlist playlist = Objects.isNull(playlists) ? (playlists = new PlaylistMother(random)).get() : playlists.get();
-    Song song = Objects.isNull(songs) ? (songs = new SongMother(random)).get() : songs.get();
+    Playlist playlist = Objects.isNull(playlists) ? (playlists = new PlaylistMother(random).withIds()).get() : playlists.get();
+    Song song = Objects.isNull(songs) ? (songs = new SongMother(random).withIds()).get() : songs.get();
 
     playlistSong.setId(id);
     playlistSong.setPlaylist(playlist);
