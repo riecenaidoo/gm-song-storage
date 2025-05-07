@@ -1,17 +1,12 @@
 package com.bobo.storage.web.api.v2.controller;
 
 import com.bobo.semantic.TechnicalID;
-import com.bobo.storage.core.resource.query.AssertedResourceNotFoundException;
 
 import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
  * A {@code Resource} could not be found.
- * <p>
- * TODO Duplicated {@link AssertedResourceNotFoundException} for now, it is marked for removal. While the
- *  idea to reduce a few lines of code is noble, there is no reason to introduce that complexity. The {@link Optional}
- *  signatures are always going to be of more use, and be more declarative.
  *
  * @see Optional#orElseThrow(Supplier)
  */
