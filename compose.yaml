@@ -3,7 +3,7 @@ services:
     image: postgres:14.12-bullseye
     ports:
       # [Expose](https://docs.docker.com/compose/compose-file/05-services/#expose)
-      - "5050:5432"
+      - "5151:5432"
     environment:
       # [Environment Variables for Postgres Img](https://hub.docker.com/_/postgres)
       - POSTGRES_PASSWORD=admin

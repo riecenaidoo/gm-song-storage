@@ -15,6 +15,6 @@ docker-compose logs api
 ## Connecting to the Database
 
 ```
-psql -h localhost -p 5050 -U postgres -d gm_song_storage
+psql -h localhost -p 5151 -U postgres -d gm_song_storage
 ```
 
