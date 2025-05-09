@@ -13,6 +13,7 @@
         <module>web</module>
         <module>application</module>
         <module>semantic</module>
+        <module>oembed</module>
     </modules>
 
     <parent>
