@@ -8,14 +8,12 @@ import com.bobo.storage.web.api.v2.request.PlaylistsPatchRequest;
 import com.bobo.storage.web.api.v2.response.PlaylistResponse;
 import com.bobo.storage.web.semantic.ResourceController;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.stream.Stream;
 
-@Component("v2 Playlists Controller") // TODO rm after v1 is rm
 @RequestMapping("/api/v2/playlists")
 @ResourceController(resource = Playlist.class, respondsWith = PlaylistResponse.class)
 public class PlaylistsController {

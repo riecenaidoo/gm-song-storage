@@ -11,14 +11,12 @@ import com.bobo.storage.web.api.v2.request.PlaylistSongsCreateRequest;
 import com.bobo.storage.web.api.v2.response.PlaylistSongResponse;
 import com.bobo.storage.web.semantic.ResourceController;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.Collection;
 
-@Component("v2 PlaylistSongs Controller") // TODO rm after v1 is rm
 @RequestMapping("/api/v2/playlists/{playlistId}/songs")
 @ResourceController(resource = PlaylistSong.class, respondsWith = PlaylistSongResponse.class)
 public class PlaylistSongsController {

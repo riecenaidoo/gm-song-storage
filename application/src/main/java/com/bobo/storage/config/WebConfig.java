@@ -17,7 +17,7 @@ public class WebConfig extends SpringBootServletInitializer implements WebMvcCon
 
   @Override
   public void addCorsMappings(CorsRegistry registry) {
-    registry.addMapping("/api/v1/**")
+    registry.addMapping("/api/v2/**")
             .allowedMethods("*")
             .allowedOrigins(clientUrl);
   }
