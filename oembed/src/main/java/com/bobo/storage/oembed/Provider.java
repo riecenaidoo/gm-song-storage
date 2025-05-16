@@ -48,7 +48,7 @@ public enum Provider {
 
   public URL getQuery(URL url) {
     try {
-      return URI.create(endpoint + "?url=" + url).toURL();
+      return URI.create(endpoint + "?url=" + url + "&format=json").toURL();
     } catch (MalformedURLException e) {
       throw new RuntimeException(
               "The instantiation of the oEmbed query, given two valid URLs, was not expected to fail.", e);

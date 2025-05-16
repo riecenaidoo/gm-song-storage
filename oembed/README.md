@@ -44,6 +44,6 @@ https://www.youtube.com/oembed
 **Example Usage:**
 
 ```
-https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=rdwz7QiG0lk
+https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=rdwz7QiG0lk&format=json
 ```
 
