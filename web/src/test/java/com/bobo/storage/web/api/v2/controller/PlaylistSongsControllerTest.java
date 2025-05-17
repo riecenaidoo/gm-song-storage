@@ -85,7 +85,10 @@ class PlaylistSongsControllerTest {
 
     // TODO figure out how to use PlaylistSong constructor
     final int id = random.nextInt(1, 101);
-    PlaylistSongResponse expectedResponse = new PlaylistSongResponse(id, validUrl);
+    PlaylistSongResponse expectedResponse = new PlaylistSongResponse(id, validUrl,
+                                                                     Optional.empty(),
+                                                                     Optional.empty(),
+                                                                     Optional.empty());
     String expectedPayload = mapper.writeValueAsString(expectedResponse);
     String expectedURI = String.format("%s/api/v2/playlists/%d/songs/%d",
                                        TestConfig.testSchemeAuthority(), playlist.getId(), id);
