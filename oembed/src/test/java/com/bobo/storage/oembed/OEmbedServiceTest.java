@@ -2,6 +2,8 @@ package com.bobo.storage.oembed;
 
 import com.bobo.semantic.UnitTest;
 import com.bobo.storage.core.domain.Song;
+import com.bobo.storage.core.resource.query.SongQueryRepository;
+import com.bobo.storage.core.service.SongService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -14,6 +16,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Optional;
 
+import static org.mockito.Mockito.mock;
+
 @ContextConfiguration(classes = {WebClientAutoConfiguration.class})
 @ExtendWith(SpringExtension.class)
 @UnitTest(OEmbedService.class)
@@ -23,7 +27,7 @@ class OEmbedServiceTest {
 
   @Autowired
   OEmbedServiceTest(WebClient.Builder builder) {
-    this.service = new OEmbedService(builder.build());
+    this.service = new OEmbedService(builder.build(), mock(SongService.class), mock(SongQueryRepository.class));
   }
 
   /**
@@ -40,8 +44,8 @@ class OEmbedServiceTest {
   })
   void lookupSong(String url) {
     Song song = new Song(url);
-    Optional<Provider> provider = service.lookupSong(song);
-    Assertions.assertTrue(provider.isPresent());  // TODO [test] assert the correct Provider matches.
+    Optional<OEmbedResponse> metadata = service.lookupSong(song);
+    Assertions.assertTrue(metadata.isPresent());
     // TODO [test] define a control test for each provider to ensure a link for that provider works as expected.
     // TODO [test] see Deezer note above; create parameterized tests for each Provider for different link shapes.
   }
