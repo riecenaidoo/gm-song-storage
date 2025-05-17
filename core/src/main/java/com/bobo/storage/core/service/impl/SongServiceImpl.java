@@ -35,6 +35,7 @@ public class SongServiceImpl implements SongService {
   }
 
   @Override
+  @Transactional
   public Song updateSong(Song song) {
     return repository.save(song);
   }
