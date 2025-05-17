@@ -4,6 +4,10 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.function.Supplier;
 
+/**
+ * TODO There are now additional {@code Song} fields the {@code Mother} needs to produce,
+ *  but as I am not sure about which fields will stay, I am not going to create them as yet.
+ */
 public class SongMother implements EntityMother<Song> {
 
   private final Random random;

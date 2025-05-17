@@ -10,4 +10,9 @@ import com.bobo.storage.core.semantic.CreateResource;
  */
 public interface SongService extends CreateResource<Song> {
 
+  /**
+   * TODO define {@code UpdateResource<R>}.
+   */
+  Song updateSong(Song song);
+
 }

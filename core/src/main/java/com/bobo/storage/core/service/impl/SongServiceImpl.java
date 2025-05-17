@@ -2,6 +2,7 @@ package com.bobo.storage.core.service.impl;
 
 import com.bobo.storage.core.domain.Song;
 import com.bobo.storage.core.resource.access.SongRepository;
+import com.bobo.storage.core.resource.query.SongQueryRepository;
 import com.bobo.storage.core.service.SongService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,8 +14,11 @@ public class SongServiceImpl implements SongService {
 
   private final SongRepository repository;
 
-  public SongServiceImpl(SongRepository repository) {
+  private final SongQueryRepository query;
+
+  public SongServiceImpl(SongRepository repository, SongQueryRepository query) {
     this.repository = repository;
+    this.query = query;
   }
 
   /**
@@ -27,7 +31,12 @@ public class SongServiceImpl implements SongService {
   public Song create(Song song) {
     if (Objects.nonNull(song.getId())) throw new IllegalArgumentException();
 
-    return repository.findByUrl(song.getUrl()).orElseGet(() -> repository.save(song));
+    return query.findByUrl(song.getUrl()).orElseGet(() -> repository.save(song));
+  }
+
+  @Override
+  public Song updateSong(Song song) {
+    return repository.save(song);
   }
 
 }

@@ -1,8 +1,9 @@
-package com.bobo.storage.core.resource.access;
+package com.bobo.storage.core.resource.query;
 
 import com.bobo.semantic.IntegrationTest;
 import com.bobo.storage.core.domain.Song;
 import com.bobo.storage.core.domain.SongMother;
+import com.bobo.storage.core.resource.access.SongRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,19 +21,22 @@ import java.util.Random;
  * TODO Figure out if I could define a test suite?
  */
 @DataJpaTest
-@IntegrationTest({SongRepository.class, Repository.class})
-class SongRepositoryIT {
+@IntegrationTest({SongQueryRepository.class, Repository.class})
+class SongQueryRepositoryIT {
 
   // Test Utilities
 
   private final Random random = new Random();
 
+  private final SongRepository songRepository;
+
   // Test Targets
 
-  private final SongRepository repository;
+  private final SongQueryRepository repository;
 
   @Autowired
-  SongRepositoryIT(SongRepository repository) {
+  SongQueryRepositoryIT(SongRepository songRepository, SongQueryRepository repository) {
+    this.songRepository = songRepository;
     this.repository = repository;
   }
 
@@ -40,7 +44,7 @@ class SongRepositoryIT {
   void findByUrl() {
     // Given
     Song song = new SongMother(random).withUrls().get();
-    song = repository.save(song);
+    song = songRepository.save(song);
     Assertions.assertTrue(repository.findById(song.getId()).isPresent(), "Test assumption failed.");
 
     // When

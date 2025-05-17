@@ -3,6 +3,7 @@ package com.bobo.storage.core.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -26,6 +27,17 @@ public class Song extends DomainEntity {
    * At that stage we would likely need to introduce a technical id.
    */
   private String url;
+
+  /**
+   * When was this {@code url} last verified (looked up)?
+   */
+  private LocalDateTime lastLookup;
+
+  private String title;
+
+  private String artist;
+
+  private String thumbnailUrl;
 
   /**
    * @see DomainEntity#DomainEntity()
@@ -62,6 +74,46 @@ public class Song extends DomainEntity {
 
   protected void setUrl(String url) {
     this.url = url;
+  }
+
+  // TODO All of these should be Optional, but I struggle to map them accordingly.
+
+  /**
+   * Declared for JPA mapping.
+   * <p>
+   * This is a meta-data field that is queried against to regularly validate the existence of a URL,
+   * it should not be visible beyond the bounds of this module.
+   */
+  protected LocalDateTime getLastLookup() {
+    return lastLookup;
+  }
+
+  public void setLastLookup(LocalDateTime lastLookup) {
+    this.lastLookup = lastLookup;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
+  }
+
+  public String getArtist() {
+    return artist;
+  }
+
+  public void setArtist(String artist) {
+    this.artist = artist;
+  }
+
+  public String getThumbnailUrl() {
+    return thumbnailUrl;
+  }
+
+  public void setThumbnailUrl(String thumbnailUrl) {
+    this.thumbnailUrl = thumbnailUrl;
   }
 
 }
