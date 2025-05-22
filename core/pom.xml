@@ -31,6 +31,13 @@
         </dependency>
         <!--        /Persistence-->
 
+        <!--        Web Client-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+        <!--        Web Client-->
+
         <!--        Testing-->
         <dependency>
             <groupId>com.bobo</groupId>

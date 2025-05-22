@@ -2,7 +2,12 @@ package com.bobo.storage.core.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import org.springframework.web.reactive.function.client.ClientResponse;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -74,6 +79,47 @@ public class Song extends DomainEntity {
 
   protected void setUrl(String url) {
     this.url = url;
+  }
+
+  /**
+   * Perform a {@code HEAD} request on this ({@code url}) {@code Song} to verify its existence.
+   * <p>
+   * Will attempt to resolve {@code 3xx Redirection} responses by updating the {@code url} to the redirection location.
+   * <p>
+   * TODO Consider what do do for unauthorized, or not found requests, etc.
+   * TODO This needs to be run on creation, but also regularly as part of look-ups. This should update last-lookup,
+   *  but that being null is used to run the first lookup hook. Need to question that.
+   *
+   * @param client to perform the request. Should not have any base path configured.
+   * @return {@code true} if the {@code Song} was mutated during resolution of the verification.
+   */
+  public boolean verifyUrl(WebClient client){
+    URI uri;
+    try{
+      uri = URI.create(url);
+    }catch (IllegalArgumentException e){
+      /*
+       TODO We should guarantee that the URL given can be formed into a URI,
+        and then provide an accessor signature that squashes the exception (because we will already have run validation
+        on it.
+      */
+      throw new RuntimeException("Unexpected.");
+    }
+
+    ClientResponse response = client.head().uri(uri).exchangeToMono(Mono::just).block();
+    assert response != null; // HEAD request should return a response headers even on error.
+    if (response.statusCode().is3xxRedirection()) {
+      URI redirectionLocation = response.headers().asHttpHeaders().getLocation();
+      if (redirectionLocation == null) return false;
+      try {
+        url = redirectionLocation.toURL().toString(); // TODO Consider how we model url and then use a setter (?)
+        return true;
+      } catch (MalformedURLException e) {
+        throw new RuntimeException("Unexpected. The redirection local was malformed.");
+      }
+    }
+
+    return false;
   }
 
   // TODO All of these should be Optional, but I struggle to map them accordingly.
