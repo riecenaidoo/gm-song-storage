@@ -78,4 +78,9 @@ public class PlaylistSong extends DomainEntity {
     this.song = song;
   }
 
+  public void migrate(Song to){
+    // TODO consider what the validation would be.
+    this.song = to;
+  }
+
 }
