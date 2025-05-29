@@ -1,6 +1,5 @@
-package com.bobo.storage.oembed;
+package com.bobo.storage.core.domain;
 
-import com.bobo.storage.core.domain.Song;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

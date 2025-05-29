@@ -1,7 +1,6 @@
-package com.bobo.storage.oembed;
+package com.bobo.storage.core.domain;
 
 import com.bobo.semantic.IntegrationTest;
-import com.bobo.storage.core.domain.Song;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;

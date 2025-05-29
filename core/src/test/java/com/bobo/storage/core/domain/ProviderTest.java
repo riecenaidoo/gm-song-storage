@@ -1,4 +1,4 @@
-package com.bobo.storage.oembed;
+package com.bobo.storage.core.domain;
 
 import com.bobo.semantic.UnitTest;
 import org.junit.jupiter.api.Assertions;

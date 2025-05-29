@@ -2,7 +2,6 @@ package com.bobo.storage;
 
 import com.bobo.storage.config.WebConfig;
 import com.bobo.storage.core.CoreContext;
-import com.bobo.storage.oembed.OEmbedConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
@@ -20,7 +19,7 @@ import org.springframework.context.annotation.Import;
  */
 @SpringBootApplication
 @CoreContext
-@Import({WebConfig.class, OEmbedConfig.class})
+@Import({WebConfig.class})
 public class App {
 
   public static void main(String[] args) {
