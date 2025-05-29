@@ -1,10 +1,18 @@
 package com.bobo.storage.oembed;
 
 import com.bobo.storage.core.domain.Song;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.reactive.function.client.ClientResponse;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
  * The source of an embeddable form of content that adheres to the {@code oEmbed} specification.
@@ -53,6 +61,60 @@ public enum Provider {
       throw new RuntimeException(
               "The instantiation of the oEmbed query, given two valid URLs, was not expected to fail.", e);
     }
+  }
+
+  /**
+   * Looks up metadata for a Song, if data is found the Song will be mutated with the information found.
+   * It is the caller's responsibility to handle {@link Song#setLastLookup(LocalDateTime)}.
+   *
+   * @return true if information about the Song was found.
+   */
+  public static boolean lookupSong(Song song, WebClient webClient) {
+    URL url;
+    try {
+      url = URI.create(song.getUrl()).toURL();
+    } catch (MalformedURLException e) {
+      // TODO [design] the Song URL may be stored as a String, but it should probably be typed to a URL.
+      throw new RuntimeException("The URL of the Song was invalid.");
+    }
+
+    for (Provider provider : values()) {
+      Optional<OEmbedResponse> metadata = provider.queryProvider(url, webClient);
+      if (metadata.isPresent()) {
+        metadata.get().title().ifPresent(song::setTitle);
+        metadata.get().authorName().ifPresent(song::setArtist);
+        metadata.get().thumbnailUrl().ifPresent(song::setThumbnailUrl);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public Optional<OEmbedResponse> queryProvider(URL url, WebClient webClient) {
+    URL query = getQuery(url);
+    URI queryURI;
+    try {
+      queryURI = query.toURI();
+    } catch (URISyntaxException e) {
+      // TODO [design] Should probably question whether #getQuery should return a URL or URI then.
+      throw new RuntimeException();
+    }
+
+    return webClient.get().uri(queryURI)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .exchangeToMono(Provider::toMono)
+                    .blockOptional();
+  }
+
+  /**
+   * Extracted for method referencing.
+   *
+   * @param response from an oEmbed API.
+   * @return a {@link Mono} of an {@link OEmbedResponse},
+   * if the API responded with {@code 200 OK} otherwise {@link Mono#empty()}.
+   */
+  private static Mono<OEmbedResponse> toMono(ClientResponse response) {
+    return (response.statusCode().equals(HttpStatus.OK)) ? response.bodyToMono(OEmbedResponse.class) : Mono.empty();
   }
 
 }
