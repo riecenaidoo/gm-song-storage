@@ -40,4 +40,10 @@ public class SongServiceImpl implements SongService {
     return repository.save(song);
   }
 
+  @Override
+  @Transactional
+  public void delete(Song song) {
+    repository.delete(song);
+  }
+
 }

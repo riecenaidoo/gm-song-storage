@@ -15,4 +15,6 @@ public interface SongService extends CreateResource<Song> {
    */
   Song updateSong(Song song);
 
+  void delete(Song song);
+
 }

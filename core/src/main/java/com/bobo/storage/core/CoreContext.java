@@ -3,6 +3,7 @@ package com.bobo.storage.core;
 import com.bobo.storage.core.domain._DomainMarker;
 import com.bobo.storage.core.resource._ResourceMarker;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
