@@ -30,6 +30,13 @@
             <version>${project.version}</version>
         </dependency>
 
+        <!--        Observability-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+        </dependency>
+        <!--        /Observability-->
+
     </dependencies>
 
     <build>
