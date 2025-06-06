@@ -13,6 +13,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.Collection;
+import java.util.Optional;
 
 @RequestMapping("/api/v2/playlists")
 @ResourceController(resource = Playlist.class, respondsWith = PlaylistResponse.class)
@@ -38,9 +39,23 @@ public class PlaylistsController {
     return ResponseEntity.created(resource).body(response);
   }
 
+  /**
+   * @param title an optional title fragment used as a case-insensitive search filter.
+   *              If specified, must not be blank (see {@link String#isBlank()}).
+   * @return zero or more {@code Playlists}.
+   */
   @GetMapping
-  public ResponseEntity<PlaylistResponse[]> readPlaylists() {
-    Collection<Playlist> playlists = this.playlists.findAll();
+  public ResponseEntity<PlaylistResponse[]> readPlaylists(@RequestParam Optional<String> title) {
+    Collection<Playlist> playlists;
+    if (title.isPresent()) {
+      String search = title.get();
+      if (search.isBlank()) {
+        throw new RequestConstraintViolationException("The 'title' parameter must not be blank if provided.");
+      }
+      playlists = this.playlists.findAllByNameContainingIgnoringCase(search);
+    } else {
+      playlists = this.playlists.findAll();
+    }
     PlaylistResponse[] response = playlists.stream().map(PlaylistResponse::new).toArray(PlaylistResponse[]::new);
     return ResponseEntity.ok(response);
   }

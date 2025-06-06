@@ -11,11 +11,10 @@ import com.bobo.storage.web.api.v2.request.PlaylistsCreateRequest;
 import com.bobo.storage.web.api.v2.request.PlaylistsPatchRequest;
 import com.bobo.storage.web.api.v2.response.PlaylistResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
@@ -24,10 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -104,27 +100,75 @@ class PlaylistsControllerTest {
   }
 
   /**
-   * @see PlaylistsController#readPlaylists()
+   * @see PlaylistsController#readPlaylists(Optional)
    */
-  @DisplayName("GET /playlists")
-  @Test
-  void readPlaylists() throws Exception {
-    // Given
-    Collection<Playlist> allPlaylists = new PlaylistMother(random).withAll().get(5).toList();
+  @Nested
+  class ReadPlaylists {
 
-    PlaylistResponse[] expectedResponse = allPlaylists.stream().map(PlaylistResponse::new)
-                                                      .toArray(PlaylistResponse[]::new);
-    String expectedPayload = mapper.writeValueAsString(expectedResponse);
+    /**
+     * The default behaviour is to read all {@code Playlists} when no filter is supplied.
+     */
+    @DisplayName("GET /playlists")
+    @Test
+    void readPlaylists() throws Exception {
+      // Given
+      Collection<Playlist> allPlaylists = new PlaylistMother(random).withAll().get(5).toList();
 
-    // Stubbing
-    when(playlists.findAll()).thenReturn(allPlaylists);
+      PlaylistResponse[] expectedResponse = allPlaylists.stream().map(PlaylistResponse::new)
+                                                        .toArray(PlaylistResponse[]::new);
+      String expectedPayload = mapper.writeValueAsString(expectedResponse);
 
-    // When
-    mvc.perform(get("/api/v2/playlists"))
-       // Then
-       .andExpect(status().isOk())
-       .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-       .andExpect(content().json(expectedPayload));
+      // Stubbing
+      when(playlists.findAll()).thenReturn(allPlaylists);
+
+      // When
+      mvc.perform(get("/api/v2/playlists"))
+         // Then
+         .andExpect(status().isOk())
+         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+         .andExpect(content().json(expectedPayload));
+
+      verify(playlists, times(1)).findAll();
+      verify(playlists, times(0)).findAllByNameContainingIgnoringCase(anyString());
+    }
+
+    /**
+     * The repository method is tested, we just want to ensure we are calling the correct
+     * query method when we receive the filter parameter.
+     */
+    @DisplayName("GET /playlists?title=")
+    @Test
+    void filterByTitle() throws Exception {
+      // Given
+      String title = "Other";
+
+      // Stubbing
+      when(playlists.findAllByNameContainingIgnoringCase(anyString())).thenReturn(List.of());
+
+      // When
+      mvc.perform(get("/api/v2/playlists").param("title", title))
+         // Then
+         .andExpect(status().isOk())
+         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+         .andExpect(content().json("[]"));
+
+      verify(playlists, times(1)).findAllByNameContainingIgnoringCase(title);
+      verify(playlists, times(0)).findAll();
+    }
+
+    @DisplayName("GET /playlists?title= (title must not be blank)")
+    @ParameterizedTest()
+    @ValueSource(strings = {"", " ", "\t", "\n", "    "})
+    void filterByBlankTitle(String title) throws Exception {
+      // Given
+      Assertions.assertTrue(title.isBlank(), "Test Assumption Failed.");
+
+      // When
+      mvc.perform(get("/api/v2/playlists").param("title", title))
+         // Then
+         .andExpect(status().isBadRequest());
+    }
+
   }
 
   /**
