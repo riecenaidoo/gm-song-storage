@@ -10,20 +10,7 @@ import java.util.stream.Stream;
 @Repository
 public interface PlaylistQueryRepository extends QueryRepository<Playlist, Integer> {
 
-  /**
-   * Note: This works fine for now because it is a simple select all,
-   * but having the return type be a stream actually makes this a streaming query which must be handled differently.
-   * <p>
-   * Consumption of a streaming query must be bounded by a transaction (read only is fine).
-   * <pre>
-   *   {@code
-   *      @Transactional(readOnly = true)
-   *   }
-   * </pre>
-   *
-   * @see InvalidDataAccessApiUsageException
-   */
-  Stream<Playlist> findAll();
+  Collection<Playlist> findAll();
 
   /**
    * @param nameFragment fragment of a {@link Playlist} {@code name} to search for.

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.stream.Stream;
+import java.util.Collection;
 
 @RequestMapping("/api/v2/playlists")
 @ResourceController(resource = Playlist.class, respondsWith = PlaylistResponse.class)
@@ -40,8 +40,8 @@ public class PlaylistsController {
 
   @GetMapping
   public ResponseEntity<PlaylistResponse[]> readPlaylists() {
-    Stream<Playlist> playlists = this.playlists.findAll();
-    PlaylistResponse[] response = playlists.map(PlaylistResponse::new).toArray(PlaylistResponse[]::new);
+    Collection<Playlist> playlists = this.playlists.findAll();
+    PlaylistResponse[] response = playlists.stream().map(PlaylistResponse::new).toArray(PlaylistResponse[]::new);
     return ResponseEntity.ok(response);
   }
 

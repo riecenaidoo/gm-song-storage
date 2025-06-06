@@ -117,7 +117,7 @@ class PlaylistsControllerTest {
     String expectedPayload = mapper.writeValueAsString(expectedResponse);
 
     // Stubbing
-    when(playlists.findAll()).thenReturn(allPlaylists.stream());
+    when(playlists.findAll()).thenReturn(allPlaylists);
 
     // When
     mvc.perform(get("/api/v2/playlists"))
