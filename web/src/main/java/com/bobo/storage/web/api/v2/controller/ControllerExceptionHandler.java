@@ -17,7 +17,22 @@ import java.net.URI;
 public class ControllerExceptionHandler {
 
   /**
-   * {@code 404 Not Found} if a {@code Resource} in the request path did not exist.
+   * Returns {@code 400 Bad Request} if the request violates the contractual constraints defined in the API —
+   * even if it was successfully received and parsed.
+   *
+   * @see <a href="https://www.rfc-editor.org/rfc/rfc9110.html#section-15.5.1">400 Bad Request</a>
+   */
+  @ExceptionHandler(RequestConstraintViolationException.class)
+  public ProblemDetail requestConstraintViolation(RequestConstraintViolationException requestConstraintViolation) {
+    ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+    problemDetail.setDetail(requestConstraintViolation.getMessage());
+    problemDetail.setType(URI.create("https://www.rfc-editor.org/rfc/rfc9110.html#section-15.5.1"));
+
+    return problemDetail;
+  }
+
+  /**
+   * Returns {@code 404 Not Found} if a {@code Resource} in the request path did not exist.
    * <p>
    * <ul>
    *   <li>
@@ -40,7 +55,7 @@ public class ControllerExceptionHandler {
   }
 
   /**
-   * {@code 404 Not Found} if a {@code Subresource} exists,
+   * Returns {@code 404 Not Found} if a {@code Subresource} exists,
    * but does not match the scope implied by the parent {@code Resource} in the URI.
    * <ol>
    *   <li>
