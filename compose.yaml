@@ -6,6 +6,7 @@ services:
       - "5151:5432"
     environment:
       # [Environment Variables for Postgres Img](https://hub.docker.com/_/postgres)
+      - POSTGRES_DB=gm_song_storage
       - POSTGRES_PASSWORD=admin
     volumes:
       # This is where the DDL would go, for now it just is a placeholder.

@@ -72,7 +72,7 @@ public class Song extends DomainEntity {
     return Objects.hashCode(url);
   }
 
-  @Column(unique = true, nullable = false)
+  @Column(unique = true, nullable = false, length = 2048)
   public String getUrl() {
     return url;
   }
@@ -154,6 +154,7 @@ public class Song extends DomainEntity {
     this.artist = artist;
   }
 
+  @Column(length = 2048)
   public String getThumbnailUrl() {
     return thumbnailUrl;
   }
