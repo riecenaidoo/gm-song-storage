@@ -113,6 +113,7 @@ public class Song extends DomainEntity {
       if (redirectionLocation == null) return false;
       try {
         url = redirectionLocation.toURL().toString(); // TODO Consider how we model url and then use a setter (?)
+        this.lastLookup = null; // TODO this should be atomic in the setter for URL. If we change the URL it must be looked up again.
         return true;
       } catch (MalformedURLException e) {
         throw new RuntimeException("Unexpected. The redirection local was malformed.");

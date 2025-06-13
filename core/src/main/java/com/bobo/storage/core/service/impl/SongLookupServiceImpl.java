@@ -39,20 +39,25 @@ public class SongLookupServiceImpl implements SongLookupService {
 
   /**
    * This is the atomic operation. If it fails the batch should not fail, but this individual should be retried.
+   * <p>In the event of a redirection, we defer lookup for the next pass. It is very possible to be redirected
+   * multiple times. We should only poll Providers on a stable URL.</p>
    */
   @Transactional
   public void lookup(Song song) {
     if (song.verifyUrl(webClient)) {
       Optional<Song> existingSong = songs.findByUrl(song.getUrl());
-      log.debug("Lookup: Song(id:{}) -> 3xx Redirection.", song.getId());
       if (existingSong.isPresent() && !existingSong.get().getId().equals(song.getId())) {
         log.info("Lookup#Redirection: Song(id:{}) Redirects to existing Song(id:{}), will migrate to existing Song.",
                  song.getId(),
                  existingSong.get().getId());
         playlistSongService.migrate(song, existingSong.get());
         songService.delete(song);
-        return;
+      } else {
+        log.debug("Lookup#Redirection: Song(id:{}) redirects. URL updated. Lookup deferred.",
+                  song.getId());
+        songService.updateSong(song);
       }
+      return;
     }
 
     Provider.lookupSong(song, webClient); // TODO [design] Returns Optional<Provider> for later co-ordination?
