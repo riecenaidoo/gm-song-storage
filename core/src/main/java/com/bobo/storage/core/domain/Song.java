@@ -31,6 +31,7 @@ public class Song extends DomainEntity {
    * to a song on the internet across different vendors.
    * At that stage we would likely need to introduce a technical id.
    */
+  @Column(unique = true, nullable = false, length = 2048)
   private String url;
 
   /**
@@ -42,6 +43,7 @@ public class Song extends DomainEntity {
 
   private String artist;
 
+  @Column(length = 2048)
   private String thumbnailUrl;
 
   /**
@@ -72,7 +74,6 @@ public class Song extends DomainEntity {
     return Objects.hashCode(url);
   }
 
-  @Column(unique = true, nullable = false, length = 2048)
   public String getUrl() {
     return url;
   }
@@ -93,11 +94,11 @@ public class Song extends DomainEntity {
    * @param client to perform the request. Should not have any base path configured.
    * @return {@code true} if the {@code Song} was mutated during resolution of the verification.
    */
-  public boolean verifyUrl(WebClient client){
+  public boolean verifyUrl(WebClient client) {
     URI uri;
-    try{
+    try {
       uri = URI.create(url);
-    }catch (IllegalArgumentException e){
+    } catch (IllegalArgumentException e) {
       /*
        TODO We should guarantee that the URL given can be formed into a URI,
         and then provide an accessor signature that squashes the exception (because we will already have run validation
@@ -125,16 +126,6 @@ public class Song extends DomainEntity {
 
   // TODO All of these should be Optional, but I struggle to map them accordingly.
 
-  /**
-   * Declared for JPA mapping.
-   * <p>
-   * This is a meta-data field that is queried against to regularly validate the existence of a URL,
-   * it should not be visible beyond the bounds of this module.
-   */
-  protected LocalDateTime getLastLookup() {
-    return lastLookup;
-  }
-
   public void setLastLookup(LocalDateTime lastLookup) {
     this.lastLookup = lastLookup;
   }
@@ -155,7 +146,6 @@ public class Song extends DomainEntity {
     this.artist = artist;
   }
 
-  @Column(length = 2048)
   public String getThumbnailUrl() {
     return thumbnailUrl;
   }

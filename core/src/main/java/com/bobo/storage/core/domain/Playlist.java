@@ -9,6 +9,7 @@ import java.util.Objects;
 @Entity
 public class Playlist extends DomainEntity {
 
+  @Column(nullable = false)
   private String name;
 
   /**
@@ -44,7 +45,6 @@ public class Playlist extends DomainEntity {
     return Objects.hash(name);
   }
 
-  @Column(nullable = false)
   public String getName() {
     return name;
   }

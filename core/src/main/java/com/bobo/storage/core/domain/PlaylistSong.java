@@ -15,8 +15,10 @@ import java.util.Objects;
 @Entity
 public class PlaylistSong extends DomainEntity {
 
+  @ManyToOne(optional = false)
   private Playlist playlist;
 
+  @ManyToOne(optional = false)
   private Song song;
 
   /**
@@ -60,7 +62,6 @@ public class PlaylistSong extends DomainEntity {
     return Objects.hash(playlist, song);
   }
 
-  @ManyToOne(optional = false)
   public Playlist getPlaylist() {
     return playlist;
   }
@@ -69,7 +70,6 @@ public class PlaylistSong extends DomainEntity {
     this.playlist = playlist;
   }
 
-  @ManyToOne(optional = false)
   public Song getSong() {
     return song;
   }
@@ -78,7 +78,7 @@ public class PlaylistSong extends DomainEntity {
     this.song = song;
   }
 
-  public void migrate(Song to){
+  public void migrate(Song to) {
     // TODO consider what the validation would be.
     this.song = to;
   }
