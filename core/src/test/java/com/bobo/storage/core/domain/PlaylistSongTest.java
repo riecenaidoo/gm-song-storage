@@ -29,7 +29,7 @@ class PlaylistSongTest {
     @DisplayName("A PlaylistSong can be constructed from valid arguments")
     void canBeConstructed() {
       Playlist playlist = new PlaylistMother(random).withAll().get();
-      Song song = new SongMother(random).withAll().get();
+      Song song = new SongMother(random).withIds().get();
 
       PlaylistSong playlistSong = Assertions.assertDoesNotThrow(() -> new PlaylistSong(playlist, song));
       Assertions.assertSame(playlist, playlistSong.getPlaylist());
@@ -40,7 +40,7 @@ class PlaylistSongTest {
     @DisplayName("Playlist argument must have an assigned TechnicalId")
     void unassignedPlaylist() {
       Playlist playlist = new PlaylistMother(random).withIds(() -> null).get();
-      Song song = new SongMother(random).withAll().get();
+      Song song = new SongMother(random).withIds().get();
 
       Assertions.assertThrows(IllegalArgumentException.class, () -> new PlaylistSong(playlist, song));
     }
@@ -62,7 +62,7 @@ class PlaylistSongTest {
     @DisplayName("Playlist and Song must exist")
     void missingArguments() {
       Playlist playlist = new PlaylistMother(random).withAll().get();
-      Song song = new SongMother(random).withAll().get();
+      Song song = new SongMother(random).withIds().get();
 
       Assertions.assertThrows(NullPointerException.class,
                               () -> new PlaylistSong(null, song),

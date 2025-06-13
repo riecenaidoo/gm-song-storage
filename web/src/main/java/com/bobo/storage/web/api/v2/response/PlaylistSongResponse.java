@@ -7,7 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
 
 /**
- * Where {@code Optional} fields are only included in the response if they have a value.
+ * {@link JsonInclude.Include#NON_ABSENT} so that {@code Optional} fields are only included in the
+ * response if they have a value.
  * <p>
  * TODO Consider defining this globally.
  */
@@ -20,9 +21,9 @@ public record PlaylistSongResponse(Integer id, String url,
   public PlaylistSongResponse(PlaylistSong playlistSong) {
     this(playlistSong.getId(),
          playlistSong.getSong().getUrl(),
-         Optional.ofNullable(playlistSong.getSong().getTitle()),
-         Optional.ofNullable(playlistSong.getSong().getArtist()),
-         Optional.ofNullable(playlistSong.getSong().getThumbnailUrl())
+         playlistSong.getSong().getTitle(),
+         playlistSong.getSong().getArtist(),
+         playlistSong.getSong().getThumbnailUrl()
     );
   }
 

@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -57,7 +56,7 @@ public class JobSchedule {
   @Scheduled(cron = "0 * * * * *")
   public void lookupNewSongs() {
     Collection<Song> songs = this.songs.findAllByLastLookupIsNull();
-    if(songs.isEmpty()){
+    if (songs.isEmpty()) {
       return;
     }
 
@@ -79,7 +78,7 @@ public class JobSchedule {
         Optional<Song> originalSong = this.songs.findById(song.getId());
         if (originalSong.isPresent()) {
           song = originalSong.get();
-          song.setLastLookup(LocalDateTime.now());
+          song.lookedUp();
           songService.updateSong(song);
           log.info("Job#LookupNewSongs: Gracefully handled Song(id:{}) Exception. Removed from the lookup queue.",
                    song.getId());

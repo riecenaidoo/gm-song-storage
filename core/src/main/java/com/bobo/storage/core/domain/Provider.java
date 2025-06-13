@@ -66,21 +66,14 @@ public enum Provider {
 
   /**
    * Looks up metadata for a Song, if data is found the Song will be mutated with the information found.
-   * It is the caller's responsibility to handle {@link Song#setLastLookup(LocalDateTime)}.
    *
    * @return true if information about the Song was found.
    */
   public static boolean lookupSong(Song song, WebClient webClient) {
-    URL url;
-    try {
-      url = URI.create(song.getUrl()).toURL();
-    } catch (MalformedURLException e) {
-      // TODO [design] the Song URL may be stored as a String, but it should probably be typed to a URL.
-      throw new RuntimeException("The URL of the Song was invalid.");
-    }
-
+    URL url = song.toUrl();
     for (Provider provider : values()) {
       Optional<OEmbedResponse> metadata = provider.queryProvider(url, webClient);
+      song.lookedUp();  // TODO [design] Should this be repeated anytime we lookup the Song, or done once at the root?
       if (metadata.isPresent()) {
         metadata.get().accept(song);
         return true;

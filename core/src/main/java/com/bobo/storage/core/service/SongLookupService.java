@@ -31,7 +31,7 @@ public interface SongLookupService {
    * </ol>
    *
    * @param song to lookup.
-   * @see Song#verifyUrl(WebClient)
+   * @see Song#verify(WebClient)
    * @see Provider#lookupSong(Song, WebClient)
    */
   void lookup(Song song);

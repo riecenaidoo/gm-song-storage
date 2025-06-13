@@ -44,7 +44,7 @@ public class SongLookupServiceImpl implements SongLookupService {
    */
   @Transactional
   public void lookup(Song song) {
-    if (song.verifyUrl(webClient)) {
+    if (song.verify(webClient)) {
       Optional<Song> existingSong = songs.findByUrl(song.getUrl());
       if (existingSong.isPresent() && !existingSong.get().getId().equals(song.getId())) {
         log.info("Lookup#Redirection: Song(id:{}) Redirects to existing Song(id:{}), will migrate to existing Song.",
@@ -61,7 +61,6 @@ public class SongLookupServiceImpl implements SongLookupService {
     }
 
     Provider.lookupSong(song, webClient); // TODO [design] Returns Optional<Provider> for later co-ordination?
-    song.setLastLookup(LocalDateTime.now());
     songService.updateSong(song);
   }
 

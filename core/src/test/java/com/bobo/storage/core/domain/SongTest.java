@@ -13,9 +13,9 @@ class SongTest {
   @Test
   void equality() {
     Song[] songs = new Song[3];
-    songs[0] = new Song("a");
-    songs[1] = new Song("a");
-    songs[2] = new Song("b");
+    songs[0] = new Song("https://a.com");
+    songs[1] = new Song("https://a.com");
+    songs[2] = new Song("https://b.com");
 
     Assertions.assertEquals(songs[0], songs[1]);
     Assertions.assertNotEquals(songs[1], songs[2]);
@@ -24,13 +24,13 @@ class SongTest {
   @Test
   void hashing() {
     Set<Song> songs = new HashSet<>();
-    songs.add(new Song("a"));
+    songs.add(new Song("https://a.com"));
 
-    songs.add(new Song("a"));
+    songs.add(new Song("https://a.com"));
 
     Assertions.assertEquals(1, songs.size());
 
-    songs.add(new Song("b"));
+    songs.add(new Song("https://b.com"));
     Assertions.assertEquals(2, songs.size());
   }
 
