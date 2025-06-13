@@ -8,41 +8,67 @@ import reactor.core.publisher.Mono;
 
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * The atomic unit of the domain.
  * <p>
- * Represents a reference to a Song on the internet.
+ * Represents a reference to a song available on the internet.
  * <p>
- * In future iterations this abstraction would also represent information about the Song.
- * In its current form, it could be considered a Value Object.
+ * Encapsulates metadata about the song as well as the current status of this reference.
  */
 @Entity
 public class Song extends DomainEntity {
 
   /**
-   * Uniform Resource Locator (URL) to the Song on the internet.
+   * The reference to the song.
    * <p>
-   * Currently serves as the unique identifier for a Song entity.
-   * However, in future iterations, we would likely have a collection of URLs.
-   * The long term goal of the system is to find and manage multiple references
-   * to a song on the internet across different vendors.
-   * At that stage we would likely need to introduce a technical id.
+   * Modeled as the Uniform Resource Locator (URL) pointing to the song on the internet.
+   * <p>
+   * Serves as the unique identifier for a {@code Song} entity.
    */
   @Column(unique = true, nullable = false, length = 2048)
   private String url;
 
   /**
-   * When was this {@code url} last verified (looked up)?
+   * The last time this reference was looked up.
+   * <p>
+   * For a new entity, this is expected to be {@code null} since a {@link Song} is uniquely identified by its reference.
    */
+  @SuppressWarnings("unused")
   private LocalDateTime lastLookup;
 
+/*
+  TODO [design] Consider extracting metadata into a dedicated value object.
+  This may clarify the role of a Provider — a Provider supplies SongMetadata.
+  It would also support future iterations where we compare metadata across references
+  to determine whether they refer to the same song.
+*/
+
+  /**
+   * The title of the song.
+   * <p>
+   * Part of the metadata associated with this reference.
+   */
   private String title;
 
+  /**
+   * The name of the artist.
+   * <p>
+   * Part of the metadata associated with this reference.
+   */
   private String artist;
 
+  /**
+   * A reference to artwork for the song.
+   * <p>
+   * Represented as a URL; part of the metadata associated with this reference.
+   */
   @Column(length = 2048)
   private String thumbnailUrl;
 
@@ -53,12 +79,12 @@ public class Song extends DomainEntity {
   }
 
   /**
-   * Create a reference to a Song on the internet.
+   * Creates a reference to a song on the internet.
    *
-   * @param url Uniform Resource Locator (URL) to the Song on the internet.
+   * @param url the Uniform Resource Locator (URL) representing the reference.
    */
   public Song(String url) {
-    this.url = url;
+    this.url = validatedUrl(url);
   }
 
   @Override
@@ -78,80 +104,177 @@ public class Song extends DomainEntity {
     return url;
   }
 
-  protected void setUrl(String url) {
-    this.url = url;
+  /**
+   * Convert this reference to a {@link URL}.
+   *
+   * @return a {@link URL} representing the reference
+   */
+  public URL toUrl() {
+    try {
+      return toUri().toURL();
+    } catch (MalformedURLException e) {
+      throw new IllegalStateException("""
+                                              The URL of a Song is guaranteed to be a valid URL,\s
+                                              but it failed to be parsed into one.\s
+                                              Was this entity (id:%d) created directly into the database,
+                                              circumventing application logic,\s
+                                              or has the application logic failed to guarantee the invariant?"""
+                                              .formatted(this.getId()), e);
+    }
   }
 
   /**
-   * Perform a {@code HEAD} request on this ({@code url}) {@code Song} to verify its existence.
-   * <p>
-   * Will attempt to resolve {@code 3xx Redirection} responses by updating the {@code url} to the redirection location.
-   * <p>
-   * TODO Consider what do do for unauthorized, or not found requests, etc.
-   * TODO This needs to be run on creation, but also regularly as part of look-ups. This should update last-lookup,
-   *  but that being null is used to run the first lookup hook. Need to question that.
+   * Convert this reference to a {@link URI}, as used for constructing network requests.
    *
-   * @param client to perform the request. Should not have any base path configured.
-   * @return {@code true} if the {@code Song} was mutated during resolution of the verification.
+   * @return a {@link URI} representing the reference
    */
-  public boolean verifyUrl(WebClient client) {
-    URI uri;
+  public URI toUri() {
     try {
-      uri = URI.create(url);
+      return URI.create(url);
     } catch (IllegalArgumentException e) {
-      /*
-       TODO We should guarantee that the URL given can be formed into a URI,
-        and then provide an accessor signature that squashes the exception (because we will already have run validation
-        on it.
-      */
-      throw new RuntimeException("Unexpected.");
+      throw new IllegalStateException("""
+                                              The URL of a Song is guaranteed to be a valid URI and URL,\s
+                                              conforming to RFC 2396, but it failed to be converted back into a URI.\s
+                                              Was this entity (id:%d) created directly into the database,
+                                              circumventing application logic,\s
+                                              or has the application logic failed to guarantee the invariant?"""
+                                              .formatted(this.getId()), e);
     }
+  }
 
-    ClientResponse response = client.head().uri(uri).exchangeToMono(Mono::just).block();
-    assert response != null; // HEAD request should return a response headers even on error.
+  /**
+   * Validates and normalizes the given {@code url} to conform to standard URL syntax.
+   * <p>
+   * All URLs are URIs, but not all URIs are URLs. A URI identifies a resource; a URL specifies a means of locating it,
+   * typically including a scheme (like {@code https}) and authority (such as a hostname).
+   *
+   * @param rawUrl the raw input string representing a URL
+   * @return the validated and normalized URL
+   * @throws IllegalArgumentException if the input cannot be interpreted as a valid URL
+   * @see <a href="https://www.ietf.org/rfc/rfc2396.txt">RFC 2396: Uniform Resource Identifiers (URI): Generic Syntax</a>
+   * @see <a href="https://www.ietf.org/rfc/rfc2732.txt">RFC 2732: Format for Literal IPv6 Addresses in URLs</a>
+   */
+  protected String validatedUrl(String rawUrl) throws IllegalArgumentException {
+    rawUrl = rawUrl.trim();
+    try {
+      URI uri = new URI(rawUrl);   // Syntax-level URI validation (RFC 2396)
+      URL url = uri.toURL();       // Ensures absolute URL with valid scheme/host
+      return url.toString();
+    } catch (URISyntaxException e) {
+      throw new IllegalArgumentException("URL validation failed. [RFC2396] Syntax issue with: %s".formatted(rawUrl), e);
+    } catch (MalformedURLException e) {
+      throw new IllegalArgumentException(("""
+              URL validation failed. Syntactically correct URI,
+              but is not a valid URL (likely due to missing scheme or authority) : %s""").formatted(rawUrl), e);
+    }
+  }
+
+  /**
+   * Updates the reference (URL) of this song.
+   * <p>
+   * Changing the reference implies that the new URL has not been looked up before,
+   * since references uniquely identify a {@code Song}. If the reference were already known,
+   * the existing entity would be used instead.
+   * <p>
+   * As a result, this method resets {@code lastLookup} to {@code null} to indicate that
+   * the new reference requires verification.
+   *
+   * @param url the new reference URL to assign to this song
+   */
+  protected void setUrl(String url) {
+    this.url = validatedUrl(url);
+    this.lastLookup = null;
+  }
+
+  /**
+   * Verifies the existence of this reference by performing a {@code HEAD} request on its {@code url}.
+   * <p>
+   * Follows {@code 3xx Redirection} responses and updates the {@code url} to the resolved location, if applicable.
+   * The resolved location is not immediately verified because hosts may redirect multiple times.
+   * Since the time to complete the entire redirection chain is unpredictable,
+   * further resolution is deferred to subsequent lookup cycles.
+   * <p>
+   * This operation is considered a lookup and will update {@code lastLookup}.
+   * It is intended to be invoked as part of regular lookup cycles.
+   * <p>
+   * It is not required to be called upon creation, based on the assumption that the client supplying this reference
+   * has already verified its existence at the time of submission.
+   * <p>
+   * TODO: Define behavior for HTTP responses such as {@code 501 Unauthorized}, {@code 404 Not Found}, etc.
+   *  When implemented, consider changing the return type to convey the response status,
+   *  or at least an enumeration grouping status codes into categories (e.g., 2xx, 3xx, 4xx, 5xx).
+   *  This will allow callers to coordinate appropriately with other services.
+   *  For example:
+   *  <ul>
+   *    <li>3xx responses require checking if the new location is already mapped to another entity.</li>
+   *    <li>4xx responses might trigger attempts to migrate referrals to another {@code Song} with matching metadata.</li>
+   *  </ul>
+   *
+   * @param client the HTTP client to use; must not have a base URL configured.
+   * @return {@code true} if the {@code url} was mutated due to redirection during verification.
+   */
+  public boolean verify(WebClient client) {
+    ClientResponse response = client.head().uri(toUri()).exchangeToMono(Mono::just).block();
+    assert response != null; // HEAD request should return response headers even on error.
+    lookedUp();
     if (response.statusCode().is3xxRedirection()) {
       URI redirectionLocation = response.headers().asHttpHeaders().getLocation();
       if (redirectionLocation == null) return false;
-      try {
-        url = redirectionLocation.toURL().toString(); // TODO Consider how we model url and then use a setter (?)
-        this.lastLookup = null; // TODO this should be atomic in the setter for URL. If we change the URL it must be looked up again.
-        return true;
-      } catch (MalformedURLException e) {
-        throw new RuntimeException("Unexpected. The redirection local was malformed.");
-      }
+      setUrl(redirectionLocation.toString());
+      return true;
     }
-
     return false;
   }
 
-  // TODO All of these should be Optional, but I struggle to map them accordingly.
+  /**
+   * Called when the {@code Song} has been looked up.
+   * <p>
+   * Sets the {@code lastLookup} of the {@code Song} to {@link LocalDate#now()}.
+   */
+  public void lookedUp() {
+    this.lastLookup = LocalDateTime.now();
+  }
 
-  public void setLastLookup(LocalDateTime lastLookup) {
+  /**
+   * This mutator exists solely for internal use in testing scenarios.
+   *
+   * @param lastLookup nullable.
+   */
+  protected void setLastLookup(LocalDateTime lastLookup) {
     this.lastLookup = lastLookup;
   }
 
-  public String getTitle() {
-    return title;
+  public Optional<String> getTitle() {
+    return Optional.ofNullable(title);
   }
 
+  /**
+   * @param title nullable.
+   */
   public void setTitle(String title) {
     this.title = title;
   }
 
-  public String getArtist() {
-    return artist;
+  public Optional<String> getArtist() {
+    return Optional.ofNullable(artist);
   }
 
+  /**
+   * @param artist nullable.
+   */
   public void setArtist(String artist) {
     this.artist = artist;
   }
 
-  public String getThumbnailUrl() {
-    return thumbnailUrl;
+  public Optional<String> getThumbnailUrl() {
+    return Optional.ofNullable(thumbnailUrl);
   }
 
+  /**
+   * @param thumbnailUrl nullable.
+   */
   public void setThumbnailUrl(String thumbnailUrl) {
-    this.thumbnailUrl = thumbnailUrl;
+    this.thumbnailUrl = Objects.isNull(thumbnailUrl) ? null : validatedUrl(thumbnailUrl);
   }
 
 }

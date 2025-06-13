@@ -23,14 +23,14 @@ class SongIT {
   }
 
   /**
-   * @see Song#verifyUrl(WebClient)
+   * @see Song#verify(WebClient)
    */
   @DisplayName("Verifying a URL that requests a client to redirect (status code 3xx) should update the Song's url to use the target location.")
   @ParameterizedTest
   @MethodSource("redirectingUrls")
-  void verifyUrl(RedirectingURL redirectingUrl) {
+  void verify(RedirectingURL redirectingUrl) {
     Song song = new Song(redirectingUrl.url);
-    song.verifyUrl(client);
+    song.verify(client);
     // TODO Consider doing a test assumption that the URL exists, and is a redirection. See #redirectingUrl docs.
     Assertions.assertEquals(redirectingUrl.targetLocation(), song.getUrl());
   }

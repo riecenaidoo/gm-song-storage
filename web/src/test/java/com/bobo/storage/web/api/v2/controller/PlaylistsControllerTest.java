@@ -237,7 +237,7 @@ class PlaylistsControllerTest {
   @Test
   void deletePlaylist() throws Exception {
     // Given
-    PlaylistMother mother = new PlaylistMother(random).withAll();
+    PlaylistMother mother = new PlaylistMother(random).withIds();
     Playlist playlist = mother.get();
     Integer id = playlist.getId();
 
