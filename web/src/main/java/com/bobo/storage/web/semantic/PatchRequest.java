@@ -1,8 +1,7 @@
 package com.bobo.storage.web.semantic;
 
-import org.springframework.http.HttpMethod;
-
 import java.util.function.Consumer;
+import org.springframework.http.HttpMethod;
 
 /**
  * A request to apply one or more mutations to (the state of) a {@code Resource}.
@@ -13,12 +12,11 @@ import java.util.function.Consumer;
  */
 public interface PatchRequest<T> {
 
-  /**
-   * Applies the {@code PATCH} to a {@code Resource}.
-   *
-   * @param resource to apply the {@code PATCH} to. Mutates.
-   * @return same {@code Object} for fluency.
-   */
-  T patch(T resource);
-
+	/**
+	 * Applies the {@code PATCH} to a {@code Resource}.
+	 *
+	 * @param resource to apply the {@code PATCH} to. Mutates.
+	 * @return same {@code Object} for fluency.
+	 */
+	T patch(T resource);
 }

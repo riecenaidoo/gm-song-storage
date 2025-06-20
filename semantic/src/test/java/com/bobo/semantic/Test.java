@@ -3,57 +3,53 @@ package com.bobo.semantic;
 @SuppressWarnings("unused")
 public interface Test {
 
-  // --- Test Targets ---
+	// --- Test Targets ---
 
-  // Test Utilities
+	// Test Utilities
 
-  // Mock Dependencies
+	// Mock Dependencies
 
-  // --- Constructor ---
+	// --- Constructor ---
 
-  // --- Test Setup ---
-
+	// --- Test Setup ---
 
 }
 
 @SuppressWarnings("unused")
 class ExampleTarget {
 
-  public void method() {
-    // ...
-  }
-
+	public void method() {
+		// ...
+	}
 }
 
 @SuppressWarnings("unused")
 @UnitTest(ExampleTarget.class)
 class ExampleUnitTest {
 
-  private ExampleTarget target;
+	private ExampleTarget target;
 
-  /**
-   * @see ExampleTarget#method()
-   */
-  void method() {
-    // ...
-  }
+	/**
+	 * @see ExampleTarget#method()
+	 */
+	void method() {
+		// ...
+	}
 
-  // OR
+	// OR
 
-  /**
-   * @see ExampleTarget#method()
-   */
-  @SuppressWarnings("InnerClassMayBeStatic")
-  class Method {
+	/**
+	 * @see ExampleTarget#method()
+	 */
+	@SuppressWarnings("InnerClassMayBeStatic")
+	class Method {
 
-    void method() {
-      // ...
-    }
+		void method() {
+			// ...
+		}
 
-    void negativePath() {
-      // ...
-    }
-
-  }
-
+		void negativePath() {
+			// ...
+		}
+	}
 }

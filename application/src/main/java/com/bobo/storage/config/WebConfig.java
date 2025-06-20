@@ -7,19 +7,17 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * <code>@EnableWebMvc</code> - see <code>WebMvcConfigurer</code>: Used to define cors mapping in <code>#addCorsMappings</code>.
+ * <code>@EnableWebMvc</code> - see <code>WebMvcConfigurer</code>: Used to define cors mapping in
+ * <code>#addCorsMappings</code>.
  */
 @EnableWebMvc
 public class WebConfig extends SpringBootServletInitializer implements WebMvcConfigurer {
 
-  @Value("${app.client.url}")
-  private String clientUrl;
+	@Value("${app.client.url}")
+	private String clientUrl;
 
-  @Override
-  public void addCorsMappings(CorsRegistry registry) {
-    registry.addMapping("/api/v2/**")
-            .allowedMethods("*")
-            .allowedOrigins(clientUrl);
-  }
-
+	@Override
+	public void addCorsMappings(CorsRegistry registry) {
+		registry.addMapping("/api/v2/**").allowedMethods("*").allowedOrigins(clientUrl);
+	}
 }

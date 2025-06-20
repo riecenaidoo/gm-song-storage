@@ -1,16 +1,14 @@
 package com.bobo.storage.web.semantic;
 
+import java.lang.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.lang.annotation.*;
-
 /**
- * A stereotyped {@link RestController} that services exactly one resource,
- * and responds with a consistent representation for the resource,
- * when a response is necessary.
- * <p>
- * The name of the {@code Controller} must reflect the name of the resource it serves.
- * If the resource is a subresource, the name must be prefaced by the first parent of the resource.
+ * A stereotyped {@link RestController} that services exactly one resource, and responds with a
+ * consistent representation for the resource, when a response is necessary.
+ *
+ * <p>The name of the {@code Controller} must reflect the name of the resource it serves. If the
+ * resource is a subresource, the name must be prefaced by the first parent of the resource.
  */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
@@ -18,14 +16,13 @@ import java.lang.annotation.*;
 @RestController
 public @interface ResourceController {
 
-  /**
-   * @return the type of resource the {@code Controller} handles requests for.
-   */
-  Class<?> resource();
+	/**
+	 * @return the type of resource the {@code Controller} handles requests for.
+	 */
+	Class<?> resource();
 
-  /**
-   * @return the representation of the resource the {@code Controller} will serve, when requested.
-   */
-  Class<?> respondsWith();
-
+	/**
+	 * @return the representation of the resource the {@code Controller} will serve, when requested.
+	 */
+	Class<?> respondsWith();
 }
