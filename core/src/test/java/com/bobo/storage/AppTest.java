@@ -8,9 +8,8 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest(classes = TestConfig.class)
 class AppTest {
 
-  @Test
-  void contextLoads() {
-    System.out.println("Application Context successfully loads during testing.");
-  }
-
+	@Test
+	void contextLoads() {
+		System.out.println("Application Context successfully loads during testing.");
+	}
 }

@@ -5,8 +5,7 @@ import com.bobo.storage.core.semantic.CreateResource;
 
 public interface PlaylistService extends CreateResource<Playlist> {
 
-  Playlist update(Playlist playlist);
+	Playlist update(Playlist playlist);
 
-  void delete(Playlist playlist);
-
+	void delete(Playlist playlist);
 }

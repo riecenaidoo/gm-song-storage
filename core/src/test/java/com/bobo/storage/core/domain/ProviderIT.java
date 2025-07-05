@@ -11,39 +11,38 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.reactive.function.client.WebClient;
 
-/**
- * Testing Integration with OEmbed Providers.
- */
+/** Testing Integration with OEmbed Providers. */
 @ContextConfiguration(classes = {WebClientAutoConfiguration.class})
 @ExtendWith(SpringExtension.class)
 @IntegrationTest(Provider.class)
 class ProviderIT {
 
-  private final WebClient client;
+	private final WebClient client;
 
-  @Autowired
-  ProviderIT(WebClient.Builder builder) {
-    this.client = builder.build();
-  }
+	@Autowired
+	ProviderIT(WebClient.Builder builder) {
+		this.client = builder.build();
+	}
 
-  /**
-   * @see Provider#lookupSong(Song, WebClient)
-   */
-  @ParameterizedTest
-  @ValueSource(strings = {
-          "https://www.youtube.com/watch?v=rdwz7QiG0lk",
-          // NOTE: Deezer's Share from App producing dzr.page.link does not work directly.
-          // You need to send that request and look at the headers for "location".
-          "https://www.deezer.com/us/track/350027801",
-          "https://www.deezer.com/track/350027801?host=0&utm_campaign=clipboard-generic&utm_source=user_sharing&utm_content=track-350027801&deferredFl=1&universal_link=1",
-          "https://open.spotify.com/track/6G6EAmGXX7T52zOWj2GWPE?si=145d2b7ff94641dc"
-  })
-  void lookupSong(String url) {
-    Song song = new Song(url);
-    Assertions.assertTrue(Provider.lookupSong(song, client));
-    // TODO [test] define a control test for each provider to ensure a link for that provider works as expected.
-    // TODO [test] see Deezer note above; create parameterized tests for each Provider for different link shapes.
-  }
-
-
+	/**
+	 * @see Provider#lookupSong(Song, WebClient)
+	 */
+	@ParameterizedTest
+	@ValueSource(
+			strings = {
+				"https://www.youtube.com/watch?v=rdwz7QiG0lk",
+				// NOTE: Deezer's Share from App producing dzr.page.link does not work directly.
+				// You need to send that request and look at the headers for "location".
+				"https://www.deezer.com/us/track/350027801",
+				"https://www.deezer.com/track/350027801?host=0&utm_campaign=clipboard-generic&utm_source=user_sharing&utm_content=track-350027801&deferredFl=1&universal_link=1",
+				"https://open.spotify.com/track/6G6EAmGXX7T52zOWj2GWPE?si=145d2b7ff94641dc"
+			})
+	void lookupSong(String url) {
+		Song song = new Song(url);
+		Assertions.assertTrue(Provider.lookupSong(song, client));
+		// TODO [test] define a control test for each provider to ensure a link for that provider works
+		// as expected.
+		// TODO [test] see Deezer note above; create parameterized tests for each Provider for different
+		// link shapes.
+	}
 }

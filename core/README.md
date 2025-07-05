@@ -11,8 +11,8 @@ This problem is hard to solve generically as we know how the **host** would hand
 3. Validate that the URL (for a given provider) is still valid.
 
 **Related, but out-of-scope**
--  Query other providers for an alternate URL to the same Song (based on the basic meta data)? The user must confirm whether it is the same song. 
-	- *Being able to add Deezer songs and pick up a corresponding YouTube link is an end-goal for this system. Spotify support will be a nice to have.*
+-  Query other providers for an alternate URL to the same Song (based on the basic meta data)? The user must confirm whether it is the same song.
+- *Being able to add Deezer songs and pick up a corresponding YouTube link is an end-goal for this system. Spotify support will be a nice to have.*
 
 ## oEmbed
 
@@ -22,9 +22,11 @@ We can use **oEmbed** to query for a provider, if any, of the URL. This would be
 - "*Many services consume oEmbed information to display link information, including WordPress and Slack,*" - [see 7.2 Consumers](https://oembed.com/#section7.2).
 
 It would still be difficult to do this generically (*dynamically, for all possible hosts; [see 7.1 Providers](https://oembed.com/#section7.1)*), but our problem becomes easier to solve if we get more specific with the **hosts** (***providers***) we support.
+
 ### Providers
 
 YouTube, Deezer and Spotify are three providers that I will be using for this project. The majority of the **ambient noises** I use for TTRPG games are provided by various YouTubers, whereas the **background music** I use is typically found listening through Artists' albums on Deezer. Spotify has mixes of both.
+
 #### Documentation
 
 - [oEmbed](https://oembed.com/)

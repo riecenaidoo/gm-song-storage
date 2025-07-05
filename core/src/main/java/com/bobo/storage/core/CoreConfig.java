@@ -7,9 +7,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class CoreConfig {
 
-  @Bean
-  public WebClient webClient(WebClient.Builder builder) {
-    return builder.build();
-  }
-
+	@Bean
+	public WebClient webClient(WebClient.Builder builder) {
+		return builder.build();
+	}
 }

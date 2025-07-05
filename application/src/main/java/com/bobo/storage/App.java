@@ -11,10 +11,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * The entrypoint to the application.
- * <p>
- * I prefer placing it in the root of our package structure,
- * because I feel it makes most sense there.
- * Placing it there is also helpful as we can use it as the target for component scanning.
+ *
+ * <p>I prefer placing it in the root of our package structure, because I feel it makes most sense
+ * there. Placing it there is also helpful as we can use it as the target for component scanning.
  *
  * @see SpringBootApplication#scanBasePackageClasses()
  * @see ComponentScan#basePackageClasses()
@@ -25,8 +24,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class App {
 
-  public static void main(String[] args) {
-    SpringApplication.run(App.class, args);
-  }
-
+	public static void main(String[] args) {
+		SpringApplication.run(App.class, args);
+	}
 }
