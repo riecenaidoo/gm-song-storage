@@ -21,4 +21,25 @@ public interface TechnicalID<T> {
 	 * @return the technical identity of this {@code Object}.
 	 */
 	T getId();
+
+	/**
+	 * Null-safe technical identity comparison.
+	 *
+	 * <h2>Implementation Note</h2>
+	 *
+	 * <p>The in-line assignment is purely to flex on you.
+	 *
+	 * @param target commutative, nullable.
+	 * @param other commutative, nullable.
+	 * @return {@code true} if the objects are non-null, of the same {@code class}, and have the
+	 *     <strong>same</strong> technical identity.
+	 */
+	static <T> boolean same(TechnicalID<T> target, TechnicalID<T> other) {
+		Object targetId;
+		return target != null
+				&& other != null
+				&& target.getClass().equals(other.getClass())
+				&& (targetId = target.getId()) != null
+				&& targetId.equals(other.getId());
+	}
 }

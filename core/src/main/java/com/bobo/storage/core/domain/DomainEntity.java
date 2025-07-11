@@ -63,11 +63,17 @@ public abstract class DomainEntity implements TechnicalID<Integer> {
 	 *
 	 * @param id the technical identifier to assign to this {@link Entity}
 	 * @see TechnicalID#getId()
+	 * @implNote Should be marked {@code final}, but the JPA provider (Hibernate) proxies the mutators
+	 *     for lazy-loading operations.
 	 */
-	protected void setId(Integer id) {
+	void setId(Integer id) {
 		this.id = id;
 	}
 
+	/**
+	 * @implNote Should be marked {@code final}, but the JPA provider (Hibernate) proxies the
+	 *     accessors for lazy-loading operations.
+	 */
 	@Override
 	public Integer getId() {
 		return id;

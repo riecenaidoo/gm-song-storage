@@ -1,5 +1,6 @@
 package com.bobo.storage.core.service.impl;
 
+import com.bobo.semantic.TechnicalID;
 import com.bobo.storage.core.domain.Provider;
 import com.bobo.storage.core.domain.Song;
 import com.bobo.storage.core.resource.query.SongQueryRepository;
@@ -48,7 +49,7 @@ public class SongLookupServiceImpl implements SongLookupService {
 	public void lookup(Song song) {
 		if (song.verify(webClient)) {
 			Optional<Song> existingSong = songs.findByUrl(song.getUrl());
-			if (existingSong.isPresent() && !existingSong.get().getId().equals(song.getId())) {
+			if (existingSong.isPresent() && !TechnicalID.same(existingSong.get(), song)) {
 				log.info(
 						"Lookup#Redirection: Song(id:{}) Redirects to existing Song(id:{}), will migrate to existing Song.",
 						song.getId(),
