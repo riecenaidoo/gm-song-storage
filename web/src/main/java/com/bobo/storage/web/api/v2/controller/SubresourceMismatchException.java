@@ -19,28 +19,26 @@ public class SubresourceMismatchException extends RuntimeException {
 
 	private final String subResourceIdentifier;
 
-	public <R extends TechnicalID<RID>, RID, S extends TechnicalID<SID>, SID>
-			SubresourceMismatchException(
-					Class<R> resource, RID id, Class<S> subResource, SID subResourceId) {
-		this.resourceName = resource.getSimpleName();
-		this.identifier = id.toString();
-		this.subResourceName = subResource.getSimpleName();
-		this.subResourceIdentifier = subResourceId.toString();
+	public SubresourceMismatchException(TechnicalID<?> resource, TechnicalID<?> subResource) {
+		this.resourceName = resource.getClass().getSimpleName();
+		this.identifier = resource.getId().toString();
+		this.subResourceName = subResource.getClass().getSimpleName();
+		this.subResourceIdentifier = subResource.getId().toString();
 	}
 
-	public String getSubResourceIdentifier() {
-		return subResourceIdentifier;
-	}
-
-	public String getSubResourceName() {
-		return subResourceName;
+	public String getResourceName() {
+		return resourceName;
 	}
 
 	public String getIdentifier() {
 		return identifier;
 	}
 
-	public String getResourceName() {
-		return resourceName;
+	public String getSubResourceName() {
+		return subResourceName;
+	}
+
+	public String getSubResourceIdentifier() {
+		return subResourceIdentifier;
 	}
 }
