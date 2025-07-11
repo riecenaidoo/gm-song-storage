@@ -91,9 +91,7 @@ public class PlaylistSongsController {
 						.findById(id)
 						.orElseThrow(() -> new ResourceNotFoundException(PlaylistSong.class, id));
 		if (!TechnicalID.same(playlist, playlistSong.getPlaylist())) {
-			throw new SubresourceMismatchException(
-					Playlist.class, playlist.getId(),
-					PlaylistSong.class, playlistSong.getId());
+			throw new SubresourceMismatchException(playlist, playlistSong);
 		}
 		service.delete(playlistSong);
 		return ResponseEntity.noContent().build();
