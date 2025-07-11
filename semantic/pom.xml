@@ -9,6 +9,16 @@
 
   <artifactId>semantic</artifactId>
 
+  <dependencies>
+    <!--        Testing-->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!--            /Testing-->
+  </dependencies>
+
   <build>
     <plugins>
       <plugin>

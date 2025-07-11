@@ -1,5 +1,6 @@
 package com.bobo.storage.web.api.v2.controller;
 
+import com.bobo.semantic.TechnicalID;
 import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.domain.PlaylistSong;
 import com.bobo.storage.core.domain.Song;
@@ -89,7 +90,7 @@ public class PlaylistSongsController {
 				playlistSongs
 						.findById(id)
 						.orElseThrow(() -> new ResourceNotFoundException(PlaylistSong.class, id));
-		if (!playlist.getId().equals(playlistSong.getPlaylist().getId())) {
+		if (!TechnicalID.same(playlist, playlistSong.getPlaylist())) {
 			throw new SubresourceMismatchException(
 					Playlist.class, playlist.getId(),
 					PlaylistSong.class, playlistSong.getId());
