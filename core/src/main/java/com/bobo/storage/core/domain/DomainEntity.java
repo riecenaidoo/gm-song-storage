@@ -59,7 +59,9 @@ public abstract class DomainEntity implements TechnicalID<Integer> {
 	 * The {@link TechnicalID} of a {@link DomainEntity} is managed exclusively by the persistence
 	 * provider.
 	 *
-	 * <p>This mutator exists solely for internal use in testing scenarios.
+	 * <p>This mutator exists solely for internal use in testing scenarios.</p>
+	 * <p>Should be marked {@code final}, but the JPA provider (Hibernate) proxies the setters for lazy-loading
+	 * operations.</p>
 	 *
 	 * @param id the technical identifier to assign to this {@link Entity}
 	 * @see TechnicalID#getId()
@@ -75,7 +77,7 @@ public abstract class DomainEntity implements TechnicalID<Integer> {
 	 *     accessors for lazy-loading operations.
 	 */
 	@Override
-	public Integer getId() {
+	public final Integer getId() {
 		return id;
 	}
 }
