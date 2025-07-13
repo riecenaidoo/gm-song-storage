@@ -116,10 +116,10 @@ public class Song extends DomainEntity {
 					"""
 																							The URL of a Song is guaranteed to be a valid URL,\s
 																							but it failed to be parsed into one.\s
-																							Was this entity (id:%d) created directly into the database,
+																							Was this %s created directly into the database,
 																							circumventing application logic,\s
 																							or has the application logic failed to guarantee the invariant?"""
-							.formatted(this.getId()),
+							.formatted(this.log()),
 					e);
 		}
 	}
@@ -137,10 +137,10 @@ public class Song extends DomainEntity {
 					"""
 																							The URL of a Song is guaranteed to be a valid URI and URL,\s
 																							conforming to RFC 2396, but it failed to be converted back into a URI.\s
-																							Was this entity (id:%d) created directly into the database,
+																							Was this %s created directly into the database,
 																							circumventing application logic,\s
 																							or has the application logic failed to guarantee the invariant?"""
-							.formatted(this.getId()),
+							.formatted(this.log()),
 					e);
 		}
 	}

@@ -7,6 +7,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.function.Consumer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.ClientResponse;
@@ -31,6 +33,8 @@ public enum Provider {
 	DEEZER("https://api.deezer.com/oembed"),
 	SPOTIFY("https://open.spotify.com/oembed");
 
+	private static final Logger log = LoggerFactory.getLogger(Provider.class);
+
 	/**
 	 * An {@code endpoint} exposed by the {@code host} that adheres to the {@code oEmbed}
 	 * specification.
@@ -45,13 +49,13 @@ public enum Provider {
 		}
 	}
 
-	/** Marked {@code protected} to expose for testing. */
-	@SuppressWarnings("ProtectedMemberInFinalClass")
-	protected URL getEndpoint() {
+	/** Given default access to expose for testing. */
+	URL getEndpoint() {
 		return endpoint;
 	}
 
-	public URL getQuery(URL url) {
+	/** Given default access to expose for testing. */
+	URL getQuery(URL url) {
 		try {
 			return URI.create(endpoint + "?url=" + url + "&format=json").toURL();
 		} catch (MalformedURLException e) {
@@ -67,7 +71,7 @@ public enum Provider {
 	 *
 	 * @return true if information about the Song was found.
 	 */
-	public static boolean lookupSong(Song song, WebClient webClient) {
+	public static boolean lookup(Song song, WebClient webClient) {
 		URL url = song.toUrl();
 		for (Provider provider : values()) {
 			Optional<OEmbedResponse> metadata = provider.queryProvider(url, webClient);
@@ -75,9 +79,11 @@ public enum Provider {
 			// once at the root?
 			if (metadata.isPresent()) {
 				metadata.get().accept(song);
+				log.info("Provider#Lookup: Hit. {} provided by {}.", song.log(), provider.name());
 				return true;
 			}
 		}
+		log.debug("Provider#Lookup: No hits for {}.", song.log());
 		return false;
 	}
 
