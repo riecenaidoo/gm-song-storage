@@ -25,7 +25,7 @@ class ProviderIT {
 	}
 
 	/**
-	 * @see Provider#lookupSong(Song, WebClient)
+	 * @see Provider#lookup(Song, WebClient)
 	 */
 	@ParameterizedTest
 	@ValueSource(
@@ -37,9 +37,9 @@ class ProviderIT {
 				"https://www.deezer.com/track/350027801?host=0&utm_campaign=clipboard-generic&utm_source=user_sharing&utm_content=track-350027801&deferredFl=1&universal_link=1",
 				"https://open.spotify.com/track/6G6EAmGXX7T52zOWj2GWPE?si=145d2b7ff94641dc"
 			})
-	void lookupSong(String url) {
+	void lookup(String url) {
 		Song song = new Song(url);
-		Assertions.assertTrue(Provider.lookupSong(song, client));
+		Assertions.assertTrue(Provider.lookup(song, client));
 		// TODO [test] define a control test for each provider to ensure a link for that provider works
 		// as expected.
 		// TODO [test] see Deezer note above; create parameterized tests for each Provider for different

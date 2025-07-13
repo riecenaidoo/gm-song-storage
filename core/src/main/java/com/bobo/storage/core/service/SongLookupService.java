@@ -34,7 +34,7 @@ public interface SongLookupService {
 	 *
 	 * @param song to lookup.
 	 * @see Song#verify(WebClient)
-	 * @see Provider#lookupSong(Song, WebClient)
+	 * @see Provider#lookup(Song, WebClient)
 	 */
 	void lookup(Song song);
 }

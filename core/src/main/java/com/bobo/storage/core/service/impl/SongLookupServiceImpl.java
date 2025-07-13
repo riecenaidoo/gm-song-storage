@@ -51,22 +51,20 @@ public class SongLookupServiceImpl implements SongLookupService {
 			Optional<Song> existingSong = songs.findByUrl(song.getUrl());
 			if (existingSong.isPresent() && !TechnicalID.same(existingSong.get(), song)) {
 				log.info(
-						"Lookup#Redirection: Song(id:{}) Redirects to existing Song(id:{}), will migrate to existing Song.",
-						song.getId(),
-						existingSong.get().getId());
+						"Lookup: {} redirects to {}. Its references will be migrated to the existing Song, and it will be removed.",
+						song.log(),
+						existingSong.get().log());
 				playlistSongService.migrate(song, existingSong.get());
 				songService.delete(song);
 			} else {
-				log.debug(
-						"Lookup#Redirection: Song(id:{}) redirects. URL updated. Lookup deferred.",
-						song.getId());
+				log.debug("Lookup: {} redirects. URL updated. Lookup deferred.", song.log());
 				songService.updateSong(song);
 			}
 			return;
 		}
 
-		Provider.lookupSong(
-				song, webClient); // TODO [design] Returns Optional<Provider> for later co-ordination?
+		// TODO [design] Returns Optional<Provider> for later co-ordination?
+		Provider.lookup(song, webClient);
 		songService.updateSong(song);
 	}
 }

@@ -1,5 +1,6 @@
 package com.bobo.storage.core.service.impl;
 
+import com.bobo.storage.core.domain.DomainEntity;
 import com.bobo.storage.core.domain.PlaylistSong;
 import com.bobo.storage.core.domain.Song;
 import com.bobo.storage.core.resource.access.PlaylistSongRepository;
@@ -7,11 +8,15 @@ import com.bobo.storage.core.resource.query.PlaylistSongQueryRepository;
 import com.bobo.storage.core.service.PlaylistSongService;
 import java.util.Collection;
 import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PlaylistSongServiceImpl implements PlaylistSongService {
+
+	private static final Logger log = LoggerFactory.getLogger(PlaylistSongServiceImpl.class);
 
 	private final PlaylistSongRepository repository;
 
@@ -43,5 +48,10 @@ public class PlaylistSongServiceImpl implements PlaylistSongService {
 		Collection<PlaylistSong> songsToTransfer = query.findAllBySong(from);
 		songsToTransfer.forEach(song -> song.migrate(to));
 		repository.saveAll(songsToTransfer);
+		log.info(
+				"PlaylistSong#Migration: {} migrated from {} to {}.",
+				DomainEntity.log(songsToTransfer),
+				from.log(),
+				to.log());
 	}
 }

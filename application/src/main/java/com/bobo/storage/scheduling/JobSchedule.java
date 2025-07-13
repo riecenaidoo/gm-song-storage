@@ -1,5 +1,6 @@
 package com.bobo.storage.scheduling;
 
+import com.bobo.storage.core.domain.DomainEntity;
 import com.bobo.storage.core.domain.Song;
 import com.bobo.storage.core.resource.query.SongQueryRepository;
 import com.bobo.storage.core.service.SongLookupService;
@@ -60,15 +61,11 @@ public class JobSchedule {
 		if (songs.isEmpty()) {
 			return;
 		}
-
 		if (log.isTraceEnabled()) {
-			String queueInfo =
-					songs.stream()
-							.map(song -> "\t- (id:%s, url:%s)".formatted(song.getId(), song.getUrl()))
-							.collect(Collectors.joining("\n"));
-			log.trace("Job#LookupNewSongs: Looking up {} Song(s)...\n{}\n", songs.size(), queueInfo);
-		} else {
-			log.info("Job#LookupNewSongs: Looking up {} Song(s)", songs.size());
+			String urlQueue = songs.stream().map(Song::getUrl).collect(Collectors.joining("\n\t - "));
+			log.trace("Job#LookupNewSongs: Looking up {}...\n\t - {}", DomainEntity.log(songs), urlQueue);
+		} else if (log.isInfoEnabled()) {
+			log.info("Job#LookupNewSongs: Looking up {}...", DomainEntity.log(songs));
 		}
 
 		for (Song song : songs) {
@@ -76,8 +73,8 @@ public class JobSchedule {
 				lookupService.lookup(song);
 			} catch (Exception ex) {
 				log.error(
-						"Job#LookupNewSongs: Exception encountered on Song(id:{}, url:{}).",
-						song.getId(),
+						"Job#LookupNewSongs: Exception encountered on {} with url {}",
+						song.log(),
 						song.getUrl(),
 						ex);
 
@@ -87,14 +84,14 @@ public class JobSchedule {
 					song.lookedUp();
 					songService.updateSong(song);
 					log.info(
-							"Job#LookupNewSongs: Gracefully handled Song(id:{}) Exception. Removed from the lookup queue.",
-							song.getId());
+							"Job#LookupNewSongs: Gracefully handled exception on {}. Removed from lookup queue.",
+							song.log());
 				} else {
 					log.warn(
 							"""
-													Job#LookupNewSongs: Handling Song(id:{}) Exception failed because the Song is no longer
-														present in the repository. Was the Song removed while lookup was occurring?""",
-							song.getId());
+													Job#LookupNewSongs: Exception handling failed because {} is no longer
+														present in the repository. Was it removed while lookup was occurring?""",
+							song.log());
 				}
 			}
 		}

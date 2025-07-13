@@ -2,6 +2,9 @@ package com.bobo.storage.core.domain;
 
 import com.bobo.semantic.TechnicalID;
 import jakarta.persistence.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Objects;
 
 /**
  * Represents an entity within the domain model.
@@ -59,9 +62,10 @@ public abstract class DomainEntity implements TechnicalID<Integer> {
 	 * The {@link TechnicalID} of a {@link DomainEntity} is managed exclusively by the persistence
 	 * provider.
 	 *
-	 * <p>This mutator exists solely for internal use in testing scenarios.</p>
-	 * <p>Should be marked {@code final}, but the JPA provider (Hibernate) proxies the setters for lazy-loading
-	 * operations.</p>
+	 * <p>This mutator exists solely for internal use in testing scenarios.
+	 *
+	 * <p>Should be marked {@code final}, but the JPA provider (Hibernate) proxies the setters for
+	 * lazy-loading operations.
 	 *
 	 * @param id the technical identifier to assign to this {@link Entity}
 	 * @see TechnicalID#getId()
@@ -79,5 +83,73 @@ public abstract class DomainEntity implements TechnicalID<Integer> {
 	@Override
 	public final Integer getId() {
 		return id;
+	}
+
+	/**
+	 * e.g. {@code Entity(id:1)}
+	 *
+	 * <p>This method exists to keep logs consistent yet concise. When logging, less is often more—but
+	 * context is essential.
+	 *
+	 * <p>If a {@code DomainEntity} appears in a log message, we need to be able to identify it within
+	 * the system for further investigation. This is one of the primary use cases for the {@code
+	 * TechnicalID}.
+	 *
+	 * <h2>Implementation Notes</h2>
+	 *
+	 * <p>A transient (unmanaged) entity cannot be traced by its {@code id} and is represented as
+	 * {@code Entity(<new>)} as a fallback. In such cases, prefer logging identifying fields
+	 * explicitly, and avoid relying solely on this method.
+	 *
+	 * @return the minimal information needed to identify this entity in logs.
+	 */
+	public final String log() {
+		String ref = (id != null) ? "(id:" + id + ")" : "(<new>)";
+		return this.getClass().getSimpleName() + ref;
+	}
+
+	/**
+	 * e.g. {@code 2 Entity(ids:1,2)}
+	 *
+	 * @param entities a non-empty, homogeneous collection of entities to log information about.
+	 * @return the minimal information needed to identify these entities in logs.
+	 * @throws IllegalArgumentException if the collection is empty, or the collection is
+	 *     non-homogenous.
+	 * @implNote Technically, we could support non-homogeneous collection by producing {@code n
+	 *     EntityA(ids:1, 2), n EntityB(ids:3, 4} but I do not see a use case for this. It would be
+	 *     very improbable to have a collection of several different entity types, and attempt to log
+	 *     them all together in a single message.
+	 * @see #log()
+	 */
+	public static String log(Collection<? extends DomainEntity> entities)
+			throws IllegalArgumentException {
+		if (Objects.requireNonNull(entities).isEmpty()) {
+			throw new IllegalArgumentException(
+					"""
+											Attempt to log information about an empty collection. \
+											Caller is missing a guard clause to avoid unnecessary executions.""");
+		}
+
+		Class<?> entityClass = null;
+		StringBuilder refs = new StringBuilder(entities.size() * 4);
+		for (Iterator<? extends DomainEntity> iterator = entities.iterator(); iterator.hasNext(); ) {
+			DomainEntity entity = iterator.next();
+			if (entityClass == null) {
+				entityClass = entity.getClass();
+			} else if (!entityClass.isInstance(entity)) {
+				throw new IllegalArgumentException(
+						"""
+																									Attempt to log information about a non-homogeneous collection. \
+																									Cannot create a single, identifiable logging representation for multiple entity types at once.""");
+			}
+			String entityRef = entity.getId() != null ? entity.getId().toString() : "<new>";
+			refs.append(entityRef);
+			if (iterator.hasNext()) {
+				refs.append(", ");
+			}
+		}
+		assert entityClass
+				!= null; // Loop will execute at-least once as we have validated it is not empty.
+		return "%d %s(ids:%s)".formatted(entities.size(), entityClass.getSimpleName(), refs);
 	}
 }
