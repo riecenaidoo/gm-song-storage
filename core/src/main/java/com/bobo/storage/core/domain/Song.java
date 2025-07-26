@@ -6,10 +6,14 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -23,6 +27,8 @@ import reactor.core.publisher.Mono;
  */
 @Entity
 public class Song extends DomainEntity {
+
+	private static final Logger log = LoggerFactory.getLogger(Song.class);
 
 	/**
 	 * The reference to the song.
@@ -45,7 +51,7 @@ public class Song extends DomainEntity {
 
 	/*
 		TODO [design] Consider extracting metadata into a dedicated value object.
-		This may clarify the role of a Provider — a Provider supplies SongMetadata.
+		This may clarify the role of a Provider. A Provider provides SongMetadata.
 		It would also support future iterations where we compare metadata across references
 		to determine whether they refer to the same song.
 	*/
@@ -197,45 +203,62 @@ public class Song extends DomainEntity {
 	}
 
 	/**
-	 * Verifies the existence of this reference by performing a {@code HEAD} request on its {@code
-	 * url}.
+	 * Performs a <a
+	 * href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods/HEAD">{@code
+	 * HEAD}</a> request on this {@link Song}'s {@link #url} to verify its existence.
 	 *
-	 * <p>Follows {@code 3xx Redirection} responses and updates the {@code url} to the resolved
-	 * location, if applicable. The resolved location is not immediately verified because hosts may
-	 * redirect multiple times. Since the time to complete the entire redirection chain is
-	 * unpredictable, further resolution is deferred to subsequent lookup cycles.
-	 *
-	 * <p>This operation is considered a lookup and will update {@code lastLookup}. It is intended to
-	 * be invoked as part of regular lookup cycles.
+	 * <p>This operation is considered a lookup and will update {@link #lastLookup}. It is intended to
+	 * be invoked as part of regular lookup cycles i.e. polling.
 	 *
 	 * <p>It is not required to be called upon creation, based on the assumption that the client
 	 * supplying this reference has already verified its existence at the time of submission.
 	 *
-	 * <p>TODO: Define behavior for HTTP responses such as {@code 501 Unauthorized}, {@code 404 Not
-	 * Found}, etc. When implemented, consider changing the return type to convey the response status,
-	 * or at least an enumeration grouping status codes into categories (e.g., 2xx, 3xx, 4xx, 5xx).
-	 * This will allow callers to coordinate appropriately with other services. For example:
-	 *
-	 * <ul>
-	 *   <li>3xx responses require checking if the new location is already mapped to another entity.
-	 *   <li>4xx responses might trigger attempts to migrate referrals to another {@code Song} with
-	 *       matching metadata.
-	 * </ul>
-	 *
 	 * @param client the HTTP client to use; must not have a base URL configured.
-	 * @return {@code true} if the {@code url} was mutated due to redirection during verification.
+	 * @return the {@link HttpStatusCode} of the {@code HEAD} request.
+	 *     <p>
+	 *     <ul>
+	 *       <li>{@link HttpStatusCode#is3xxRedirection()} requires co-ordination to ensure the new
+	 *           location ({@link #url}) of this {@link Song} is not already mapped by another {@link
+	 *           Song}.
+	 *       <li>{@code 404} should attempt to migrate referrals to another {@link Song} with matching
+	 *           metadata.
+	 *     </ul>
+	 *
+	 * @implNote Obeys {@code 3xx Redirection} responses by updating the {@link #url} to the
+	 *     redirection location, if applicable. The new location ({@link #url}) is not immediately
+	 *     looked-up, because hosts may redirect multiple times. Since the time to complete the entire
+	 *     redirection chain is unpredictable, further resolution is deferred to subsequent lookup
+	 *     cycles.
+	 * @see #url
+	 * @see #lastLookup
 	 */
-	public boolean verify(WebClient client) {
-		ClientResponse response = client.head().uri(toUri()).exchangeToMono(Mono::just).block();
-		assert response != null; // HEAD request should return response headers even on error.
+	public HttpStatusCode poll(WebClient client) {
+		URI uri = toUri();
+		ClientResponse response =
+				Objects.requireNonNull(
+						client
+								.head()
+								.uri(uri)
+								.exchangeToMono(Mono::just)
+								.block(Duration.ofSeconds(5)), // TODO allow configuration
+						"""
+						HEAD request unexpectedly returned null; \
+						exchangeToMono must produce a non-empty Mono.""");
 		lookedUp();
 		if (response.statusCode().is3xxRedirection()) {
 			URI redirectionLocation = response.headers().asHttpHeaders().getLocation();
-			if (redirectionLocation == null) return false;
-			setUrl(redirectionLocation.toString());
-			return true;
+			if (redirectionLocation != null) {
+				setUrl(redirectionLocation.toString());
+			} else {
+				log.error(
+						"""
+													Verification: Encountered {} response.
+													Cannot resolve redirection for {} without a Location header.""",
+						response.statusCode(),
+						this.log());
+			}
 		}
-		return false;
+		return response.statusCode();
 	}
 
 	/**

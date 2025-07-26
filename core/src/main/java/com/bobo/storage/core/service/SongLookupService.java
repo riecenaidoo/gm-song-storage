@@ -33,7 +33,7 @@ public interface SongLookupService {
 	 * </ol>
 	 *
 	 * @param song to lookup.
-	 * @see Song#verify(WebClient)
+	 * @see Song#poll(WebClient)
 	 * @see Provider#lookup(Song, WebClient)
 	 */
 	void lookup(Song song);

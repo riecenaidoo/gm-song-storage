@@ -1,3 +1,5 @@
+- `PlaylistSongController` needs to create a Playlist and a Song, but this is not done atomically. It needs to be done in the `PlaylistSongService`. The `create` method is still valid, however, for use in PATCH requests where the Song is know.
+
 ## Make File
 
 A phony rule to initialise the repository. Things like downloading documentation, etc.

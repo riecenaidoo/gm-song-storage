@@ -10,6 +10,7 @@ import com.bobo.storage.core.service.SongService;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -47,7 +48,15 @@ public class SongLookupServiceImpl implements SongLookupService {
 	 */
 	@Transactional
 	public void lookup(Song song) {
-		if (song.verify(webClient)) {
+		HttpStatusCode statusCode = song.poll(webClient);
+		if (statusCode.is2xxSuccessful()) {
+			// TODO [design] Returns Optional<Provider> for later co-ordination?
+			Provider.lookup(song, webClient);
+			songService.updateSong(song);
+			return;
+		}
+
+		if (statusCode.is3xxRedirection()) {
 			Optional<Song> existingSong = songs.findByUrl(song.getUrl());
 			if (existingSong.isPresent() && !TechnicalID.same(existingSong.get(), song)) {
 				log.info(
@@ -60,11 +69,6 @@ public class SongLookupServiceImpl implements SongLookupService {
 				log.debug("Lookup: {} redirects. URL updated. Lookup deferred.", song.log());
 				songService.updateSong(song);
 			}
-			return;
 		}
-
-		// TODO [design] Returns Optional<Provider> for later co-ordination?
-		Provider.lookup(song, webClient);
-		songService.updateSong(song);
 	}
 }
