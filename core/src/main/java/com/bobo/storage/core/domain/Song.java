@@ -36,6 +36,9 @@ public class Song extends DomainEntity {
 	 * <p>Modeled as the Uniform Resource Locator (URL) pointing to the song on the internet.
 	 *
 	 * <p>Serves as the unique identifier for a {@code Song} entity.
+	 *
+	 * @see #toUrl()
+	 * @see #toUri()
 	 */
 	@Column(unique = true, nullable = false, length = 2048)
 	private String url;
@@ -61,6 +64,7 @@ public class Song extends DomainEntity {
 	 *
 	 * <p>Part of the metadata associated with this reference.
 	 */
+	@Column(length = 256)
 	private String title;
 
 	/**
@@ -68,6 +72,7 @@ public class Song extends DomainEntity {
 	 *
 	 * <p>Part of the metadata associated with this reference.
 	 */
+	@Column(length = 256)
 	private String artist;
 
 	/**
@@ -86,9 +91,12 @@ public class Song extends DomainEntity {
 	/**
 	 * Creates a reference to a song on the internet.
 	 *
-	 * @param url the Uniform Resource Locator (URL) representing the reference.
+	 * @param url the reference to the song. A valid URL.
+	 * @see #url
+	 * @see Song#validatedUrl(String)
+	 * @throws IllegalArgumentException on an invalid URL.
 	 */
-	public Song(String url) {
+	public Song(String url) throws IllegalArgumentException {
 		this.url = validatedUrl(url);
 	}
 
@@ -105,6 +113,9 @@ public class Song extends DomainEntity {
 		return Objects.hashCode(url);
 	}
 
+	/**
+	 * @see #url
+	 */
 	public String getUrl() {
 		return url;
 	}
@@ -113,6 +124,7 @@ public class Song extends DomainEntity {
 	 * Convert this reference to a {@link URL}.
 	 *
 	 * @return a {@link URL} representing the reference
+	 * @see #url
 	 */
 	public URL toUrl() {
 		try {
@@ -134,6 +146,7 @@ public class Song extends DomainEntity {
 	 * Convert this reference to a {@link URI}, as used for constructing network requests.
 	 *
 	 * @return a {@link URI} representing the reference
+	 * @see #url
 	 */
 	public URI toUri() {
 		try {
@@ -165,13 +178,34 @@ public class Song extends DomainEntity {
 	 *     (URI): Generic Syntax</a>
 	 * @see <a href="https://www.ietf.org/rfc/rfc2732.txt">RFC 2732: Format for Literal IPv6 Addresses
 	 *     in URLs</a>
+	 * @see #url
+	 * @implNote URLs beyond {@code 2048} characters are rejected. While there are no formal
+	 *     restrictions around URL length, the upper limit is typically {@code 2000} - anything larger
+	 *     is likely malicious.
 	 */
-	protected String validatedUrl(String rawUrl) throws IllegalArgumentException {
+	private static String validatedUrl(String rawUrl) throws IllegalArgumentException {
 		rawUrl = rawUrl.trim();
+		if (rawUrl.isEmpty()) {
+			throw new IllegalArgumentException("URL cannot be empty.");
+		}
+		if (rawUrl.length() > 2048) {
+			throw new IllegalArgumentException(
+					"""
+																								URL rejected. Exceeds length restriction of 2048 chars. \
+																								Actual length: %d characters."""
+							.formatted(rawUrl.length()));
+		}
 		try {
 			URI uri = new URI(rawUrl); // Syntax-level URI validation (RFC 2396)
 			URL url = uri.toURL(); // Ensures absolute URL with valid scheme/host
 			return url.toString();
+		} catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException(
+					"""
+																								URL validation failed. Not an absolute URL. \
+																								Cannot be polled : %s"""
+							.formatted(rawUrl),
+					e);
 		} catch (URISyntaxException e) {
 			throw new IllegalArgumentException(
 					"URL validation failed. [RFC2396] Syntax issue with: %s".formatted(rawUrl), e);
@@ -188,17 +222,21 @@ public class Song extends DomainEntity {
 	/**
 	 * Updates the reference (URL) of this song.
 	 *
-	 * <p>Changing the reference implies that the new URL has not been looked up before, since
-	 * references uniquely identify a {@code Song}. If the reference were already known, the existing
-	 * entity would be used instead.
-	 *
-	 * <p>As a result, this method resets {@code lastLookup} to {@code null} to indicate that the new
-	 * reference requires verification.
-	 *
 	 * @param url the new reference URL to assign to this song
+	 * @implNote Changing the reference is equivalent to creating a new {@code Song}. As a result,
+	 *     this method resets {@code lastLookup} to {@code null} to indicate that the new reference
+	 *     requires verification.
+	 *     <p>The only valid case for mutating the reference is to follow {@code 3xx Redirection}
+	 *     responses from the host of the URL.
+	 *     <p>The access level for this mutator is widened to {@code package-private} solely for
+	 *     internal use in testing scenarios.
+	 * @see #url
+	 * @see #lastLookup
 	 */
-	protected void setUrl(String url) {
-		this.url = validatedUrl(url);
+	void setUrl(String url) {
+		url = validatedUrl(url);
+		if (url.equals(this.url)) return;
+		this.url = url;
 		this.lastLookup = null;
 	}
 
@@ -235,15 +273,12 @@ public class Song extends DomainEntity {
 	public HttpStatusCode poll(WebClient client) {
 		URI uri = toUri();
 		ClientResponse response =
-				Objects.requireNonNull(
-						client
-								.head()
-								.uri(uri)
-								.exchangeToMono(Mono::just)
-								.block(Duration.ofSeconds(5)), // TODO allow configuration
-						"""
-						HEAD request unexpectedly returned null; \
-						exchangeToMono must produce a non-empty Mono.""");
+				client
+						.head()
+						.uri(uri)
+						.exchangeToMono(Mono::just)
+						.block(Duration.ofSeconds(5)); // TODO allow configuration
+		assert response != null; // exchangeToMono(Mono::just) never null
 		lookedUp();
 		if (response.statusCode().is3xxRedirection()) {
 			URI redirectionLocation = response.headers().asHttpHeaders().getLocation();
@@ -252,7 +287,7 @@ public class Song extends DomainEntity {
 			} else {
 				log.error(
 						"""
-													Verification: Encountered {} response.
+													Verification: Encountered {} response. Unsupported.
 													Cannot resolve redirection for {} without a Location header.""",
 						response.statusCode(),
 						this.log());
@@ -262,53 +297,93 @@ public class Song extends DomainEntity {
 	}
 
 	/**
-	 * Called when the {@code Song} has been looked up.
+	 * This accessor exists solely for internal use in testing scenarios.
 	 *
-	 * <p>Sets the {@code lastLookup} of the {@code Song} to {@link LocalDate#now()}.
+	 * @see #lastLookup
 	 */
-	public void lookedUp() {
-		this.lastLookup = LocalDateTime.now();
+	LocalDateTime getLastLookup() {
+		return lastLookup;
 	}
 
 	/**
 	 * This mutator exists solely for internal use in testing scenarios.
 	 *
 	 * @param lastLookup nullable.
+	 * @see #lastLookup
 	 */
-	protected void setLastLookup(LocalDateTime lastLookup) {
+	void setLastLookup(LocalDateTime lastLookup) {
 		this.lastLookup = lastLookup;
 	}
 
+	/**
+	 * Called when the {@code Song} has been looked up.
+	 *
+	 * <p>Sets the {@code lastLookup} of the {@code Song} to {@link LocalDate#now()}.
+	 *
+	 * @see #lastLookup
+	 */
+	public void lookedUp() {
+		this.lastLookup = LocalDateTime.now();
+	}
+
+	/**
+	 * @see #title
+	 */
 	public Optional<String> getTitle() {
 		return Optional.ofNullable(title);
 	}
 
 	/**
-	 * @param title nullable.
+	 * @param title nullable. As a blank {@code String} provides no metadata about the {@code Song},
+	 *     it is treated as {@code null}.
+	 * @implNote Metadata fields are non-essential and can be derived from the {@link #url}, The title
+	 *     of a song is expected to be relatively short. If it exceeds 256 characters, we do not throw
+	 *     an exception because we can handle this by truncation.
+	 * @see #title
 	 */
 	public void setTitle(String title) {
-		this.title = title;
+		this.title =
+				(title == null || title.isBlank())
+						? null
+						: (title = title.trim()).length() > 256 ? title.substring(0, 256) : title;
 	}
 
+	/**
+	 * @see #artist
+	 */
 	public Optional<String> getArtist() {
 		return Optional.ofNullable(artist);
 	}
 
 	/**
-	 * @param artist nullable.
+	 * @param artist nullable. As a blank {@code String} provides no metadata about the {@code Song},
+	 *     it is treated as {@code null}.
+	 * @implNote Metadata fields are non-essential and can be derived from the {@link #url}, if
+	 *     required. The artist of a song is expected to be relatively short. If it exceeds 256
+	 *     characters, we do not throw an exception because we can handle this by truncation.
+	 * @see #artist
 	 */
 	public void setArtist(String artist) {
-		this.artist = artist;
+		this.artist =
+				(artist == null || artist.isBlank())
+						? null
+						: (artist = artist.trim()).length() > 256 ? artist.substring(0, 256) : artist;
 	}
 
+	/**
+	 * @see #thumbnailUrl
+	 */
 	public Optional<String> getThumbnailUrl() {
 		return Optional.ofNullable(thumbnailUrl);
 	}
 
 	/**
-	 * @param thumbnailUrl nullable.
+	 * @param thumbnailUrl a valid URL. Nullable.
+	 * @see #thumbnailUrl
+	 * @see Song#validatedUrl(String)
+	 * @throws IllegalArgumentException on an invalid URL.
 	 */
-	public void setThumbnailUrl(String thumbnailUrl) {
+	public void setThumbnailUrl(String thumbnailUrl) throws IllegalArgumentException {
 		this.thumbnailUrl = Objects.isNull(thumbnailUrl) ? null : validatedUrl(thumbnailUrl);
 	}
 }
