@@ -1,5 +1,15 @@
+# Artifacts
 target/
-.idea
+.made/
 
+# Configs
+.idea
 *.iml
+
+# Exclude notes unless explictly included
 *.md
+
+# Tooling
+.mvn/
+mvnw
+mvnw.cmd

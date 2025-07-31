@@ -1,10 +1,42 @@
+# ========================================
 # ANSI Color Escape Codes
 # YELLOW='\033[0;33m'
 # RED='\033[0;31m'
 # GREEN='\033[0;32m'
 # NONE='\033[0m'
+# ========================================
 
-.PHONY: git-hooks
+SRC_FILES := $(shell find . -type f -name "*.java")
+
+.PHONY: all images artifacts git-hooks
+
+all: images artifacts git-hooks
+
+# ========================================
+# Images
+# ========================================
+
+images: .made/gm-song-storage-api
+
+.made/gm-song-storage-api: application/target/application-1.0-SNAPSHOT.jar
+	docker build -t gm-song-storage-api:dev -f Dockerfile-targetonly .
+	mkdir -p ./.made	# Ensure existence
+	touch ./.made/gm-song-storage-api	# Timestamp file
+	docker compose down api	# Teardown out of date containers
+
+# ========================================
+# Artifacts
+# ========================================
+
+artifacts: application/target/application-1.0-SNAPSHOT.jar
+
+application/target/application-1.0-SNAPSHOT.jar: $(SRC_FILES)
+	mvn spotless:apply
+	mvn package
+
+# ========================================
+# Git Hooks
+# ========================================
 
 git-hooks: .git/hooks/pre-commit .git/hooks/pre-push	## update all Git hooks in the local repository
 
@@ -33,4 +65,3 @@ git-hooks: .git/hooks/pre-commit .git/hooks/pre-push	## update all Git hooks in 
 	@printf '\n\033[0;33m%s\033[0m\n\n' "Pre-Push Hook added:"
 	@cat .git/hooks/pre-push
 	@printf '\n\033[0;33m%s\033[0m\n\n' "The Pre-Push Hook can be removed with 'rm .git/hooks/pre-push'"
-

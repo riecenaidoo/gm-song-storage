@@ -14,7 +14,7 @@ services:
   api:
     build:
       dockerfile: "Dockerfile"
-    image: gm-song-storage-api
+    image: gm-song-storage-api:dev
     ports:
       - "8080:8080"
     environment:
