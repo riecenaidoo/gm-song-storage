@@ -1,5 +1,9 @@
 package com.bobo.storage.core.domain;
 
+import static com.bobo.storage.core.domain.Normalisations.nullIf;
+import static com.bobo.storage.core.domain.Normalisations.skipIfNull;
+import static com.bobo.storage.core.domain.Normalisations.truncateToSize;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import java.net.MalformedURLException;
@@ -11,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatusCode;
@@ -52,12 +57,22 @@ public class Song extends DomainEntity {
 	@SuppressWarnings("unused")
 	private LocalDateTime lastLookup;
 
-	/*
-		TODO [design] Consider extracting metadata into a dedicated value object.
-		This may clarify the role of a Provider. A Provider provides SongMetadata.
-		It would also support future iterations where we compare metadata across references
-		to determine whether they refer to the same song.
-	*/
+	/**
+	 * The normalisation pipeline for {@link Song} metadata.
+	 *
+	 * <p>These fields are expected to be relatively short strings. If they exceed 256 characters, we
+	 * do not throw an exception, because we can safely handle this via truncation. We consider this
+	 * safe because metadata fields are derived from the {@link #url}.
+	 *
+	 * @implNote TODO [design] Consider extracting metadata into a dedicated value object. This may
+	 *     clarify the role of a Provider. A Provider provides SongMetadata. It would also support
+	 *     future iterations where we compare metadata across references to determine whether they
+	 *     refer to the same song.
+	 */
+	private static final Function<String, String> metadataNormalisation =
+			nullIf(String::isBlank)
+					.andThen(skipIfNull(String::trim))
+					.andThen(skipIfNull(truncateToSize(256)));
 
 	/**
 	 * The title of the song.
@@ -335,17 +350,11 @@ public class Song extends DomainEntity {
 
 	/**
 	 * @param title nullable. As a blank {@code String} provides no metadata about the {@code Song},
-	 *     it is treated as {@code null}.
-	 * @implNote Metadata fields are non-essential and can be derived from the {@link #url}, The title
-	 *     of a song is expected to be relatively short. If it exceeds 256 characters, we do not throw
-	 *     an exception because we can handle this by truncation.
+	 *     it is treated as {@code null}. Truncates to 256 characters.
 	 * @see #title
 	 */
 	public void setTitle(String title) {
-		this.title =
-				(title == null || title.isBlank())
-						? null
-						: (title = title.trim()).length() > 256 ? title.substring(0, 256) : title;
+		this.title = metadataNormalisation.apply(title);
 	}
 
 	/**
@@ -357,17 +366,11 @@ public class Song extends DomainEntity {
 
 	/**
 	 * @param artist nullable. As a blank {@code String} provides no metadata about the {@code Song},
-	 *     it is treated as {@code null}.
-	 * @implNote Metadata fields are non-essential and can be derived from the {@link #url}, if
-	 *     required. The artist of a song is expected to be relatively short. If it exceeds 256
-	 *     characters, we do not throw an exception because we can handle this by truncation.
+	 *     it is treated as {@code null}. Truncates to 256 characters.
 	 * @see #artist
 	 */
 	public void setArtist(String artist) {
-		this.artist =
-				(artist == null || artist.isBlank())
-						? null
-						: (artist = artist.trim()).length() > 256 ? artist.substring(0, 256) : artist;
+		this.artist = metadataNormalisation.apply(artist);
 	}
 
 	/**
