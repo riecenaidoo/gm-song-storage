@@ -6,6 +6,7 @@ import com.bobo.storage.core.domain.Song;
 import com.bobo.storage.core.resource.access.PlaylistSongRepository;
 import com.bobo.storage.core.resource.query.PlaylistSongQueryRepository;
 import com.bobo.storage.core.service.PlaylistSongService;
+import com.bobo.storage.core.service.SongService;
 import java.util.Collection;
 import java.util.Objects;
 import org.slf4j.Logger;
@@ -22,17 +23,24 @@ public class PlaylistSongServiceImpl implements PlaylistSongService {
 
 	private final PlaylistSongQueryRepository query;
 
+	private final SongService songService;
+
 	public PlaylistSongServiceImpl(
-			PlaylistSongRepository repository, PlaylistSongQueryRepository query) {
+			PlaylistSongRepository repository,
+			PlaylistSongQueryRepository query,
+			SongService songService) {
 		this.repository = repository;
 		this.query = query;
+		this.songService = songService;
 	}
 
 	@Override
 	@Transactional
 	public PlaylistSong create(PlaylistSong song) {
 		if (Objects.nonNull(song.getId())) throw new IllegalArgumentException();
-
+		if (song.getSong().getId() == null) {
+			songService.create(song.getSong());
+		}
 		return repository.save(song);
 	}
 

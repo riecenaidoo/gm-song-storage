@@ -12,8 +12,7 @@ import com.bobo.storage.core.resource.query.PlaylistSongQueryRepository;
 import com.bobo.storage.core.service.PlaylistSongService;
 import com.bobo.storage.core.service.SongService;
 import com.bobo.storage.web.TestConfig;
-import com.bobo.storage.web.api.v2.request.PlaylistSongsCreateRequest;
-import com.bobo.storage.web.api.v2.request.PlaylistsCreateRequest;
+import com.bobo.storage.web.api.v2.request.SongsCreateRequest;
 import com.bobo.storage.web.api.v2.response.PlaylistSongResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Arrays;
@@ -29,7 +28,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestInstance(
+		TestInstance.Lifecycle
+				.PER_CLASS) // TODO rm. Does not give the benefits I assumed. We don't need shared state.
 @WebMvcTest(PlaylistSongsController.class)
 @UnitTest(
 		PlaylistSongsController
@@ -67,7 +68,7 @@ class PlaylistSongsControllerTest {
 	}
 
 	/**
-	 * @see PlaylistsController#createPlaylist(PlaylistsCreateRequest)
+	 * @see PlaylistSongsController#createPlaylistSong(int, SongsCreateRequest)
 	 */
 	@DisplayName("POST /playlists/{playlist_id}/songs")
 	@Test
@@ -77,7 +78,7 @@ class PlaylistSongsControllerTest {
 
 		SongMother songMother = new SongMother(random);
 		String validUrl = songMother.withUrls().get().getUrl();
-		PlaylistSongsCreateRequest request = new PlaylistSongsCreateRequest(validUrl);
+		SongsCreateRequest request = new SongsCreateRequest(validUrl);
 		String requestPayload = mapper.writeValueAsString(request);
 
 		// TODO figure out how to use PlaylistSong constructor
@@ -170,7 +171,7 @@ class PlaylistSongsControllerTest {
 		when(playlistSongs.findById(id)).thenReturn(Optional.of(playlistSong));
 
 		// When
-		mvc.perform(delete("/api/v2//playlists/{playlist_id}/songs/{id}", playlistId, id))
+		mvc.perform(delete("/api/v2/playlists/{playlist_id}/songs/{id}", playlistId, id))
 				// Then
 				.andExpect(status().isNoContent())
 				.andExpect(header().doesNotExist("content-type"));

@@ -7,8 +7,7 @@ import com.bobo.storage.core.domain.Song;
 import com.bobo.storage.core.resource.query.PlaylistQueryRepository;
 import com.bobo.storage.core.resource.query.PlaylistSongQueryRepository;
 import com.bobo.storage.core.service.PlaylistSongService;
-import com.bobo.storage.core.service.SongService;
-import com.bobo.storage.web.api.v2.request.PlaylistSongsCreateRequest;
+import com.bobo.storage.web.api.v2.request.SongsCreateRequest;
 import com.bobo.storage.web.api.v2.response.PlaylistSongResponse;
 import com.bobo.storage.web.semantic.ResourceController;
 import java.net.URI;
@@ -27,17 +26,13 @@ public class PlaylistSongsController {
 
 	private final PlaylistSongService service;
 
-	private final SongService songService;
-
 	public PlaylistSongsController(
 			PlaylistSongQueryRepository playlistSongs,
 			PlaylistQueryRepository playlists,
-			PlaylistSongService service,
-			SongService songService) {
+			PlaylistSongService service) {
 		this.playlistSongs = playlistSongs;
 		this.playlists = playlists;
 		this.service = service;
-		this.songService = songService;
 	}
 
 	/**
@@ -48,15 +43,12 @@ public class PlaylistSongsController {
 	 */
 	@PostMapping
 	public ResponseEntity<PlaylistSongResponse> createPlaylistSong(
-			@PathVariable int playlistId, @RequestBody PlaylistSongsCreateRequest request) {
+			@PathVariable int playlistId, @RequestBody SongsCreateRequest request) {
 		Playlist playlist =
 				playlists
 						.findById(playlistId)
 						.orElseThrow(() -> new ResourceNotFoundException(Playlist.class, playlistId));
-		Song song = request.toCreate();
-		song = songService.create(song);
-
-		PlaylistSong playlistSong = new PlaylistSong(playlist, song);
+		PlaylistSong playlistSong = new PlaylistSong(playlist, request.toCreate());
 		playlistSong = service.create(playlistSong);
 		PlaylistSongResponse response = new PlaylistSongResponse(playlistSong);
 		URI resource =

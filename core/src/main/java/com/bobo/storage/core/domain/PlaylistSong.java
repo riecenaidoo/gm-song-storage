@@ -26,10 +26,15 @@ public class PlaylistSong extends DomainEntity {
 	protected PlaylistSong() {}
 
 	/**
-	 * A {@code PlaylistSong} can only be created by adding a {@link Song} into a {@link Playlist}.
+	 * Create a relationship between a {@link Playlist} and a {@link Song}.
 	 *
-	 * @param playlist to add into. Must have an assigned {@link TechnicalID}.
-	 * @param song to add. Must have an assigned {@link TechnicalID}.
+	 * <p>The {@link Playlist} is the owning side of the relationship, it must already exist. A {@link
+	 * PlaylistSong} can serve as a creation root for a {@link Song}; if the {@link Song} does not
+	 * exist, it will be created.
+	 *
+	 * @param playlist the {@link Playlist} to add the {@link Song} into. Must have an assigned {@link
+	 *     TechnicalID}.
+	 * @param song the {@link Song} to add to the {@link Playlist}.
 	 */
 	public PlaylistSong(Playlist playlist, Song song) {
 		// Existence Validation
@@ -39,9 +44,6 @@ public class PlaylistSong extends DomainEntity {
 		// State Validation
 		if (playlist.getId() == null) {
 			throw new IllegalArgumentException("Playlist argument must have an assigned TechnicalID.");
-		}
-		if (song.getId() == null) {
-			throw new IllegalArgumentException("Song argument must have an assigned TechnicalID.");
 		}
 
 		this.playlist = playlist;
