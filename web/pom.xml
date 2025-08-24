@@ -55,22 +55,4 @@
 
   </dependencies>
 
-  <build>
-    <plugins>
-      <plugin>
-        <!--                Resolves Mockito User Agent Warnings-->
-        <!--                https://stackoverflow.com/a/79306379-->
-        <!--                https://stackoverflow.com/a/79213258/4071001-->
-        <!--                https://stackoverflow.com/a/79213258/4071001-->
-        <!--                https://stackoverflow.com/a/79171147/4071001-->
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <argLine>-javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
-                        -Xshare:off</argLine>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-
 </project>

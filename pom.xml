@@ -25,6 +25,10 @@
     <java.version>17</java.version>
 
     <spotless.version>2.44.4</spotless.version>
+    <skip.unit.tests>
+      <!--          [Running Unit and Integration Test Separately in Maven](https://medium.com/@vandernobrel/running-unit-and-integration-test-separately-in-maven-a3e82d25cb7d)-->
+      false
+    </skip.unit.tests>
   </properties>
 
   <dependencies>
@@ -41,25 +45,27 @@
 
   <build>
     <plugins>
+      <!--      Configure testing-->
       <plugin>
-        <!--        Bind Integration (*IT) tests to verify phase. They do not run during test phase, only unit tests (*Test) do. -->
+        <!--  [Resolve Mockito User Agent Warnings](https://stackoverflow.com/a/79213258/4071001)-->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>-javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
+            -Xshare:off</argLine>
+          <!--  [Running Unit and Integration Test Separately in Maven](https://medium.com/@vandernobrel/running-unit-and-integration-test-separately-in-maven-a3e82d25cb7d)-->
+          <skipTests>${skip.unit.tests}</skipTests>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>integration-test</goal>
-              <goal>verify</goal>
-            </goals>
-            <configuration>
-              <includes>
-                <include>**/*IT.java</include>
-              </includes>
-            </configuration>
-          </execution>
-        </executions>
+        <configuration>
+          <argLine>-javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
+            -Xshare:off</argLine>
+        </configuration>
       </plugin>
-
+      <!--      /Configure testing-->
       <plugin>
         <!--        Configure code formatting-->
         <groupId>com.diffplug.spotless</groupId>
