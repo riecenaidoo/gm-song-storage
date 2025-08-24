@@ -33,7 +33,7 @@ printf '\033[0;32m%s\033[0m\n' "Passed."
 staged_src_files=$(git diff --cached --name-only | grep '\.java$')
 if [ -n "$staged_src_files" ]; then
   printf "[\033[0;33m%s\033[0m] Checking... " "Integration-Test"
-  STDOUT=$($MVN verify -Dskip.unit.tests=true)
+  STDOUT=$($MVN failsafe:integration-test failsafe:verify)
   EXIT_CODE=$?
   if [ "$EXIT_CODE" -ne 0 ]; then
     printf '\033[0;31m%s\033[0m' "Failed!"

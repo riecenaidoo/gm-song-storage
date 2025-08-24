@@ -25,10 +25,6 @@
     <java.version>17</java.version>
 
     <spotless.version>2.44.4</spotless.version>
-    <skip.unit.tests>
-      <!--          [Running Unit and Integration Test Separately in Maven](https://medium.com/@vandernobrel/running-unit-and-integration-test-separately-in-maven-a3e82d25cb7d)-->
-      false
-    </skip.unit.tests>
   </properties>
 
   <dependencies>
@@ -53,8 +49,6 @@
         <configuration>
           <argLine>-javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
             -Xshare:off</argLine>
-          <!--  [Running Unit and Integration Test Separately in Maven](https://medium.com/@vandernobrel/running-unit-and-integration-test-separately-in-maven-a3e82d25cb7d)-->
-          <skipTests>${skip.unit.tests}</skipTests>
         </configuration>
       </plugin>
       <plugin>
