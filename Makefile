@@ -1,48 +1,65 @@
+# See [7.2.1 General Conventions for Makefiles](https://www.gnu.org/prep/standards/html_node/Makefile-Basics.html)
+SHELL = /bin/sh
+
+# See [7.2.6 Standard Targets for Users > 'all'](https://www.gnu.org/prep/standards/html_node/Standard-Targets.html)
+all: git-hooks	## default (no-arg) target to initialise, or update the local repository
+
+.PHONY: all
+
 # ========================================
-# ANSI Color Escape Codes
-# YELLOW='\033[0;33m'
-# RED='\033[0;31m'
-# GREEN='\033[0;32m'
-# NONE='\033[0m'
+# Java Artifacts
 # ========================================
 
+java: application/target/application-1.0-SNAPSHOT.jar	## alias for creating all Java artifacts
+
+# [6.2.4 Conditional Variable Assignment](https://www.gnu.org/software/make/manual/html_node/Conditional-Assignment.html)
+# [6.10 Variables from the Environment](https://www.gnu.org/software/make/manual/html_node/Environment.html)
+MVN ?= mvn
+# [6.2.2 Simply Expanded Variable Assignment](https://www.gnu.org/software/make/manual/html_node/Simple-Assignment.html)
 SRC_FILES := $(shell find . -type f -name "*.java")
 
-.PHONY: all images artifacts git-hooks
+application/target/application-1.0-SNAPSHOT.jar: $(SRC_FILES)
+	$(MVN) package -DskipTests
 
-all: images artifacts git-hooks
+rm-java:	## remove all Java artifacts produced by this script
+	$(MVN) clean
+
+.PHONY: java rm-java
 
 # ========================================
-# Images
+# Docker Artifacts
 # ========================================
 
-images: .made/gm-song-storage-api
+docker: .made/gm-song-storage-api	## alias for creating all Docker artifacts
+
+DOCKER ?= docker
 
 .made/gm-song-storage-api: application/target/application-1.0-SNAPSHOT.jar
-	docker build -t gm-song-storage-api:dev -f Dockerfile-targetonly .
+	$(DOCKER) build -t gm-song-storage-api:dev -f Dockerfile-targetonly .
 	mkdir -p ./.made	# Ensure existence
 	touch ./.made/gm-song-storage-api	# Timestamp file
-	docker compose down api	# Teardown out of date containers
+
+rm-docker:	## remove all Docker artifacts produced by this script
+	$(DOCKER) compose down -v
+	@if ! $(DOCKER) ps -a | grep -F "gm-song-storage-api:dev"; then \
+  		$(DOCKER) rmi gm-song-storage-api:dev; \
+  	else \
+		printf '\033[0;31m[%s]\t\033[0m' "WARN"; \
+		printf '\033[0;31m%s\033[0m' "Removal aborted: \"gm-song-storage-api:dev\" is still in use."; \
+	fi
+	rm -f ./.made/gm-song-storage-api
+
+.PHONY: docker rm-docker
 
 # ========================================
-# Artifacts
+# [Git Hooks](https://git-scm.com/book/ms/v2/Customizing-Git-Git-Hooks)
 # ========================================
 
-artifacts: application/target/application-1.0-SNAPSHOT.jar
+git-hooks: .git/hooks/pre-commit .git/hooks/pre-push	## alias for updating all Git hooks in the local repository
 
-application/target/application-1.0-SNAPSHOT.jar: $(SRC_FILES)
-	mvn spotless:apply
-	mvn package
-
-# ========================================
-# Git Hooks
-# ========================================
-
-git-hooks: .git/hooks/pre-commit .git/hooks/pre-push	## update all Git hooks in the local repository
+GIT ?= git
 
 .git/hooks/pre-commit: scripts/pre-commit.sh	## updates the pre-commit hook in the local repository
-# Formatting and unit-testing should be performed before each commit to the remote repository.
-# [Git Hook](https://git-scm.com/book/ms/v2/Customizing-Git-Git-Hooks)
 	@if [ -f .git/hooks/pre-commit ]; then \
 		printf '\n\033[0;31m%s\033[0m\n\n' 'Pre-existing Pre-Commit Hook:'; \
 		cat .git/hooks/pre-commit; \
@@ -54,8 +71,6 @@ git-hooks: .git/hooks/pre-commit .git/hooks/pre-push	## update all Git hooks in 
 	@printf '\n\033[0;33m%s\033[0m\n\n' "The Pre-Commit Hook can be removed with 'rm .git/hooks/pre-commit'"
 
 .git/hooks/pre-push: scripts/pre-push.sh	## updates the pre-push hook in the local repository
-# Build must be stable before pushing to the remote
-# [Git Hook](https://git-scm.com/book/ms/v2/Customizing-Git-Git-Hooks)
 	@if [ -f .git/hooks/pre-push ]; then \
 		printf '\n\033[0;31m%s\033[0m\n\n' 'Pre-existing Pre-Push Hook:'; \
 		cat .git/hooks/pre-push; \
@@ -65,3 +80,44 @@ git-hooks: .git/hooks/pre-commit .git/hooks/pre-push	## update all Git hooks in 
 	@printf '\n\033[0;33m%s\033[0m\n\n' "Pre-Push Hook added:"
 	@cat .git/hooks/pre-push
 	@printf '\n\033[0;33m%s\033[0m\n\n' "The Pre-Push Hook can be removed with 'rm .git/hooks/pre-push'"
+
+rm-git-hooks:	## remove all Git Hooks installed to the local repository by this script
+	rm -f .git/hooks/pre-commit
+	rm -f .git/hooks/pre-push
+
+.PHONY: git-hooks rm-git-hooks
+
+# ========================================
+# Utilities
+# ========================================
+
+# See [7.2.6 Standard Targets for Users > 'clean'](https://www.gnu.org/prep/standards/html_node/Standard-Targets.html)
+clean: rm-java rm-docker rm-git-hooks	## alias for cleaning up all artifacts of this script
+	rm -rf ./.made
+
+format:	## run formatting
+	$(MVN) spotless:apply
+	$(GIT) status -s
+
+help:  ## show available targets
+	@printf "%s\n" \
+	"------------------" \
+	"Available Commands" \
+	"------------------"
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
+		| awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
+	@printf "%s\n" \
+	"------------------"
+
+.PHONY: clean format help
+
+# ========================================
+# ANSI Color Escape Codes
+# ========================================
+# YELLOW='\033[0;33m'
+# RED='\033[0;31m'
+# GREEN='\033[0;32m'
+# CYAN='\033[0;36m'
+# BLUE='\033[0;34m'
+# NONE='\033[0m'
+# ========================================
