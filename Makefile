@@ -45,7 +45,7 @@ java: application/target/application-$(PROJECT_VERSION).jar	## alias for creatin
 SRC_FILES := $(shell find . -type f -name "*.java")
 
 application/target/application-%.jar: $(SRC_FILES)
-	$(MVN) install -DskipTests
+	$(MVN) package -DskipTests
 
 rm-java:	## remove all Java artifacts produced by this script
 	$(MVN) clean
