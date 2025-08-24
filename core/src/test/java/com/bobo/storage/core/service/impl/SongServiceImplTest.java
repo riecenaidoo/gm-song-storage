@@ -6,8 +6,7 @@ import com.bobo.semantic.UnitTest;
 import com.bobo.storage.core.domain.EntityMother;
 import com.bobo.storage.core.domain.Song;
 import com.bobo.storage.core.domain.SongMother;
-import com.bobo.storage.core.resource.access.SongRepository;
-import com.bobo.storage.core.resource.query.SongQueryRepository;
+import com.bobo.storage.core.resource.SongRepository;
 import com.bobo.storage.core.service.SongService;
 import java.util.Optional;
 import java.util.Random;
@@ -21,8 +20,6 @@ class SongServiceImplTest {
 
 	private SongRepository repository;
 
-	private SongQueryRepository songs;
-
 	// Test Utilities
 
 	private final Random random = new Random();
@@ -34,8 +31,7 @@ class SongServiceImplTest {
 	@BeforeEach
 	void setUp() {
 		repository = mock(SongRepository.class);
-		songs = mock(SongQueryRepository.class);
-		service = new SongServiceImpl(repository, songs);
+		service = new SongServiceImpl(repository);
 	}
 
 	/**
@@ -50,7 +46,7 @@ class SongServiceImplTest {
 			Song song = new SongMother(random).withUrls().get();
 
 			// Stubbing
-			when(songs.findByUrl(song.getUrl())).thenReturn(Optional.empty());
+			when(repository.findByUrl(song.getUrl())).thenReturn(Optional.empty());
 			when(repository.save(song)).then((ans) -> EntityMother.setId(song, 1));
 
 			// When
@@ -83,7 +79,7 @@ class SongServiceImplTest {
 			Song existingEntity = mother.withUrls(song::getUrl).withIds().get();
 
 			// Stubbing
-			when(songs.findByUrl(song.getUrl())).thenReturn(Optional.of(existingEntity));
+			when(repository.findByUrl(song.getUrl())).thenReturn(Optional.of(existingEntity));
 
 			// When
 			Song createdSong = service.create(song);

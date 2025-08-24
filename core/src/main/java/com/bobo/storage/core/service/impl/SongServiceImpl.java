@@ -1,23 +1,21 @@
 package com.bobo.storage.core.service.impl;
 
 import com.bobo.storage.core.domain.Song;
-import com.bobo.storage.core.resource.access.SongRepository;
-import com.bobo.storage.core.resource.query.SongQueryRepository;
+import com.bobo.storage.core.resource.SongRepository;
 import com.bobo.storage.core.service.SongService;
+import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SongServiceImpl implements SongService {
 
-	private final SongRepository repository;
+	private final SongRepository songs;
 
-	private final SongQueryRepository query;
-
-	public SongServiceImpl(SongRepository repository, SongQueryRepository query) {
-		this.repository = repository;
-		this.query = query;
+	public SongServiceImpl(SongRepository songs) {
+		this.songs = songs;
 	}
 
 	/**
@@ -30,18 +28,33 @@ public class SongServiceImpl implements SongService {
 	public Song create(Song song) {
 		if (Objects.nonNull(song.getId())) throw new IllegalArgumentException();
 
-		return query.findByUrl(song.getUrl()).orElseGet(() -> repository.save(song));
+		return songs.findByUrl(song.getUrl()).orElseGet(() -> songs.save(song));
 	}
 
 	@Override
 	@Transactional
 	public Song updateSong(Song song) {
-		return repository.save(song);
+		return songs.save(song);
 	}
 
 	@Override
 	@Transactional
 	public void delete(Song song) {
-		repository.delete(song);
+		songs.delete(song);
+	}
+
+	@Override
+	public Optional<Song> findById(int id) {
+		return songs.findById(id);
+	}
+
+	@Override
+	public Optional<Song> findByUrl(String url) {
+		return songs.findByUrl(url);
+	}
+
+	@Override
+	public Collection<Song> findAllByLastLookupIsNull() {
+		return songs.findAllByLastLookupIsNull();
 	}
 }

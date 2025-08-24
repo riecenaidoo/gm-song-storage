@@ -7,10 +7,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.bobo.semantic.UnitTest;
 import com.bobo.storage.core.domain.*;
-import com.bobo.storage.core.resource.query.PlaylistQueryRepository;
-import com.bobo.storage.core.resource.query.PlaylistSongQueryRepository;
+import com.bobo.storage.core.service.PlaylistService;
 import com.bobo.storage.core.service.PlaylistSongService;
-import com.bobo.storage.core.service.SongService;
 import com.bobo.storage.web.TestConfig;
 import com.bobo.storage.web.api.v2.request.SongsCreateRequest;
 import com.bobo.storage.web.api.v2.response.PlaylistSongResponse;
@@ -39,13 +37,9 @@ class PlaylistSongsControllerTest {
 
 	// Mock Dependencies
 
-	@MockitoBean private PlaylistSongQueryRepository playlistSongs;
+	@MockitoBean private PlaylistService playlists;
 
-	@MockitoBean private PlaylistQueryRepository playlists;
-
-	@MockitoBean private PlaylistSongService service;
-
-	@MockitoBean private SongService songService;
+	@MockitoBean private PlaylistSongService playlistSongs;
 
 	// Test Utilities
 
@@ -97,16 +91,11 @@ class PlaylistSongsControllerTest {
 				I don't think so, I'm really just setting ids tbh.
 		*/
 		when(playlists.findById(playlist.getId())).thenReturn(Optional.of(playlist));
-		when(songService.create(request.toCreate()))
-				.thenAnswer(
-						invocation -> {
-							Song song = invocation.getArgument(0);
-							return songMother.setId(song);
-						});
-		when(service.create(any(PlaylistSong.class)))
+		when(playlistSongs.create(any(PlaylistSong.class)))
 				.thenAnswer(
 						invocation -> {
 							PlaylistSong playlistSong = invocation.getArgument(0);
+							songMother.setId(playlistSong.getSong());
 							return EntityMother.setId(playlistSong, id);
 						});
 
@@ -122,7 +111,7 @@ class PlaylistSongsControllerTest {
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(content().json(expectedPayload));
 
-		verify(service, times(1)).create(any(PlaylistSong.class));
+		verify(playlistSongs, times(1)).create(any(PlaylistSong.class));
 	}
 
 	/**
@@ -176,6 +165,6 @@ class PlaylistSongsControllerTest {
 				.andExpect(status().isNoContent())
 				.andExpect(header().doesNotExist("content-type"));
 
-		verify(service, times(1)).delete(playlistSong);
+		verify(playlistSongs, times(1)).delete(playlistSong);
 	}
 }

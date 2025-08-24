@@ -4,8 +4,7 @@ import com.bobo.semantic.TechnicalID;
 import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.domain.PlaylistSong;
 import com.bobo.storage.core.domain.Song;
-import com.bobo.storage.core.resource.query.PlaylistQueryRepository;
-import com.bobo.storage.core.resource.query.PlaylistSongQueryRepository;
+import com.bobo.storage.core.service.PlaylistService;
 import com.bobo.storage.core.service.PlaylistSongService;
 import com.bobo.storage.web.api.v2.request.SongsCreateRequest;
 import com.bobo.storage.web.api.v2.response.PlaylistSongResponse;
@@ -20,19 +19,13 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @ResourceController(resource = PlaylistSong.class, respondsWith = PlaylistSongResponse.class)
 public class PlaylistSongsController {
 
-	private final PlaylistSongQueryRepository playlistSongs;
+	private final PlaylistService playlists;
 
-	private final PlaylistQueryRepository playlists;
+	private final PlaylistSongService playlistSongs;
 
-	private final PlaylistSongService service;
-
-	public PlaylistSongsController(
-			PlaylistSongQueryRepository playlistSongs,
-			PlaylistQueryRepository playlists,
-			PlaylistSongService service) {
+	public PlaylistSongsController(PlaylistService playlists, PlaylistSongService playlistSongs) {
 		this.playlistSongs = playlistSongs;
 		this.playlists = playlists;
-		this.service = service;
 	}
 
 	/**
@@ -49,7 +42,7 @@ public class PlaylistSongsController {
 						.findById(playlistId)
 						.orElseThrow(() -> new ResourceNotFoundException(Playlist.class, playlistId));
 		PlaylistSong playlistSong = new PlaylistSong(playlist, request.toCreate());
-		playlistSong = service.create(playlistSong);
+		playlistSong = playlistSongs.create(playlistSong);
 		PlaylistSongResponse response = new PlaylistSongResponse(playlistSong);
 		URI resource =
 				ServletUriComponentsBuilder.fromCurrentRequestUri()
@@ -85,7 +78,7 @@ public class PlaylistSongsController {
 		if (!TechnicalID.same(playlist, playlistSong.getPlaylist())) {
 			throw new SubresourceMismatchException(playlist, playlistSong);
 		}
-		service.delete(playlistSong);
+		playlistSongs.delete(playlistSong);
 		return ResponseEntity.noContent().build();
 	}
 }

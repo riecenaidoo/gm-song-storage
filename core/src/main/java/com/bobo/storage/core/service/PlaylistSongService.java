@@ -1,8 +1,11 @@
 package com.bobo.storage.core.service;
 
+import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.domain.PlaylistSong;
 import com.bobo.storage.core.domain.Song;
 import com.bobo.storage.core.semantic.CreateResource;
+import java.util.Collection;
+import java.util.Optional;
 
 public interface PlaylistSongService extends CreateResource<PlaylistSong> {
 
@@ -19,4 +22,8 @@ public interface PlaylistSongService extends CreateResource<PlaylistSong> {
 	 * @param to {@code Song} to transfer to.
 	 */
 	void migrate(Song from, Song to);
+
+	Optional<PlaylistSong> findById(int id);
+
+	Collection<PlaylistSong> findAllByPlaylist(Playlist playlist);
 }

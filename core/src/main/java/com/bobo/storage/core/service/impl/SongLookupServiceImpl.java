@@ -3,7 +3,6 @@ package com.bobo.storage.core.service.impl;
 import com.bobo.semantic.TechnicalID;
 import com.bobo.storage.core.domain.Provider;
 import com.bobo.storage.core.domain.Song;
-import com.bobo.storage.core.resource.query.SongQueryRepository;
 import com.bobo.storage.core.service.PlaylistSongService;
 import com.bobo.storage.core.service.SongLookupService;
 import com.bobo.storage.core.service.SongService;
@@ -22,21 +21,15 @@ public class SongLookupServiceImpl implements SongLookupService {
 
 	private final WebClient webClient;
 
-	private final SongQueryRepository songs;
+	private final SongService songs;
 
-	private final SongService songService;
-
-	private final PlaylistSongService playlistSongService;
+	private final PlaylistSongService playlistSongs;
 
 	public SongLookupServiceImpl(
-			WebClient webClient,
-			SongQueryRepository songs,
-			SongService songService,
-			PlaylistSongService playlistSongService) {
+			WebClient webClient, SongService songs, PlaylistSongService playlistSongs) {
 		this.webClient = webClient;
 		this.songs = songs;
-		this.songService = songService;
-		this.playlistSongService = playlistSongService;
+		this.playlistSongs = playlistSongs;
 	}
 
 	/**
@@ -52,7 +45,7 @@ public class SongLookupServiceImpl implements SongLookupService {
 		if (statusCode.is2xxSuccessful()) {
 			// TODO [design] Returns Optional<Provider> for later co-ordination?
 			Provider.lookup(song, webClient);
-			songService.updateSong(song);
+			songs.updateSong(song);
 			return;
 		}
 
@@ -63,11 +56,11 @@ public class SongLookupServiceImpl implements SongLookupService {
 						"Lookup: {} redirects to {}. Its references will be migrated to the existing Song, and it will be removed.",
 						song.log(),
 						existingSong.get().log());
-				playlistSongService.migrate(song, existingSong.get());
-				songService.delete(song);
+				playlistSongs.migrate(song, existingSong.get());
+				songs.delete(song);
 			} else {
 				log.debug("Lookup: {} redirects. URL updated. Lookup deferred.", song.log());
-				songService.updateSong(song);
+				songs.updateSong(song);
 			}
 		}
 	}

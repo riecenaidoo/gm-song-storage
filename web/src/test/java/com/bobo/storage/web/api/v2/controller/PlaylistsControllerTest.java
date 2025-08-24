@@ -9,7 +9,6 @@ import com.bobo.semantic.UnitTest;
 import com.bobo.storage.core.domain.EntityMother;
 import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.domain.PlaylistMother;
-import com.bobo.storage.core.resource.query.PlaylistQueryRepository;
 import com.bobo.storage.core.service.PlaylistService;
 import com.bobo.storage.web.TestConfig;
 import com.bobo.storage.web.api.v2.request.PlaylistsCreateRequest;
@@ -25,6 +24,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.lang.NonNull;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -37,9 +37,7 @@ class PlaylistsControllerTest {
 
 	// Mock Dependencies
 
-	@MockitoBean private PlaylistService service;
-
-	@MockitoBean private PlaylistQueryRepository playlists;
+	@MockitoBean private PlaylistService playlists;
 
 	// Test Utilities
 
@@ -80,7 +78,7 @@ class PlaylistsControllerTest {
 				String.format("%s/api/v2/playlists/%d", TestConfig.testSchemeAuthority(), id);
 
 		// Stubbing
-		when(service.create(any()))
+		when(playlists.create(any()))
 				.thenAnswer(
 						invocation -> {
 							Playlist playlist = invocation.getArgument(0);
@@ -99,7 +97,7 @@ class PlaylistsControllerTest {
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(content().json(expectedPayload));
 
-		verify(service, times(1)).create(request.toCreate());
+		verify(playlists, times(1)).create(request.toCreate());
 	}
 
 	/**
@@ -218,7 +216,8 @@ class PlaylistsControllerTest {
 
 		// Stubbing
 		when(playlists.findById(id)).thenReturn(Optional.of(playlist));
-		when(service.update(any(Playlist.class))).thenAnswer((invocation -> invocation.getArgument(0)));
+		when(playlists.update(any(Playlist.class)))
+				.thenAnswer((invocation -> invocation.getArgument(0)));
 
 		// When
 		mvc.perform(
@@ -230,7 +229,7 @@ class PlaylistsControllerTest {
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(content().json(expectedPayload));
 
-		verify(service, times(1)).update(updatedPlaylist);
+		verify(playlists, times(1)).update(updatedPlaylist);
 	}
 
 	/**
@@ -253,7 +252,7 @@ class PlaylistsControllerTest {
 				.andExpect(status().isNoContent())
 				.andExpect(header().doesNotExist("content-type"));
 
-		verify(service, times(1)).delete(playlist);
+		verify(playlists, times(1)).delete(playlist);
 	}
 
 	/**
@@ -304,7 +303,7 @@ class PlaylistsControllerTest {
 	 */
 	record TestSourceRequest(String displayName, MockHttpServletRequestBuilder requestBuilder) {
 
-		@Override
+		@NonNull @Override
 		public String toString() {
 			return displayName;
 		}
