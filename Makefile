@@ -77,23 +77,23 @@ rm-docker:	## remove all Docker artifacts produced by this script
 # ========================================
 git: .git/hooks/pre-commit .git/hooks/pre-push	## alias for initialising the local repository; creates Git artifacts
 
-.git/hooks/pre-commit: scripts/pre-commit.sh	## updates the pre-commit hook in the local repository
+.git/hooks/pre-commit: .scripts	## updates the pre-commit hook in the local repository
 	@if [ -f .git/hooks/pre-commit ]; then \
 		printf '\n\033[0;31m%s\033[0m\n\n' 'Pre-existing Pre-Commit Hook:'; \
 		cat .git/hooks/pre-commit; \
 	fi
-	cat scripts/pre-commit.sh > .git/hooks/pre-commit
+	cat .scripts/pre-commit.sh > .git/hooks/pre-commit
 	chmod +x .git/hooks/pre-commit	# Ensure the script is executable.
 	@printf '\n\033[0;33m%s\033[0m\n\n' "Pre-Commit Hook added:"
 	@cat .git/hooks/pre-commit
 	@printf '\n\033[0;33m%s\033[0m\n\n' "The Pre-Commit Hook can be removed with 'rm .git/hooks/pre-commit'"
 
-.git/hooks/pre-push: scripts/pre-push.sh	## updates the pre-push hook in the local repository
+.git/hooks/pre-push: .scripts	## updates the pre-push hook in the local repository
 	@if [ -f .git/hooks/pre-push ]; then \
 		printf '\n\033[0;31m%s\033[0m\n\n' 'Pre-existing Pre-Push Hook:'; \
 		cat .git/hooks/pre-push; \
 	fi
-	cat scripts/pre-push.sh > .git/hooks/pre-push
+	cat .scripts/pre-push.sh > .git/hooks/pre-push
 	chmod +x .git/hooks/pre-push	# Ensure the script is executable.
 	@printf '\n\033[0;33m%s\033[0m\n\n' "Pre-Push Hook added:"
 	@cat .git/hooks/pre-push
