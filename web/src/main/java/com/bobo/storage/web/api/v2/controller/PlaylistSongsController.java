@@ -19,9 +19,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @ResourceController(resource = PlaylistSong.class, respondsWith = PlaylistSongResponse.class)
 public class PlaylistSongsController {
 
-	private final PlaylistService playlists;
-
 	private final PlaylistSongService playlistSongs;
+
+	private final PlaylistService playlists;
 
 	public PlaylistSongsController(PlaylistService playlists, PlaylistSongService playlistSongs) {
 		this.playlistSongs = playlistSongs;
