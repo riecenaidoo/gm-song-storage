@@ -6,6 +6,9 @@ import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+/**
+ * @see EntityRepository
+ */
 @Repository
 public interface SongRepository
 		extends EntityRepository<Song, Integer>, CrudRepository<Song, Integer> {

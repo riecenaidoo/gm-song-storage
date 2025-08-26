@@ -5,7 +5,18 @@ import java.util.Optional;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.Repository;
 
-/** Captures types to ensure the correct {@code id} type is used for the {@code Entity}. */
+/**
+ * Represents a collection of entities.
+ *
+ * @apiNote Instances of this repository should be treated as collective nouns representing their
+ *     entity type. e.g.
+ *     <pre>
+ *   {@code private final AppleRepository apples;}
+ * </pre>
+ *
+ * @implNote Fundamentally, this interface is serving the same purpose as {@link Repository}, but
+ *     for our system.
+ */
 @NoRepositoryBean
 public interface EntityRepository<T extends TechnicalID<ID>, ID> extends Repository<T, ID> {
 

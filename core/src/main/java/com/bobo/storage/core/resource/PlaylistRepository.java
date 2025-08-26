@@ -6,6 +6,9 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
+/**
+ * @see EntityRepository
+ */
 @Repository
 public interface PlaylistRepository
 		extends EntityRepository<Playlist, Integer>, CrudRepository<Playlist, Integer> {
