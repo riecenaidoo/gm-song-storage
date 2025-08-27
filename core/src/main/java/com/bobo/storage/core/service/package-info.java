@@ -1,22 +1,27 @@
 /**
- * A service is a unit of work the system can perform. Contracts within the service package outline
- * the services available for use. The service layer enforces the business rules of those services.
+ * The service layer of the application.
+ *
+ * <p>This package contains service contracts that represent units of work the system can perform,
+ * including queries and operations that enforce business rules.
  *
  * <p>Rules:
  *
  * <ol>
- *   <li>The service layer only communicates via the common domain language. It may not service
- *       requests in layer specific dialects, such as DTOs and Commands.
+ *   <li>The service layer communicates exclusively using the common domain language. It must not
+ *       service requests expressed in layer-specific dialects such as DTOs or Commands.
+ *   <li>All service methods must represent meaningful operations in the domain, including both
+ *       business rule–enforcing actions and query-based use cases.
  * </ol>
  *
- * Style:
+ * <p>Style:
  *
  * <ol>
- *   <li>Service contracts must respect the ordering of the serviced domain object's fields - namely
- *       in method and parameter declaration ordering.
- *   <li>A service method should reflect a unit of work that has a business rule associated with it.
- *       If there is no business rule, e.g. simple queries, it need not be defined as part of the
- *       service contract.
+ *   <li>Service contracts must respect the ordering of the serviced domain object's fields,
+ *       particularly in method and parameter declaration order.
+ *   <li>Service methods should be grouped by CRUD operations. Within each group, singular
+ *       operations should be defined before batch operations.
  * </ol>
+ *
+ * <p>These classes may be aware of other layers or technical concerns, but must not depend on them.
  */
 package com.bobo.storage.core.service;

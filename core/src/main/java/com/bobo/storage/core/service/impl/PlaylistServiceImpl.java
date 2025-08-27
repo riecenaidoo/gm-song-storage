@@ -27,18 +27,6 @@ public class PlaylistServiceImpl implements PlaylistService {
 	}
 
 	@Override
-	public Playlist update(Playlist playlist) {
-		return playlists.save(playlist);
-	}
-
-	/** TODO: Consider marking inactive rather than removing. */
-	@Override
-	@Transactional
-	public void delete(Playlist playlist) {
-		playlists.delete(playlist);
-	}
-
-	@Override
 	public Optional<Playlist> findById(int id) {
 		return playlists.findById(id);
 	}
@@ -51,5 +39,17 @@ public class PlaylistServiceImpl implements PlaylistService {
 	@Override
 	public Collection<Playlist> findAllByNameContainingIgnoringCase(String search) {
 		return playlists.findAllByNameContainingIgnoringCase(search);
+	}
+
+	@Override
+	public Playlist update(Playlist playlist) {
+		return playlists.save(playlist);
+	}
+
+	/** TODO: Consider marking inactive rather than removing. */
+	@Override
+	@Transactional
+	public void delete(Playlist playlist) {
+		playlists.delete(playlist);
 	}
 }

@@ -12,11 +12,6 @@ import java.util.Optional;
  */
 public interface SongService extends CreateResource<Song> {
 
-	/** TODO define {@code UpdateResource<R>}. */
-	Song updateSong(Song song);
-
-	void delete(Song song);
-
 	Optional<Song> findById(int id);
 
 	Optional<Song> findByUrl(String url);
@@ -28,4 +23,9 @@ public interface SongService extends CreateResource<Song> {
 	 * @apiNote In future, we will accept a {@code limit} parameter to control the return size.
 	 */
 	Collection<Song> getLookupCandidates();
+
+	/** TODO define {@code UpdateResource<R>}. */
+	Song updateSong(Song song);
+
+	void delete(Song song);
 }

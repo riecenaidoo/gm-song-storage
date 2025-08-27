@@ -40,6 +40,16 @@ public class PlaylistSongServiceImpl implements PlaylistSongService {
 	}
 
 	@Override
+	public Optional<PlaylistSong> findById(int id) {
+		return playlistSongs.findById(id);
+	}
+
+	@Override
+	public Collection<PlaylistSong> findAllByPlaylist(Playlist playlist) {
+		return playlistSongs.findAllByPlaylist(playlist);
+	}
+
+	@Override
 	@Transactional
 	public void delete(PlaylistSong song) {
 		playlistSongs.delete(song);
@@ -56,15 +66,5 @@ public class PlaylistSongServiceImpl implements PlaylistSongService {
 				DomainEntity.log(songsToTransfer),
 				from.log(),
 				to.log());
-	}
-
-	@Override
-	public Optional<PlaylistSong> findById(int id) {
-		return playlistSongs.findById(id);
-	}
-
-	@Override
-	public Collection<PlaylistSong> findAllByPlaylist(Playlist playlist) {
-		return playlistSongs.findAllByPlaylist(playlist);
 	}
 }

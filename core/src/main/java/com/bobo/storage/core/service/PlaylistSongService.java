@@ -9,6 +9,10 @@ import java.util.Optional;
 
 public interface PlaylistSongService extends CreateResource<PlaylistSong> {
 
+	Optional<PlaylistSong> findById(int id);
+
+	Collection<PlaylistSong> findAllByPlaylist(Playlist playlist);
+
 	void delete(PlaylistSong song);
 
 	/**
@@ -22,8 +26,4 @@ public interface PlaylistSongService extends CreateResource<PlaylistSong> {
 	 * @param to {@code Song} to transfer to.
 	 */
 	void migrate(Song from, Song to);
-
-	Optional<PlaylistSong> findById(int id);
-
-	Collection<PlaylistSong> findAllByPlaylist(Playlist playlist);
 }

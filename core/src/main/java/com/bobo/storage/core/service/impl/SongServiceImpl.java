@@ -32,18 +32,6 @@ public class SongServiceImpl implements SongService {
 	}
 
 	@Override
-	@Transactional
-	public Song updateSong(Song song) {
-		return songs.save(song);
-	}
-
-	@Override
-	@Transactional
-	public void delete(Song song) {
-		songs.delete(song);
-	}
-
-	@Override
 	public Optional<Song> findById(int id) {
 		return songs.findById(id);
 	}
@@ -61,5 +49,17 @@ public class SongServiceImpl implements SongService {
 	@Override
 	public Collection<Song> getLookupCandidates() {
 		return songs.findAllByLastLookupIsNull();
+	}
+
+	@Override
+	@Transactional
+	public Song updateSong(Song song) {
+		return songs.save(song);
+	}
+
+	@Override
+	@Transactional
+	public void delete(Song song) {
+		songs.delete(song);
 	}
 }
