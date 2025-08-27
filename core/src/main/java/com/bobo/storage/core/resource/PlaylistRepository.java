@@ -7,7 +7,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 /**
- * @see EntityRepository
+ * @implSpec {@link EntityRepository}
  */
 @Repository
 public interface PlaylistRepository
