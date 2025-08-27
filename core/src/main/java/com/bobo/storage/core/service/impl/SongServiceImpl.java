@@ -25,14 +25,14 @@ public class SongServiceImpl implements SongService {
 	 */
 	@Override
 	@Transactional
-	public Song create(Song song) {
+	public Song add(Song song) {
 		if (Objects.nonNull(song.getId())) throw new IllegalArgumentException();
 
 		return songs.findByUrl(song.getUrl()).orElseGet(() -> songs.save(song));
 	}
 
 	@Override
-	public Optional<Song> findById(int id) {
+	public Optional<Song> find(int id) {
 		return songs.findById(id);
 	}
 

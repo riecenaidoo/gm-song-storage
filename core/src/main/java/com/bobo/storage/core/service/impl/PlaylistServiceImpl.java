@@ -20,19 +20,19 @@ public class PlaylistServiceImpl implements PlaylistService {
 
 	@Override
 	@Transactional
-	public Playlist create(Playlist playlist) {
+	public Playlist add(Playlist playlist) {
 		if (Objects.nonNull(playlist.getId())) throw new IllegalArgumentException();
 
 		return playlists.save(playlist);
 	}
 
 	@Override
-	public Optional<Playlist> findById(int id) {
+	public Optional<Playlist> find(int id) {
 		return playlists.findById(id);
 	}
 
 	@Override
-	public Collection<Playlist> findAll() {
+	public Collection<Playlist> get() {
 		return playlists.findAll();
 	}
 

@@ -73,7 +73,7 @@ public class JobSchedule {
 						song.getUrl(),
 						ex);
 
-				Optional<Song> originalSong = this.songs.findById(song.getId());
+				Optional<Song> originalSong = this.songs.find(song.getId());
 				if (originalSong.isPresent()) {
 					song = originalSong.get();
 					song.lookedUp();

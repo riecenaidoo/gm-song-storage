@@ -90,8 +90,8 @@ class PlaylistSongsControllerTest {
 		/* TODO Reconsider the dependencies of this Controller. Am I stubbing too much?
 				I don't think so, I'm really just setting ids tbh.
 		*/
-		when(playlists.findById(playlist.getId())).thenReturn(Optional.of(playlist));
-		when(playlistSongs.create(any(PlaylistSong.class)))
+		when(playlists.find(playlist.getId())).thenReturn(Optional.of(playlist));
+		when(playlistSongs.add(any(PlaylistSong.class)))
 				.thenAnswer(
 						invocation -> {
 							PlaylistSong playlistSong = invocation.getArgument(0);
@@ -111,7 +111,7 @@ class PlaylistSongsControllerTest {
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(content().json(expectedPayload));
 
-		verify(playlistSongs, times(1)).create(any(PlaylistSong.class));
+		verify(playlistSongs, times(1)).add(any(PlaylistSong.class));
 	}
 
 	/**
@@ -133,8 +133,8 @@ class PlaylistSongsControllerTest {
 		String expectedPayload = mapper.writeValueAsString(expectedResponse);
 
 		// Stubbing
-		when(playlists.findById(playlist.getId())).thenReturn(Optional.of(playlist));
-		when(playlistSongs.findAllByPlaylist(playlist)).thenReturn(List.of(allPlaylistSongs));
+		when(playlists.find(playlist.getId())).thenReturn(Optional.of(playlist));
+		when(playlistSongs.getFromPlaylist(playlist)).thenReturn(List.of(allPlaylistSongs));
 
 		// When
 		mvc.perform(get("/api/v2/playlists/{playlist_id}/songs", playlist.getId()))
@@ -156,8 +156,8 @@ class PlaylistSongsControllerTest {
 		int id = playlistSong.getId();
 
 		// Stubbing
-		when(playlists.findById(playlistId)).thenReturn(Optional.of(playlistSong.getPlaylist()));
-		when(playlistSongs.findById(id)).thenReturn(Optional.of(playlistSong));
+		when(playlists.find(playlistId)).thenReturn(Optional.of(playlistSong.getPlaylist()));
+		when(playlistSongs.find(id)).thenReturn(Optional.of(playlistSong));
 
 		// When
 		mvc.perform(delete("/api/v2/playlists/{playlist_id}/songs/{id}", playlistId, id))

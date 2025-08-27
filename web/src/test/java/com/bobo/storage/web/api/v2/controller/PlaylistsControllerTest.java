@@ -78,7 +78,7 @@ class PlaylistsControllerTest {
 				String.format("%s/api/v2/playlists/%d", TestConfig.testSchemeAuthority(), id);
 
 		// Stubbing
-		when(playlists.create(any()))
+		when(playlists.add(any()))
 				.thenAnswer(
 						invocation -> {
 							Playlist playlist = invocation.getArgument(0);
@@ -97,7 +97,7 @@ class PlaylistsControllerTest {
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(content().json(expectedPayload));
 
-		verify(playlists, times(1)).create(request.toCreate());
+		verify(playlists, times(1)).add(request.toCreate());
 	}
 
 	/**
@@ -118,7 +118,7 @@ class PlaylistsControllerTest {
 			String expectedPayload = mapper.writeValueAsString(expectedResponse);
 
 			// Stubbing
-			when(playlists.findAll()).thenReturn(allPlaylists);
+			when(playlists.get()).thenReturn(allPlaylists);
 
 			// When
 			mvc.perform(get("/api/v2/playlists"))
@@ -127,7 +127,7 @@ class PlaylistsControllerTest {
 					.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(expectedPayload));
 
-			verify(playlists, times(1)).findAll();
+			verify(playlists, times(1)).get();
 			verify(playlists, times(0)).searchByName(anyString());
 		}
 
@@ -152,7 +152,7 @@ class PlaylistsControllerTest {
 					.andExpect(content().json("[]"));
 
 			verify(playlists, times(1)).searchByName(title);
-			verify(playlists, times(0)).findAll();
+			verify(playlists, times(0)).get();
 		}
 
 		@DisplayName("GET /playlists?title= (title must not be blank)")
@@ -184,7 +184,7 @@ class PlaylistsControllerTest {
 		String expectedPayload = mapper.writeValueAsString(expectedResponse);
 
 		// Stubbing
-		when(playlists.findById(id)).thenReturn(Optional.of(playlist));
+		when(playlists.find(id)).thenReturn(Optional.of(playlist));
 
 		// When
 		mvc.perform(get("/api/v2/playlists/{id}", id))
@@ -215,7 +215,7 @@ class PlaylistsControllerTest {
 		String expectedPayload = mapper.writeValueAsString(expectedResponse);
 
 		// Stubbing
-		when(playlists.findById(id)).thenReturn(Optional.of(playlist));
+		when(playlists.find(id)).thenReturn(Optional.of(playlist));
 		when(playlists.update(any(Playlist.class)))
 				.thenAnswer((invocation -> invocation.getArgument(0)));
 
@@ -244,7 +244,7 @@ class PlaylistsControllerTest {
 		Integer id = playlist.getId();
 
 		// Stubbing
-		when(playlists.findById(id)).thenReturn(Optional.of(playlist));
+		when(playlists.find(id)).thenReturn(Optional.of(playlist));
 
 		// When
 		mvc.perform(delete("/api/v2/playlists/{id}", id))
@@ -285,7 +285,7 @@ class PlaylistsControllerTest {
 	@ParameterizedTest
 	void playlistNotFound(TestSourceRequest request) throws Exception {
 		// Stubbing
-		when(playlists.findById(anyInt())).thenReturn(Optional.empty());
+		when(playlists.find(anyInt())).thenReturn(Optional.empty());
 
 		// When
 		mvc.perform(request.requestBuilder())

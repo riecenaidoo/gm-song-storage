@@ -35,13 +35,13 @@ class SongServiceImplTest {
 	}
 
 	/**
-	 * @see SongServiceImpl#create(Song)
+	 * @see SongServiceImpl#add(Song)
 	 */
 	@Nested
 	class Create {
 
 		@Test
-		void createSong() {
+		void addSong() {
 			// Given
 			Song song = new SongMother(random).withUrls().get();
 
@@ -50,7 +50,7 @@ class SongServiceImplTest {
 			when(repository.save(song)).then((ans) -> EntityMother.setId(song, 1));
 
 			// When
-			Song createdSong = service.create(song);
+			Song createdSong = service.add(song);
 
 			// Then
 			Assertions.assertEquals(song, createdSong);
@@ -67,7 +67,7 @@ class SongServiceImplTest {
 			Assertions.assertThrows(
 					IllegalArgumentException.class,
 					// When
-					() -> service.create(song));
+					() -> service.add(song));
 		}
 
 		@DisplayName("Do not save another Song, if an entry for it already exists.")
@@ -82,7 +82,7 @@ class SongServiceImplTest {
 			when(repository.findByUrl(song.getUrl())).thenReturn(Optional.of(existingEntity));
 
 			// When
-			Song createdSong = service.create(song);
+			Song createdSong = service.add(song);
 
 			// Then
 			Assertions.assertEquals(

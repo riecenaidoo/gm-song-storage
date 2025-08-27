@@ -27,7 +27,7 @@ public class PlaylistsController {
 	public ResponseEntity<PlaylistResponse> createPlaylist(
 			@RequestBody PlaylistsCreateRequest request) {
 		Playlist playlist = request.toCreate();
-		playlist = playlists.create(playlist);
+		playlist = playlists.add(playlist);
 		PlaylistResponse response = new PlaylistResponse(playlist);
 		// TODO [design] I am beginning to see how I should define the Resource abstraction.
 		URI resource =
@@ -54,7 +54,7 @@ public class PlaylistsController {
 			}
 			playlists = this.playlists.searchByName(search);
 		} else {
-			playlists = this.playlists.findAll();
+			playlists = this.playlists.get();
 		}
 		PlaylistResponse[] response =
 				playlists.stream().map(PlaylistResponse::new).toArray(PlaylistResponse[]::new);
@@ -64,7 +64,7 @@ public class PlaylistsController {
 	@GetMapping("/{id}")
 	public ResponseEntity<PlaylistResponse> readPlaylist(@PathVariable int id) {
 		Playlist playlist =
-				playlists.findById(id).orElseThrow(() -> new ResourceNotFoundException(Playlist.class, id));
+				playlists.find(id).orElseThrow(() -> new ResourceNotFoundException(Playlist.class, id));
 		PlaylistResponse response = new PlaylistResponse(playlist);
 		return ResponseEntity.ok(response);
 	}
@@ -73,7 +73,7 @@ public class PlaylistsController {
 	public ResponseEntity<PlaylistResponse> updatePlaylist(
 			@PathVariable int id, @RequestBody PlaylistsPatchRequest request) {
 		Playlist playlist =
-				playlists.findById(id).orElseThrow(() -> new ResourceNotFoundException(Playlist.class, id));
+				playlists.find(id).orElseThrow(() -> new ResourceNotFoundException(Playlist.class, id));
 		request.patch(playlist);
 		playlist = playlists.update(playlist);
 		PlaylistResponse response = new PlaylistResponse(playlist);
@@ -83,7 +83,7 @@ public class PlaylistsController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deletePlaylist(@PathVariable int id) {
 		Playlist playlist =
-				playlists.findById(id).orElseThrow(() -> new ResourceNotFoundException(Playlist.class, id));
+				playlists.find(id).orElseThrow(() -> new ResourceNotFoundException(Playlist.class, id));
 		playlists.delete(playlist);
 		return ResponseEntity.noContent().build();
 	}

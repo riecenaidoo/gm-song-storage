@@ -39,10 +39,10 @@ public class PlaylistSongsController {
 			@PathVariable int playlistId, @RequestBody SongsCreateRequest request) {
 		Playlist playlist =
 				playlists
-						.findById(playlistId)
+						.find(playlistId)
 						.orElseThrow(() -> new ResourceNotFoundException(Playlist.class, playlistId));
 		PlaylistSong playlistSong = new PlaylistSong(playlist, request.toCreate());
-		playlistSong = playlistSongs.create(playlistSong);
+		playlistSong = playlistSongs.add(playlistSong);
 		PlaylistSongResponse response = new PlaylistSongResponse(playlistSong);
 		URI resource =
 				ServletUriComponentsBuilder.fromCurrentRequestUri()
@@ -56,9 +56,9 @@ public class PlaylistSongsController {
 	public ResponseEntity<PlaylistSongResponse[]> readPlaylistSongs(@PathVariable int playlistId) {
 		Playlist playlist =
 				playlists
-						.findById(playlistId)
+						.find(playlistId)
 						.orElseThrow(() -> new ResourceNotFoundException(Playlist.class, playlistId));
-		Collection<PlaylistSong> playlistSongs = this.playlistSongs.findAllByPlaylist(playlist);
+		Collection<PlaylistSong> playlistSongs = this.playlistSongs.getFromPlaylist(playlist);
 		PlaylistSongResponse[] response =
 				playlistSongs.stream().map(PlaylistSongResponse::new).toArray(PlaylistSongResponse[]::new);
 		return ResponseEntity.ok(response);
@@ -69,11 +69,11 @@ public class PlaylistSongsController {
 			@PathVariable int playlistId, @PathVariable int id) {
 		Playlist playlist =
 				playlists
-						.findById(playlistId)
+						.find(playlistId)
 						.orElseThrow(() -> new ResourceNotFoundException(Playlist.class, playlistId));
 		PlaylistSong playlistSong =
 				playlistSongs
-						.findById(id)
+						.find(id)
 						.orElseThrow(() -> new ResourceNotFoundException(PlaylistSong.class, id));
 		if (!TechnicalID.same(playlist, playlistSong.getPlaylist())) {
 			throw new SubresourceMismatchException(playlist, playlistSong);

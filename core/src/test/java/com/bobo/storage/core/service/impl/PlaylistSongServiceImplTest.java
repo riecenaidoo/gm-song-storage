@@ -29,7 +29,7 @@ class PlaylistSongServiceImplTest {
 	}
 
 	/**
-	 * @see PlaylistSongServiceImpl#create(PlaylistSong)
+	 * @see PlaylistSongServiceImpl#add(PlaylistSong)
 	 */
 	@Nested
 	class Create {
@@ -44,7 +44,7 @@ class PlaylistSongServiceImplTest {
 			Assertions.assertThrows(
 					IllegalArgumentException.class,
 					// When
-					() -> service.create(song));
+					() -> service.add(song));
 		}
 	}
 }

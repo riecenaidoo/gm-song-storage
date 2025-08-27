@@ -31,28 +31,22 @@ public class PlaylistSongServiceImpl implements PlaylistSongService {
 
 	@Override
 	@Transactional
-	public PlaylistSong create(PlaylistSong song) {
+	public PlaylistSong add(PlaylistSong song) {
 		if (Objects.nonNull(song.getId())) throw new IllegalArgumentException();
 		if (song.getSong().getId() == null) {
-			songs.create(song.getSong());
+			songs.add(song.getSong());
 		}
 		return playlistSongs.save(song);
 	}
 
 	@Override
-	public Optional<PlaylistSong> findById(int id) {
+	public Optional<PlaylistSong> find(int id) {
 		return playlistSongs.findById(id);
 	}
 
 	@Override
-	public Collection<PlaylistSong> findAllByPlaylist(Playlist playlist) {
+	public Collection<PlaylistSong> getFromPlaylist(Playlist playlist) {
 		return playlistSongs.findAllByPlaylist(playlist);
-	}
-
-	@Override
-	@Transactional
-	public void delete(PlaylistSong song) {
-		playlistSongs.delete(song);
 	}
 
 	@Override
@@ -66,5 +60,11 @@ public class PlaylistSongServiceImpl implements PlaylistSongService {
 				DomainEntity.log(songsToTransfer),
 				from.log(),
 				to.log());
+	}
+
+	@Override
+	@Transactional
+	public void delete(PlaylistSong song) {
+		playlistSongs.delete(song);
 	}
 }
