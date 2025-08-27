@@ -52,7 +52,7 @@ public class JobSchedule {
 	 */
 	@Scheduled(cron = "0 * * * * *")
 	public void lookupNewSongs() {
-		Collection<Song> songs = this.songs.findAllByLastLookupIsNull();
+		Collection<Song> songs = this.songs.getLookupCandidates();
 		if (songs.isEmpty()) {
 			return;
 		}

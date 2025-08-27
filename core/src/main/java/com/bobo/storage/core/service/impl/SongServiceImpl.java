@@ -19,9 +19,9 @@ public class SongServiceImpl implements SongService {
 	}
 
 	/**
-	 * The idea is that the {@code Service} requirement is to return a {@code Song} object for the
-	 * given {@code URL}, but the caller does not need to know that our business rule is that there
-	 * must only be a single {@code Song} to represent a {@code URL}.
+	 * The {@code Service} requirement is to return a {@code Song} object for the given {@code URL},
+	 * but the caller does not need to know that our business rule is that there must only be a single
+	 * {@code Song} to represent a {@code URL}.
 	 */
 	@Override
 	@Transactional
@@ -53,8 +53,13 @@ public class SongServiceImpl implements SongService {
 		return songs.findByUrl(url);
 	}
 
+	/**
+	 * @implNote In future, we will mark songs as eligible for a lookup, after a configurable period
+	 *     has past since their last lookup. Those that have never been looked up will be given
+	 *     priority.
+	 */
 	@Override
-	public Collection<Song> findAllByLastLookupIsNull() {
+	public Collection<Song> getLookupCandidates() {
 		return songs.findAllByLastLookupIsNull();
 	}
 }

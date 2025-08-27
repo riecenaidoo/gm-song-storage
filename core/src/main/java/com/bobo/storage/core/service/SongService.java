@@ -21,5 +21,11 @@ public interface SongService extends CreateResource<Song> {
 
 	Optional<Song> findByUrl(String url);
 
-	Collection<Song> findAllByLastLookupIsNull();
+	/**
+	 * @return a {@link Collection} of all {@link Song} resources that are eligible for a lookup.
+	 * @see Song#lookedUp()
+	 * @see SongLookupService
+	 * @apiNote In future, we will accept a {@code limit} parameter to control the return size.
+	 */
+	Collection<Song> getLookupCandidates();
 }

@@ -15,8 +15,5 @@ public interface SongRepository
 
 	Optional<Song> findByUrl(String url);
 
-	/**
-	 * @return newly created {@code Songs} whose {@code url} has never been looked up.
-	 */
 	Collection<Song> findAllByLastLookupIsNull();
 }
