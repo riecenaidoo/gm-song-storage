@@ -27,11 +27,13 @@ public class PlaylistServiceImpl implements PlaylistService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Optional<Playlist> find(int id) {
 		return playlists.findById(id);
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Collection<Playlist> get() {
 		return playlists.findAll();
 	}
@@ -43,11 +45,13 @@ public class PlaylistServiceImpl implements PlaylistService {
 	 *     quality.
 	 */
 	@Override
+	@Transactional(readOnly = true)
 	public Collection<Playlist> searchByName(String name) {
 		return playlists.findAllByNameContainingIgnoringCase(name);
 	}
 
 	@Override
+	@Transactional
 	public Playlist update(Playlist playlist) {
 		return playlists.save(playlist);
 	}

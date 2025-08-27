@@ -35,11 +35,13 @@ public class SongServiceImpl implements SongService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Optional<Song> find(int id) {
 		return songs.findById(id);
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Optional<Song> findByUrl(String url) {
 		return songs.findByUrl(url);
 	}
@@ -50,6 +52,7 @@ public class SongServiceImpl implements SongService {
 	 *     priority.
 	 */
 	@Override
+	@Transactional(readOnly = true)
 	public Collection<Song> getLookupCandidates() {
 		return songs.findAllByLastLookupIsNull();
 	}

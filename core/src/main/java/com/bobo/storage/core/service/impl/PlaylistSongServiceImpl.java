@@ -40,11 +40,13 @@ public class PlaylistSongServiceImpl implements PlaylistSongService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Optional<PlaylistSong> find(int id) {
 		return playlistSongs.findById(id);
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Collection<PlaylistSong> getFromPlaylist(Playlist playlist) {
 		return playlistSongs.findAllByPlaylist(playlist);
 	}
