@@ -128,7 +128,7 @@ class PlaylistsControllerTest {
 					.andExpect(content().json(expectedPayload));
 
 			verify(playlists, times(1)).findAll();
-			verify(playlists, times(0)).findAllByNameContainingIgnoringCase(anyString());
+			verify(playlists, times(0)).searchByName(anyString());
 		}
 
 		/**
@@ -142,7 +142,7 @@ class PlaylistsControllerTest {
 			String title = "Other";
 
 			// Stubbing
-			when(playlists.findAllByNameContainingIgnoringCase(anyString())).thenReturn(List.of());
+			when(playlists.searchByName(anyString())).thenReturn(List.of());
 
 			// When
 			mvc.perform(get("/api/v2/playlists").param("title", title))
@@ -151,7 +151,7 @@ class PlaylistsControllerTest {
 					.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 					.andExpect(content().json("[]"));
 
-			verify(playlists, times(1)).findAllByNameContainingIgnoringCase(title);
+			verify(playlists, times(1)).searchByName(title);
 			verify(playlists, times(0)).findAll();
 		}
 

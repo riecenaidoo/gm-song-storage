@@ -36,9 +36,15 @@ public class PlaylistServiceImpl implements PlaylistService {
 		return playlists.findAll();
 	}
 
+	/**
+	 * @implNote We should explore support for more advanced search functionality in the future,
+	 *     including semantic search via external libraries or embedded LLMs.
+	 *     <p>We should also consider introducing relevance scoring to rank results based on match
+	 *     quality.
+	 */
 	@Override
-	public Collection<Playlist> findAllByNameContainingIgnoringCase(String search) {
-		return playlists.findAllByNameContainingIgnoringCase(search);
+	public Collection<Playlist> searchByName(String name) {
+		return playlists.findAllByNameContainingIgnoringCase(name);
 	}
 
 	@Override

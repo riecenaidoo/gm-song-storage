@@ -11,7 +11,14 @@ public interface PlaylistService extends CreateResource<Playlist> {
 
 	Collection<Playlist> findAll();
 
-	Collection<Playlist> findAllByNameContainingIgnoringCase(String search);
+	/**
+	 * @param name a case-insensitive {@code name}, or part thereof, to search for.
+	 * @return a {@link Collection} of {@link Playlist} resources that match, or contain, the queried
+	 *     {@code name}.
+	 * @apiNote In future, this method will support flags to control case sensitivity, word matching,
+	 *     prefix matching, and other search behaviors.
+	 */
+	Collection<Playlist> searchByName(String name);
 
 	Playlist update(Playlist playlist);
 

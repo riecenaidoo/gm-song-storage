@@ -52,7 +52,7 @@ public class PlaylistsController {
 				throw new RequestConstraintViolationException(
 						"The 'title' parameter must not be blank if provided.");
 			}
-			playlists = this.playlists.findAllByNameContainingIgnoringCase(search);
+			playlists = this.playlists.searchByName(search);
 		} else {
 			playlists = this.playlists.findAll();
 		}
