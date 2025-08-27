@@ -1,7 +1,9 @@
 package com.bobo.storage.core.service.impl;
 
+import com.bobo.storage.core.domain.DomainEntity;
 import com.bobo.storage.core.domain.Song;
 import com.bobo.storage.core.resource.SongRepository;
+import com.bobo.storage.core.semantic.Create;
 import com.bobo.storage.core.service.SongService;
 import java.util.Collection;
 import java.util.Objects;
@@ -19,9 +21,10 @@ public class SongServiceImpl implements SongService {
 	}
 
 	/**
-	 * The {@code Service} requirement is to return a {@code Song} object for the given {@code URL},
-	 * but the caller does not need to know that our business rule is that there must only be a single
-	 * {@code Song} to represent a {@code URL}.
+	 * Songs are uniquely identified by their {@code url}; only one {@link Song} with a given {@code
+	 * url} can exist in the system at any time.
+	 *
+	 * @implSpec {@link Create#add(DomainEntity)}
 	 */
 	@Override
 	@Transactional
