@@ -52,18 +52,22 @@ public class JobSchedule {
 	 */
 	@Scheduled(cron = "0 * * * * *")
 	public void lookupNewSongs() {
-		Collection<Song> songs = this.songs.getLookupCandidates();
-		if (songs.isEmpty()) {
+		Collection<Song> songsToLookup = songs.getLookupCandidates();
+		if (songsToLookup.isEmpty()) {
 			return;
 		}
 		if (log.isTraceEnabled()) {
-			String urlQueue = songs.stream().map(Song::getUrl).collect(Collectors.joining("\n\t - "));
-			log.trace("Job#LookupNewSongs: Looking up {}...\n\t - {}", DomainEntity.log(songs), urlQueue);
+			String urlQueue =
+					songsToLookup.stream().map(Song::getUrl).collect(Collectors.joining("\n\t - "));
+			log.trace(
+					"Job#LookupNewSongs: Looking up {}...\n\t - {}",
+					DomainEntity.log(songsToLookup),
+					urlQueue);
 		} else if (log.isInfoEnabled()) {
-			log.info("Job#LookupNewSongs: Looking up {}...", DomainEntity.log(songs));
+			log.info("Job#LookupNewSongs: Looking up {}...", DomainEntity.log(songsToLookup));
 		}
 
-		for (Song song : songs) {
+		for (Song song : songsToLookup) {
 			try {
 				lookupService.lookup(song);
 			} catch (Exception ex) {
@@ -73,11 +77,11 @@ public class JobSchedule {
 						song.getUrl(),
 						ex);
 
-				Optional<Song> originalSong = this.songs.find(song.getId());
+				Optional<Song> originalSong = songs.find(song.getId());
 				if (originalSong.isPresent()) {
 					song = originalSong.get();
 					song.lookedUp();
-					this.songs.updateSong(song);
+					songs.updateSong(song);
 					log.info(
 							"Job#LookupNewSongs: Gracefully handled exception on {}. Removed from lookup queue.",
 							song.log());
