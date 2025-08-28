@@ -2,9 +2,9 @@ package com.bobo.storage.core.resource.query;
 
 import com.bobo.semantic.IntegrationTest;
 import com.bobo.storage.core.domain.*;
-import com.bobo.storage.core.resource.access.PlaylistRepository;
-import com.bobo.storage.core.resource.access.PlaylistSongRepository;
-import com.bobo.storage.core.resource.access.SongRepository;
+import com.bobo.storage.core.resource.PlaylistRepository;
+import com.bobo.storage.core.resource.PlaylistSongRepository;
+import com.bobo.storage.core.resource.SongRepository;
 import java.util.Collection;
 import java.util.Random;
 import org.junit.jupiter.api.Assertions;
@@ -14,14 +14,12 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.repository.Repository;
 
 @DataJpaTest
-@IntegrationTest({PlaylistSongQueryRepository.class, Repository.class})
-class PlaylistSongQueryRepositoryIT {
+@IntegrationTest({PlaylistSongRepository.class, Repository.class})
+class PlaylistSongRepositoryIT {
 
 	// Test Utilities
 
 	private final Random random = new Random();
-
-	private final PlaylistSongRepository accessRepository;
 
 	private final PlaylistRepository playlistRepository;
 
@@ -29,22 +27,20 @@ class PlaylistSongQueryRepositoryIT {
 
 	// Test Targets
 
-	private final PlaylistSongQueryRepository queryRepository;
+	private final PlaylistSongRepository repository;
 
 	@Autowired
-	PlaylistSongQueryRepositoryIT(
-			PlaylistSongRepository accessRepository,
+	PlaylistSongRepositoryIT(
+			PlaylistSongRepository repository,
 			PlaylistRepository playlistRepository,
-			SongRepository songRepository,
-			PlaylistSongQueryRepository queryRepository) {
-		this.accessRepository = accessRepository;
+			SongRepository songRepository) {
+		this.repository = repository;
 		this.playlistRepository = playlistRepository;
 		this.songRepository = songRepository;
-		this.queryRepository = queryRepository;
 	}
 
 	/**
-	 * @see PlaylistSongQueryRepository#findAllByPlaylist(Playlist)
+	 * @see PlaylistSongRepository#findAllByPlaylist(Playlist)
 	 */
 	@Test
 	void findAllByPlaylist() {
@@ -52,10 +48,10 @@ class PlaylistSongQueryRepositoryIT {
 		Playlist playlist = playlistRepository.save(new PlaylistMother(random).get());
 		Song song = songRepository.save(new SongMother(random).get());
 
-		accessRepository.save(new PlaylistSong(playlist, song));
+		repository.save(new PlaylistSong(playlist, song));
 
 		// When
-		Collection<PlaylistSong> playlistSongs = queryRepository.findAllByPlaylist(playlist);
+		Collection<PlaylistSong> playlistSongs = repository.findAllByPlaylist(playlist);
 
 		// Then
 		Assertions.assertEquals(1, playlistSongs.size());

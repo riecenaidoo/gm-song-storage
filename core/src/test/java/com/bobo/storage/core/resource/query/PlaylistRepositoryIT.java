@@ -3,7 +3,7 @@ package com.bobo.storage.core.resource.query;
 import com.bobo.semantic.IntegrationTest;
 import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.domain.PlaylistMother;
-import com.bobo.storage.core.resource.access.PlaylistRepository;
+import com.bobo.storage.core.resource.PlaylistRepository;
 import java.util.Collection;
 import java.util.Random;
 import org.junit.jupiter.api.Assertions;
@@ -14,27 +14,23 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.repository.Repository;
 
 @DataJpaTest
-@IntegrationTest({PlaylistQueryRepository.class, Repository.class})
-class PlaylistQueryRepositoryIT {
+@IntegrationTest({PlaylistRepository.class, Repository.class})
+class PlaylistRepositoryIT {
 
-	private final PlaylistQueryRepository repository;
-
-	private final PlaylistRepository playlistRepository;
+	private final PlaylistRepository repository;
 
 	private final Random random = new Random();
 
 	@Autowired
-	PlaylistQueryRepositoryIT(
-			PlaylistQueryRepository repository, PlaylistRepository playlistRepository) {
+	PlaylistRepositoryIT(PlaylistRepository repository) {
 		this.repository = repository;
-		this.playlistRepository = playlistRepository;
 	}
 
 	/**
 	 * Expecting generated query to use {@code WHERE} clause with a {@code LIKE '%...%'}, and to wrap
 	 * operands in {@code upper()/lower()} for case insensitivity.
 	 *
-	 * @see PlaylistQueryRepository#findAllByNameContainingIgnoringCase(String)
+	 * @see PlaylistRepository#findAllByNameContainingIgnoringCase(String)
 	 */
 	@Nested
 	class FindAllByNameContainingIgnoringCase {
@@ -43,7 +39,7 @@ class PlaylistQueryRepositoryIT {
 		void byExactName() {
 			// Given
 			Playlist playlist = new PlaylistMother(random).withNames().get();
-			playlist = playlistRepository.save(playlist);
+			playlist = repository.save(playlist);
 			Assertions.assertTrue(
 					repository.findById(playlist.getId()).isPresent(), "Test assumption failed.");
 
@@ -60,7 +56,7 @@ class PlaylistQueryRepositoryIT {
 		void byExactNameIgnoringCase() {
 			// Given
 			Playlist playlist = new PlaylistMother(random).withNames().get();
-			playlist = playlistRepository.save(playlist);
+			playlist = repository.save(playlist);
 			Assertions.assertTrue(
 					repository.findById(playlist.getId()).isPresent(), "Test assumption failed.");
 
@@ -76,7 +72,7 @@ class PlaylistQueryRepositoryIT {
 		void byPartialName() {
 			// Given
 			Playlist playlist = new PlaylistMother(random).withNames(() -> "Some Long Name").get();
-			playlist = playlistRepository.save(playlist);
+			playlist = repository.save(playlist);
 			Assertions.assertTrue(
 					repository.findById(playlist.getId()).isPresent(), "Test assumption failed.");
 
@@ -97,7 +93,7 @@ class PlaylistQueryRepositoryIT {
 		void byPartialNameIgnoringCase() {
 			// Given
 			Playlist playlist = new PlaylistMother(random).withNames(() -> "Some Long Name").get();
-			playlist = playlistRepository.save(playlist);
+			playlist = repository.save(playlist);
 			Assertions.assertTrue(
 					repository.findById(playlist.getId()).isPresent(), "Test assumption failed.");
 
@@ -119,7 +115,7 @@ class PlaylistQueryRepositoryIT {
 		void onlyIfMatch() {
 			// Given
 			Playlist playlist = new PlaylistMother(random).withNames(() -> "Some Name").get();
-			playlist = playlistRepository.save(playlist);
+			playlist = repository.save(playlist);
 			Assertions.assertTrue(
 					repository.findById(playlist.getId()).isPresent(), "Test assumption failed.");
 
@@ -150,8 +146,8 @@ class PlaylistQueryRepositoryIT {
 			Playlist playlist = mother.get();
 			String differenceBetweenThem = " Delta";
 			playlist.setName(playlist.getName() + differenceBetweenThem);
-			playlistRepository.save(similarPlaylist);
-			playlistRepository.save(playlist);
+			repository.save(similarPlaylist);
+			repository.save(playlist);
 			Assertions.assertTrue(
 					repository.findById(playlist.getId()).isPresent(), "Test assumption failed.");
 			Assertions.assertTrue(
@@ -171,7 +167,7 @@ class PlaylistQueryRepositoryIT {
 			// Given
 			Collection<Playlist> playlists =
 					new PlaylistMother(random).withNames(() -> "Some Name").get(5).toList();
-			playlists = playlistRepository.saveAll(playlists);
+			playlists = repository.saveAll(playlists);
 			for (Playlist playlist : playlists) {
 				Assertions.assertTrue(
 						repository.findById(playlist.getId()).isPresent(), "Test assumption failed.");

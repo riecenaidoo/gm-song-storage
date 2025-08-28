@@ -1,7 +1,6 @@
 package com.bobo.storage.web.api.v2.controller;
 
 import com.bobo.storage.core.domain.Playlist;
-import com.bobo.storage.core.resource.query.PlaylistQueryRepository;
 import com.bobo.storage.core.service.PlaylistService;
 import com.bobo.storage.web.api.v2.request.PlaylistsCreateRequest;
 import com.bobo.storage.web.api.v2.request.PlaylistsPatchRequest;
@@ -18,12 +17,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @ResourceController(resource = Playlist.class, respondsWith = PlaylistResponse.class)
 public class PlaylistsController {
 
-	private final PlaylistQueryRepository playlists;
+	private final PlaylistService playlists;
 
-	private final PlaylistService service;
-
-	public PlaylistsController(PlaylistService service, PlaylistQueryRepository playlists) {
-		this.service = service;
+	public PlaylistsController(PlaylistService playlists) {
 		this.playlists = playlists;
 	}
 
@@ -31,7 +27,7 @@ public class PlaylistsController {
 	public ResponseEntity<PlaylistResponse> createPlaylist(
 			@RequestBody PlaylistsCreateRequest request) {
 		Playlist playlist = request.toCreate();
-		playlist = service.create(playlist);
+		playlist = playlists.add(playlist);
 		PlaylistResponse response = new PlaylistResponse(playlist);
 		// TODO [design] I am beginning to see how I should define the Resource abstraction.
 		URI resource =
@@ -56,9 +52,9 @@ public class PlaylistsController {
 				throw new RequestConstraintViolationException(
 						"The 'title' parameter must not be blank if provided.");
 			}
-			playlists = this.playlists.findAllByNameContainingIgnoringCase(search);
+			playlists = this.playlists.searchByName(search);
 		} else {
-			playlists = this.playlists.findAll();
+			playlists = this.playlists.get();
 		}
 		PlaylistResponse[] response =
 				playlists.stream().map(PlaylistResponse::new).toArray(PlaylistResponse[]::new);
@@ -68,7 +64,7 @@ public class PlaylistsController {
 	@GetMapping("/{id}")
 	public ResponseEntity<PlaylistResponse> readPlaylist(@PathVariable int id) {
 		Playlist playlist =
-				playlists.findById(id).orElseThrow(() -> new ResourceNotFoundException(Playlist.class, id));
+				playlists.find(id).orElseThrow(() -> new ResourceNotFoundException(Playlist.class, id));
 		PlaylistResponse response = new PlaylistResponse(playlist);
 		return ResponseEntity.ok(response);
 	}
@@ -77,9 +73,9 @@ public class PlaylistsController {
 	public ResponseEntity<PlaylistResponse> updatePlaylist(
 			@PathVariable int id, @RequestBody PlaylistsPatchRequest request) {
 		Playlist playlist =
-				playlists.findById(id).orElseThrow(() -> new ResourceNotFoundException(Playlist.class, id));
+				playlists.find(id).orElseThrow(() -> new ResourceNotFoundException(Playlist.class, id));
 		request.patch(playlist);
-		playlist = service.update(playlist);
+		playlist = playlists.update(playlist);
 		PlaylistResponse response = new PlaylistResponse(playlist);
 		return ResponseEntity.ok(response);
 	}
@@ -87,8 +83,8 @@ public class PlaylistsController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deletePlaylist(@PathVariable int id) {
 		Playlist playlist =
-				playlists.findById(id).orElseThrow(() -> new ResourceNotFoundException(Playlist.class, id));
-		service.delete(playlist);
+				playlists.find(id).orElseThrow(() -> new ResourceNotFoundException(Playlist.class, id));
+		playlists.delete(playlist);
 		return ResponseEntity.noContent().build();
 	}
 }

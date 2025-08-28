@@ -9,7 +9,6 @@ import com.bobo.semantic.UnitTest;
 import com.bobo.storage.core.domain.EntityMother;
 import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.domain.PlaylistMother;
-import com.bobo.storage.core.resource.query.PlaylistQueryRepository;
 import com.bobo.storage.core.service.PlaylistService;
 import com.bobo.storage.web.TestConfig;
 import com.bobo.storage.web.api.v2.request.PlaylistsCreateRequest;
@@ -25,6 +24,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.lang.NonNull;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -37,9 +37,7 @@ class PlaylistsControllerTest {
 
 	// Mock Dependencies
 
-	@MockitoBean private PlaylistService service;
-
-	@MockitoBean private PlaylistQueryRepository playlists;
+	@MockitoBean private PlaylistService playlists;
 
 	// Test Utilities
 
@@ -80,7 +78,7 @@ class PlaylistsControllerTest {
 				String.format("%s/api/v2/playlists/%d", TestConfig.testSchemeAuthority(), id);
 
 		// Stubbing
-		when(service.create(any()))
+		when(playlists.add(any()))
 				.thenAnswer(
 						invocation -> {
 							Playlist playlist = invocation.getArgument(0);
@@ -99,7 +97,7 @@ class PlaylistsControllerTest {
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(content().json(expectedPayload));
 
-		verify(service, times(1)).create(request.toCreate());
+		verify(playlists, times(1)).add(request.toCreate());
 	}
 
 	/**
@@ -120,7 +118,7 @@ class PlaylistsControllerTest {
 			String expectedPayload = mapper.writeValueAsString(expectedResponse);
 
 			// Stubbing
-			when(playlists.findAll()).thenReturn(allPlaylists);
+			when(playlists.get()).thenReturn(allPlaylists);
 
 			// When
 			mvc.perform(get("/api/v2/playlists"))
@@ -129,8 +127,8 @@ class PlaylistsControllerTest {
 					.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(expectedPayload));
 
-			verify(playlists, times(1)).findAll();
-			verify(playlists, times(0)).findAllByNameContainingIgnoringCase(anyString());
+			verify(playlists, times(1)).get();
+			verify(playlists, times(0)).searchByName(anyString());
 		}
 
 		/**
@@ -144,7 +142,7 @@ class PlaylistsControllerTest {
 			String title = "Other";
 
 			// Stubbing
-			when(playlists.findAllByNameContainingIgnoringCase(anyString())).thenReturn(List.of());
+			when(playlists.searchByName(anyString())).thenReturn(List.of());
 
 			// When
 			mvc.perform(get("/api/v2/playlists").param("title", title))
@@ -153,8 +151,8 @@ class PlaylistsControllerTest {
 					.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 					.andExpect(content().json("[]"));
 
-			verify(playlists, times(1)).findAllByNameContainingIgnoringCase(title);
-			verify(playlists, times(0)).findAll();
+			verify(playlists, times(1)).searchByName(title);
+			verify(playlists, times(0)).get();
 		}
 
 		@DisplayName("GET /playlists?title= (title must not be blank)")
@@ -186,7 +184,7 @@ class PlaylistsControllerTest {
 		String expectedPayload = mapper.writeValueAsString(expectedResponse);
 
 		// Stubbing
-		when(playlists.findById(id)).thenReturn(Optional.of(playlist));
+		when(playlists.find(id)).thenReturn(Optional.of(playlist));
 
 		// When
 		mvc.perform(get("/api/v2/playlists/{id}", id))
@@ -217,8 +215,9 @@ class PlaylistsControllerTest {
 		String expectedPayload = mapper.writeValueAsString(expectedResponse);
 
 		// Stubbing
-		when(playlists.findById(id)).thenReturn(Optional.of(playlist));
-		when(service.update(any(Playlist.class))).thenAnswer((invocation -> invocation.getArgument(0)));
+		when(playlists.find(id)).thenReturn(Optional.of(playlist));
+		when(playlists.update(any(Playlist.class)))
+				.thenAnswer((invocation -> invocation.getArgument(0)));
 
 		// When
 		mvc.perform(
@@ -230,7 +229,7 @@ class PlaylistsControllerTest {
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(content().json(expectedPayload));
 
-		verify(service, times(1)).update(updatedPlaylist);
+		verify(playlists, times(1)).update(updatedPlaylist);
 	}
 
 	/**
@@ -245,7 +244,7 @@ class PlaylistsControllerTest {
 		Integer id = playlist.getId();
 
 		// Stubbing
-		when(playlists.findById(id)).thenReturn(Optional.of(playlist));
+		when(playlists.find(id)).thenReturn(Optional.of(playlist));
 
 		// When
 		mvc.perform(delete("/api/v2/playlists/{id}", id))
@@ -253,7 +252,7 @@ class PlaylistsControllerTest {
 				.andExpect(status().isNoContent())
 				.andExpect(header().doesNotExist("content-type"));
 
-		verify(service, times(1)).delete(playlist);
+		verify(playlists, times(1)).delete(playlist);
 	}
 
 	/**
@@ -286,7 +285,7 @@ class PlaylistsControllerTest {
 	@ParameterizedTest
 	void playlistNotFound(TestSourceRequest request) throws Exception {
 		// Stubbing
-		when(playlists.findById(anyInt())).thenReturn(Optional.empty());
+		when(playlists.find(anyInt())).thenReturn(Optional.empty());
 
 		// When
 		mvc.perform(request.requestBuilder())
@@ -304,7 +303,7 @@ class PlaylistsControllerTest {
 	 */
 	record TestSourceRequest(String displayName, MockHttpServletRequestBuilder requestBuilder) {
 
-		@Override
+		@NonNull @Override
 		public String toString() {
 			return displayName;
 		}
