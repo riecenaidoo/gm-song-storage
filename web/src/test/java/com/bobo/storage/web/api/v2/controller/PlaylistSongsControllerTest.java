@@ -6,9 +6,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.bobo.semantic.UnitTest;
-import com.bobo.storage.core.domain.*;
-import com.bobo.storage.core.service.PlaylistService;
-import com.bobo.storage.core.service.PlaylistSongService;
+import com.bobo.storage.core.playlist.Playlist;
+import com.bobo.storage.core.playlist.PlaylistMother;
+import com.bobo.storage.core.playlist.PlaylistService;
+import com.bobo.storage.core.playlist.song.PlaylistSong;
+import com.bobo.storage.core.playlist.song.PlaylistSongMother;
+import com.bobo.storage.core.playlist.song.PlaylistSongService;
+import com.bobo.storage.core.semantic.*;
+import com.bobo.storage.core.song.SongMother;
 import com.bobo.storage.web.TestConfig;
 import com.bobo.storage.web.api.v2.request.SongsCreateRequest;
 import com.bobo.storage.web.api.v2.response.PlaylistSongResponse;
