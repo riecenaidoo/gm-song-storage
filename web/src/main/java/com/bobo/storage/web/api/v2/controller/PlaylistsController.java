@@ -1,7 +1,7 @@
 package com.bobo.storage.web.api.v2.controller;
 
-import com.bobo.storage.core.domain.Playlist;
-import com.bobo.storage.core.service.PlaylistService;
+import com.bobo.storage.core.playlist.Playlist;
+import com.bobo.storage.core.playlist.PlaylistService;
 import com.bobo.storage.web.api.v2.request.PlaylistsCreateRequest;
 import com.bobo.storage.web.api.v2.request.PlaylistsPatchRequest;
 import com.bobo.storage.web.api.v2.response.PlaylistResponse;
