@@ -1,6 +1,6 @@
 package com.bobo.storage;
 
-import com.bobo.storage.config.WebConfig;
+import com.bobo.storage.web.WebConfig;
 import com.bobo.storage.core.CoreConfig;
 import com.bobo.storage.core.CoreContext;
 import org.springframework.boot.SpringApplication;
