@@ -9,7 +9,8 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SmokeTest
 @ActiveProfiles("test")
-@SpringBootTest(classes = CoreTestConfig.class)
+@CoreContext
+@SpringBootTest(classes = CoreConfig.class)
 class CoreContextTest {
 
 	private static final Logger log = LoggerFactory.getLogger(CoreContextTest.class);

@@ -1,20 +1,17 @@
 package com.bobo.storage.web;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 /**
- *
- *
- * <ol>
- *   <li>It seems the easiest way to set up SpringBoot tests is to point it them to a {@link
- *       SpringBootApplication}. The {@code Web} module is just a library, so I need a target for
- *       the {@link WebMvcTest}(s) to configure from.
- * </ol>
+ * @implNote Library modules do not have an actual {@link SpringBootApplication} for Spring to
+ *     target when setting up {@link SpringBootTest}/{@code SliceTest(s)}, so we create a "fake"
+ *     target {@link SpringBootApplication} for Spring to use when bootstrapping the application
+ *     context.
  */
 @SpringBootApplication
-public class TestConfig {
+public class WebTestApplication {
 
 	public static MockHttpServletRequest testSchemeAuthority(
 			MockHttpServletRequest mockHttpServletRequest) {

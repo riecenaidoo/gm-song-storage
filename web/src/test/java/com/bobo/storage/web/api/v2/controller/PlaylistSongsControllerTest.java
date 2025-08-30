@@ -9,7 +9,7 @@ import com.bobo.semantic.UnitTest;
 import com.bobo.storage.core.domain.*;
 import com.bobo.storage.core.service.PlaylistService;
 import com.bobo.storage.core.service.PlaylistSongService;
-import com.bobo.storage.web.TestConfig;
+import com.bobo.storage.web.WebTestApplication;
 import com.bobo.storage.web.api.v2.request.SongsCreateRequest;
 import com.bobo.storage.web.api.v2.response.PlaylistSongResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -84,7 +84,7 @@ class PlaylistSongsControllerTest {
 		String expectedURI =
 				String.format(
 						"%s/api/v2/playlists/%d/songs/%d",
-						TestConfig.testSchemeAuthority(), playlist.getId(), id);
+						WebTestApplication.testSchemeAuthority(), playlist.getId(), id);
 
 		// Stubbing
 		/* TODO Reconsider the dependencies of this Controller. Am I stubbing too much?
@@ -102,7 +102,7 @@ class PlaylistSongsControllerTest {
 		// When
 		mvc.perform(
 						post("/api/v2/playlists/{playlist_id}/songs", playlist.getId(), id)
-								.with(TestConfig::testSchemeAuthority)
+								.with(WebTestApplication::testSchemeAuthority)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(requestPayload))
 				// Then

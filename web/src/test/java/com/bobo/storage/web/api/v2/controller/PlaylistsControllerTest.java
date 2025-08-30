@@ -10,7 +10,7 @@ import com.bobo.storage.core.domain.EntityMother;
 import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.domain.PlaylistMother;
 import com.bobo.storage.core.service.PlaylistService;
-import com.bobo.storage.web.TestConfig;
+import com.bobo.storage.web.WebTestApplication;
 import com.bobo.storage.web.api.v2.request.PlaylistsCreateRequest;
 import com.bobo.storage.web.api.v2.request.PlaylistsPatchRequest;
 import com.bobo.storage.web.api.v2.response.PlaylistResponse;
@@ -75,7 +75,7 @@ class PlaylistsControllerTest {
 				new PlaylistResponse(EntityMother.setId(request.toCreate(), id));
 		String expectedPayload = mapper.writeValueAsString(expectedResponse);
 		String expectedURI =
-				String.format("%s/api/v2/playlists/%d", TestConfig.testSchemeAuthority(), id);
+				String.format("%s/api/v2/playlists/%d", WebTestApplication.testSchemeAuthority(), id);
 
 		// Stubbing
 		when(playlists.add(any()))
@@ -88,7 +88,7 @@ class PlaylistsControllerTest {
 		// When
 		mvc.perform(
 						post("/api/v2/playlists")
-								.with(TestConfig::testSchemeAuthority)
+								.with(WebTestApplication::testSchemeAuthority)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(requestPayload))
 				// Then
