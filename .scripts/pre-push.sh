@@ -28,7 +28,22 @@ Stash or stage the changes."
 fi
 printf '\033[0;32m%s\033[0m\n' "Passed."
 # ========================================
-# Integration Test Check
+# Smoke-Test Check
+# ========================================
+printf "[\033[0;33m%s\033[0m] Checking... " "Smoke-Test"
+STDOUT=$($MVN test -Dgroups="smoke")
+EXIT_CODE=$?
+if [ "$EXIT_CODE" -ne 0 ]; then
+  printf '\033[0;31m%s\033[0m' "Failed!"
+  printf '%s\n' " - There are test failures. Resolve and restage."
+  printf '\n\033[0;31m'
+  printf '%s\n' "$STDOUT" | grep "\[ERROR\]"
+  printf '\033[0m\n'
+  exit 1
+fi
+printf '\033[0;32m%s\033[0m\n' "Passed."
+# ========================================
+# Integration-Test Check
 # ========================================
 printf "[\033[0;33m%s\033[0m] Checking... " "Integration-Test"
 STDOUT=$($MVN verify)

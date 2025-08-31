@@ -56,6 +56,9 @@ rm-java:	## remove all Java artifacts produced by this script
 # Java Aliases
 # ========================================
 
+test-unit:	## run all unit tests (semantic.UnitTest)
+	$(MVN) test -Dgroups="unit"
+
 test-smoke:	## run all smoke tests (semantic.SmokeTest)
 	$(MVN) test -Dgroups="smoke"
 
