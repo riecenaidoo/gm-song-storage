@@ -1,16 +1,9 @@
 package com.bobo.storage.web;
 
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.test.context.SpringBootTest;
+import com.bobo.semantic.TestApplication;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-/**
- * @implNote Library modules do not have an actual {@link SpringBootApplication} for Spring to
- *     target when setting up {@link SpringBootTest}/{@code SliceTest(s)}, so we create a "fake"
- *     target {@link SpringBootApplication} for Spring to use when bootstrapping the application
- *     context.
- */
-@SpringBootApplication
+@TestApplication
 public class WebTestApplication {
 
 	public static MockHttpServletRequest testSchemeAuthority(
