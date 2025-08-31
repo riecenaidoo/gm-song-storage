@@ -12,9 +12,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.reactive.function.client.WebClient;
 
 /** Testing Integration with OEmbed Providers. */
-@ContextConfiguration(classes = {WebClientAutoConfiguration.class})
+@IntegrationTest({Provider.class, WebClient.class})
 @ExtendWith(SpringExtension.class)
-@IntegrationTest(Provider.class)
+@ContextConfiguration(classes = {WebClientAutoConfiguration.class})
 class ProviderIT {
 
 	private final WebClient client;

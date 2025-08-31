@@ -1,5 +1,6 @@
 package com.bobo.storage.core.domain;
 
+import com.bobo.semantic.UnitTest;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+@UnitTest(DomainEntity.class)
 class DomainEntityTest {
 
 	/**

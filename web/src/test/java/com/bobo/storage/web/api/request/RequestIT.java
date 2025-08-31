@@ -18,9 +18,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
  * Tests that {@code Request(s)} are mapped as I expect by the Jackson {@link ObjectMapper}, when
  * using the (default) autoconfiguration provided by Spring.
  */
-@ContextConfiguration(classes = {JacksonAutoConfiguration.class})
-@ExtendWith(SpringExtension.class)
 @IntegrationTest({ObjectMapper.class, JacksonAutoConfiguration.class})
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {JacksonAutoConfiguration.class})
 class RequestIT {
 
 	private final ObjectMapper mapper;
