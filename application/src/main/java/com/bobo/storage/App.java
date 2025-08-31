@@ -1,12 +1,10 @@
 package com.bobo.storage;
 
-import com.bobo.storage.web.WebConfig;
-import com.bobo.storage.core.CoreConfig;
 import com.bobo.storage.core.CoreContext;
+import com.bobo.storage.web.WebContext;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
@@ -20,7 +18,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  */
 @SpringBootApplication
 @CoreContext
-@Import({CoreConfig.class, WebConfig.class})
+@WebContext
 @EnableScheduling
 public class App {
 

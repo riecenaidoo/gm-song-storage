@@ -1,7 +1,6 @@
 package com.bobo.storage.web;
 
 import com.bobo.semantic.SmokeTest;
-import com.bobo.storage.core.CoreConfig;
 import com.bobo.storage.core.CoreContext;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -12,7 +11,8 @@ import org.springframework.test.context.ActiveProfiles;
 @SmokeTest
 @ActiveProfiles("test")
 @CoreContext
-@SpringBootTest(classes = {CoreConfig.class, WebConfig.class})
+@WebContext
+@SpringBootTest
 class WebContextTest {
 
 	private static final Logger log =

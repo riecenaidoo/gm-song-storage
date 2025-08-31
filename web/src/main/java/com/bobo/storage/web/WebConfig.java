@@ -6,7 +6,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @EnableWebMvc
-public class WebConfig implements WebMvcConfigurer {
+class WebConfig implements WebMvcConfigurer {
 
 	/**
 	 * @implNote In future, we should define a {@code Properties} object for the {@code web} module
