@@ -53,6 +53,14 @@ rm-java:	## remove all Java artifacts produced by this script
 
 .PHONY: java rm-java
 # ========================================
+# Java Aliases
+# ========================================
+
+test-smoke:	## run all smoke tests (semantic.SmokeTest)
+	$(MVN) test -Dgroups="smoke"
+
+.PHONY: test-smoke
+# ========================================
 # Docker Artifacts
 # ========================================
 docker: .made/gm-song-storage-api	## alias for creating all Docker artifacts
@@ -121,7 +129,11 @@ help:  ## show available targets
 	"Available Commands" \
 	"------------------"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
-		| awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
+		| awk 'BEGIN {FS = ":.*?## "}; { \
+			cmd = $$1; desc = $$2; \
+			gsub(/\(([^)]*)\)/, "\033[34m&\033[0m", desc); \
+			printf "  \033[36m%-15s\033[0m %s\n", cmd, desc \
+		}'
 	@printf "%s\n" \
 	"------------------"
 

@@ -1,19 +1,19 @@
-package com.bobo.storage.config;
+package com.bobo.storage.web;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-/**
- * <code>@EnableWebMvc</code> - see <code>WebMvcConfigurer</code>: Used to define cors mapping in
- * <code>#addCorsMappings</code>.
- */
 @EnableWebMvc
-public class WebConfig extends SpringBootServletInitializer implements WebMvcConfigurer {
+class WebConfig implements WebMvcConfigurer {
 
-	@Value("${app.client.url}")
+	/**
+	 * @implNote In future, we should define a {@code Properties} object for the {@code web} module
+	 *     and define our defaults there. We would want to have a flexible signature here and allow
+	 *     CORS for multiple client urls.
+	 */
+	@Value("${app.client.url:http://localhost:4200}")
 	private String clientUrl;
 
 	@Override
