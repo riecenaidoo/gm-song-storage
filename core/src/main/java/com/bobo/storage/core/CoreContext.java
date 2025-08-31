@@ -2,6 +2,7 @@ package com.bobo.storage.core;
 
 import static java.lang.annotation.ElementType.TYPE;
 
+import com.bobo.semantic.ModuleContext;
 import com.bobo.storage.core.domain.DomainEntity;
 import com.bobo.storage.core.resource.EntityRepository;
 import java.lang.annotation.Retention;
@@ -13,6 +14,10 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+/**
+ * @implSpec {@link ModuleContext}
+ */
+@ModuleContext
 @Target({TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Import(CoreConfig.class)
