@@ -55,7 +55,7 @@ if [ -n "$staged_src_files" ]; then
   EXIT_CODE=$?
   if [ "$EXIT_CODE" -ne 0 ]; then
     printf '\033[0;31m%s\033[0m' "Failed!"
-    printf '%s\n' " - There are Smoke test failures; the build is unstable. Resolve and restage."
+    printf '%s\n' " - There are Unit-Test failures; the build is unstable. Resolve and restage."
     printf '\n\033[0;31m'
     printf '%s\n' "$STDOUT" | grep "\[ERROR\]"
     printf '\033[0m\n'

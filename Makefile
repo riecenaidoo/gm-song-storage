@@ -62,7 +62,10 @@ test-unit:	## run all unit tests (semantic.UnitTest)
 test-smoke:	## run all smoke tests (semantic.SmokeTest)
 	$(MVN) test -Dgroups="smoke"
 
-.PHONY: test-smoke
+test-integration:	## run all integration tests (semantic.IntegrationTest)
+	$(MVN) verify -Dgroups="integration"
+
+.PHONY: test-unit test-smoke test-integration
 # ========================================
 # Docker Artifacts
 # ========================================

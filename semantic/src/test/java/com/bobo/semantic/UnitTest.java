@@ -14,8 +14,8 @@ import org.junit.jupiter.api.Tags;
  * <p>Typically at tests the contract of {@code public} methods. The contract is what has been
  * defined by the method signature, and the words in its documentation.
  *
- * @implSpec Suffix test classes with {@code Test}, which is the default pattern Maven surefire uses
- *     to detect unit tests for the test cycle ({@code mvn test}).
+ * @implSpec Suffix test classes with {@code Test}, which is the default pattern the Maven Surefire
+ *     plugin uses to detect unit tests for the test cycle ({@code mvn test}).
  */
 @Documented
 @Target(ElementType.TYPE)
