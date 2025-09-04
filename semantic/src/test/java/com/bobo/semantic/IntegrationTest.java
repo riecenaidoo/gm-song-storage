@@ -55,4 +55,31 @@ public @interface IntegrationTest {
 	 *     to it directly.
 	 */
 	String TAG = "integration";
+
+	/**
+	 * The {@link Tag} value to use for {@link IntegrationTest} tests that interact with external
+	 * systems.
+	 *
+	 * <p>We make a distinct because we cannot guarantee the status, or behaviour, of a system we do
+	 * not control, which makes these tests potentially "flaky".
+	 *
+	 * <p>These are tests we might run as part of a health check, but not in a CI/CD pipeline, or
+	 * local workflow.
+	 *
+	 * <p>Tagging via JUnit enables running a slice of tests via Maven.
+	 *
+	 * <pre>{@code
+	 * mvn verify -Dgroups="external"
+	 * }</pre>
+	 *
+	 * <p>Tagging also enables the exclusion of specific tests. Exclusion takes precedence; if a test
+	 * is both included and excluded via tags (tests can have multiple tags), it will be excluded.
+	 *
+	 * <pre>{@code
+	 * mvn verify -Dgroups="integration" -DexcludedGroups="external"
+	 * }</pre>
+	 *
+	 * @see Tags
+	 */
+	String EXTERNAL_TAG = "external";
 }

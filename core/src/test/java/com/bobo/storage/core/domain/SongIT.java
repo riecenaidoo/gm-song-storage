@@ -4,6 +4,7 @@ import com.bobo.semantic.IntegrationTest;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -13,6 +14,7 @@ import org.springframework.web.reactive.function.client.WebClient;
  * work as expected in the wild.
  */
 @IntegrationTest({Song.class, WebClient.class})
+@Tag(IntegrationTest.EXTERNAL_TAG)
 class SongIT {
 
 	private final WebClient client;

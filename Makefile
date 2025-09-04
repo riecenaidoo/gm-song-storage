@@ -62,10 +62,13 @@ test-unit:	## run all unit tests (semantic.UnitTest)
 test-smoke:	## run all smoke tests (semantic.SmokeTest)
 	$(MVN) test -Dgroups="smoke"
 
-test-integration:	## run all integration tests (semantic.IntegrationTest)
-	$(MVN) verify -Dgroups="integration"
+test-integration:	## run all integration tests (semantic.IntegrationTest), excluding external system tests (test-integration-ext)
+	$(MVN) verify -Dgroups="integration" -DexcludedGroups="external"
 
-.PHONY: test-unit test-smoke test-integration
+test-integration-ext:	## run all external integration tests (semantic.IntegrationTest#EXTERNAL)
+	$(MVN) verify -Dgroups="external"
+
+.PHONY: test-unit test-smoke test-integration test-integration-ext
 # ========================================
 # Docker Artifacts
 # ========================================
@@ -138,7 +141,7 @@ help:  ## show available targets
 		| awk 'BEGIN {FS = ":.*?## "}; { \
 			cmd = $$1; desc = $$2; \
 			gsub(/\(([^)]*)\)/, "\033[34m&\033[0m", desc); \
-			printf "  \033[36m%-15s\033[0m %s\n", cmd, desc \
+			printf "  \033[36m%-21s\033[0m %s\n", cmd, desc \
 		}'
 	@printf "%s\n" \
 	"------------------"
