@@ -2,6 +2,7 @@ package com.bobo.storage.core.domain;
 
 import com.bobo.semantic.IntegrationTest;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -12,9 +13,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.reactive.function.client.WebClient;
 
 /** Testing Integration with OEmbed Providers. */
-@ContextConfiguration(classes = {WebClientAutoConfiguration.class})
+@IntegrationTest({Provider.class, WebClient.class})
+@Tag(IntegrationTest.EXTERNAL_TAG)
 @ExtendWith(SpringExtension.class)
-@IntegrationTest(Provider.class)
+@ContextConfiguration(classes = {WebClientAutoConfiguration.class})
 class ProviderIT {
 
 	private final WebClient client;

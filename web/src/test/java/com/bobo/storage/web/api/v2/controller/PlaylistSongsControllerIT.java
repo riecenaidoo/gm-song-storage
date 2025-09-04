@@ -5,7 +5,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.bobo.semantic.UnitTest;
+import com.bobo.semantic.IntegrationTest;
 import com.bobo.storage.core.domain.*;
 import com.bobo.storage.core.service.PlaylistService;
 import com.bobo.storage.core.service.PlaylistSongService;
@@ -19,21 +19,19 @@ import java.util.Optional;
 import java.util.Random;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-@TestInstance(
-		TestInstance.Lifecycle
-				.PER_CLASS) // TODO rm. Does not give the benefits I assumed. We don't need shared state.
+@IntegrationTest({
+	PlaylistSongsController.class,
+	ObjectMapper.class,
+	ControllerExceptionHandler.class
+})
 @WebMvcTest(PlaylistSongsController.class)
-@UnitTest(
-		PlaylistSongsController
-				.class) // In Spring, this is a Slice test, but that concept isn't universal - I think.
-class PlaylistSongsControllerTest {
+class PlaylistSongsControllerIT {
 
 	// Mock Dependencies
 
@@ -56,7 +54,7 @@ class PlaylistSongsControllerTest {
 	private final Random random = new Random();
 
 	@Autowired
-	PlaylistSongsControllerTest(MockMvc mvc, ObjectMapper mapper) {
+	PlaylistSongsControllerIT(MockMvc mvc, ObjectMapper mapper) {
 		this.mvc = mvc;
 		this.mapper = mapper;
 	}

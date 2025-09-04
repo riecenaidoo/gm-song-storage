@@ -11,10 +11,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.repository.Repository;
+import org.springframework.data.repository.CrudRepository;
 
+@IntegrationTest({PlaylistSongRepository.class, CrudRepository.class})
 @DataJpaTest
-@IntegrationTest({PlaylistSongRepository.class, Repository.class})
 class PlaylistSongRepositoryIT {
 
 	// Test Utilities

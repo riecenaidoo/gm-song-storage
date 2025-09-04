@@ -56,10 +56,19 @@ rm-java:	## remove all Java artifacts produced by this script
 # Java Aliases
 # ========================================
 
+test-unit:	## run all unit tests (semantic.UnitTest)
+	$(MVN) test -Dgroups="unit"
+
 test-smoke:	## run all smoke tests (semantic.SmokeTest)
 	$(MVN) test -Dgroups="smoke"
 
-.PHONY: test-smoke
+test-integration:	## run all integration tests (semantic.IntegrationTest), excluding external system tests (test-integration-ext)
+	$(MVN) verify -Dgroups="integration" -DexcludedGroups="external"
+
+test-integration-ext:	## run all external integration tests (semantic.IntegrationTest#EXTERNAL)
+	$(MVN) verify -Dgroups="external"
+
+.PHONY: test-unit test-smoke test-integration test-integration-ext
 # ========================================
 # Docker Artifacts
 # ========================================
@@ -132,7 +141,7 @@ help:  ## show available targets
 		| awk 'BEGIN {FS = ":.*?## "}; { \
 			cmd = $$1; desc = $$2; \
 			gsub(/\(([^)]*)\)/, "\033[34m&\033[0m", desc); \
-			printf "  \033[36m%-15s\033[0m %s\n", cmd, desc \
+			printf "  \033[36m%-21s\033[0m %s\n", cmd, desc \
 		}'
 	@printf "%s\n" \
 	"------------------"

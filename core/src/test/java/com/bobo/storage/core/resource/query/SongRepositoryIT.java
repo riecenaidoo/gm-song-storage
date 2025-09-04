@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.repository.Repository;
+import org.springframework.data.repository.CrudRepository;
 
 /**
  * These tests are specifically for repository methods I define using the query language. I do not
@@ -19,8 +19,8 @@ import org.springframework.data.repository.Repository;
  * <p>They probably would only be necessary to re-run if I change the domain model, otherwise they
  * can be skipped. TODO Figure out if I could define a test suite?
  */
+@IntegrationTest({SongRepository.class, CrudRepository.class})
 @DataJpaTest
-@IntegrationTest({SongRepository.class, Repository.class})
 class SongRepositoryIT {
 
 	// Test Utilities

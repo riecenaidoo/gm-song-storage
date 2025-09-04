@@ -5,7 +5,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.bobo.semantic.UnitTest;
+import com.bobo.semantic.IntegrationTest;
 import com.bobo.storage.core.domain.EntityMother;
 import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.domain.PlaylistMother;
@@ -30,10 +30,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+@IntegrationTest({PlaylistsController.class, ObjectMapper.class, ControllerExceptionHandler.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @WebMvcTest(PlaylistsController.class)
-@UnitTest(PlaylistsController.class)
-class PlaylistsControllerTest {
+class PlaylistsControllerIT {
 
 	// Mock Dependencies
 
@@ -54,7 +54,7 @@ class PlaylistsControllerTest {
 	private final Random random = new Random();
 
 	@Autowired
-	PlaylistsControllerTest(MockMvc mvc, ObjectMapper mapper) {
+	PlaylistsControllerIT(MockMvc mvc, ObjectMapper mapper) {
 		this.mvc = mvc;
 		this.mapper = mapper;
 	}

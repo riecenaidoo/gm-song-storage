@@ -14,8 +14,8 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-@ExtendWith(MockitoExtension.class)
 @UnitTest(SongServiceImpl.class)
+@ExtendWith(MockitoExtension.class)
 class SongServiceImplTest {
 
 	private SongRepository repository;
