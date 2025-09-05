@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
  * A contract for a unit of work the system can perform, including queries and operations that
  * enforce business rules.
  *
- * <p>Marks the service layer of the {@code core} module.
+ * <p>Marks the service layer of {@link com.bobo.storage.core}.
  *
  * @implSpec
  *     <p>Method definitions should be grouped by CRUD operation. Within each group, singular

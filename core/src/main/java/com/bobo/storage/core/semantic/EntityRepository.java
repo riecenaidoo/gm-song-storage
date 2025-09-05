@@ -8,7 +8,8 @@ import org.springframework.data.repository.Repository;
 /**
  * Represents a collection of entities.
  *
- * <p>A repository controls access to persistent stores.
+ * <p>An {@link EntityRepository} controls access to persistent stores, and marks the resource layer
+ * of {@link com.bobo.storage.core}.
  *
  * @apiNote Instances of this repository should be treated as collective nouns representing their
  *     entity type. e.g.
