@@ -1,6 +1,7 @@
-package com.bobo.storage.core.domain;
+package com.bobo.storage.core.playlist;
 
 import com.bobo.semantic.TechnicalID;
+import com.bobo.storage.core.domain.DomainEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import java.util.Objects;

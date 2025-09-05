@@ -7,7 +7,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.bobo.semantic.IntegrationTest;
 import com.bobo.storage.core.domain.*;
-import com.bobo.storage.core.service.PlaylistService;
+import com.bobo.storage.core.playlist.Playlist;
+import com.bobo.storage.core.playlist.PlaylistMother;
+import com.bobo.storage.core.playlist.PlaylistService;
 import com.bobo.storage.core.service.PlaylistSongService;
 import com.bobo.storage.core.song.SongMother;
 import com.bobo.storage.web.WebTestApplication;

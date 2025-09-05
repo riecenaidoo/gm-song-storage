@@ -1,9 +1,6 @@
-package com.bobo.storage.core.resource.query;
+package com.bobo.storage.core.playlist;
 
 import com.bobo.semantic.IntegrationTest;
-import com.bobo.storage.core.domain.Playlist;
-import com.bobo.storage.core.domain.PlaylistMother;
-import com.bobo.storage.core.resource.PlaylistRepository;
 import java.util.Collection;
 import java.util.Random;
 import org.junit.jupiter.api.Assertions;

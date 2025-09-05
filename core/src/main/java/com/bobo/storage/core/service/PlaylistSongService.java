@@ -1,8 +1,8 @@
 package com.bobo.storage.core.service;
 
 import com.bobo.storage.core.domain.DomainEntity;
-import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.domain.PlaylistSong;
+import com.bobo.storage.core.playlist.Playlist;
 import com.bobo.storage.core.resource.PlaylistSongRepository;
 import com.bobo.storage.core.semantic.Create;
 import com.bobo.storage.core.semantic.Read;
