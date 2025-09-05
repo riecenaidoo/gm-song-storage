@@ -1,8 +1,15 @@
 package com.bobo.storage.core.service;
 
+import com.bobo.semantic.TechnicalID;
 import com.bobo.storage.core.domain.PlaylistSong;
 import com.bobo.storage.core.domain.Provider;
 import com.bobo.storage.core.domain.Song;
+import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
 /**
@@ -21,7 +28,23 @@ import org.springframework.web.reactive.function.client.WebClient;
  *       a different provider—is available.
  * </ul>
  */
-public interface SongLookupService {
+@Service
+public class SongLookupService {
+
+	private static final Logger log = LoggerFactory.getLogger(SongLookupService.class);
+
+	private final WebClient webClient;
+
+	private final SongService songs;
+
+	private final PlaylistSongService playlistSongs;
+
+	public SongLookupService(
+			WebClient webClient, SongService songs, PlaylistSongService playlistSongs) {
+		this.webClient = webClient;
+		this.songs = songs;
+		this.playlistSongs = playlistSongs;
+	}
 
 	/**
 	 * Performs the lookup of a {@link Song}, which is a two-step process that may require
@@ -35,6 +58,34 @@ public interface SongLookupService {
 	 * @param song to lookup.
 	 * @see Song#poll(WebClient)
 	 * @see Provider#lookup(Song, WebClient)
+	 * @implNote This is the atomic operation. If it fails the batch should not fail, but this
+	 *     individual should be retried.
+	 *     <p>In the event of a redirection, we defer lookup for the next pass. It is very possible to
+	 *     be redirected multiple times. We should only poll Providers on a stable URL.
 	 */
-	void lookup(Song song);
+	@Transactional
+	public void lookup(Song song) {
+		HttpStatusCode statusCode = song.poll(webClient);
+		if (statusCode.is2xxSuccessful()) {
+			// TODO [design] Returns Optional<Provider> for later co-ordination?
+			Provider.lookup(song, webClient);
+			songs.updateSong(song);
+			return;
+		}
+
+		if (statusCode.is3xxRedirection()) {
+			Optional<Song> existingSong = songs.findByUrl(song.getUrl());
+			if (existingSong.isPresent() && !TechnicalID.same(existingSong.get(), song)) {
+				log.info(
+						"Lookup: {} redirects to {}. Its references will be migrated to the existing Song, and it will be removed.",
+						song.log(),
+						existingSong.get().log());
+				playlistSongs.migrate(song, existingSong.get());
+				songs.delete(song);
+			} else {
+				log.debug("Lookup: {} redirects. URL updated. Lookup deferred.", song.log());
+				songs.updateSong(song);
+			}
+		}
+	}
 }

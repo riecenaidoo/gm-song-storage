@@ -1,4 +1,4 @@
-package com.bobo.storage.core.service.impl;
+package com.bobo.storage.core.service;
 
 import static org.mockito.Mockito.mock;
 
@@ -6,13 +6,11 @@ import com.bobo.semantic.UnitTest;
 import com.bobo.storage.core.domain.PlaylistSong;
 import com.bobo.storage.core.domain.PlaylistSongMother;
 import com.bobo.storage.core.resource.PlaylistSongRepository;
-import com.bobo.storage.core.service.PlaylistSongService;
-import com.bobo.storage.core.service.SongService;
 import java.util.Random;
 import org.junit.jupiter.api.*;
 
-@UnitTest(PlaylistSongServiceImpl.class)
-class PlaylistSongServiceImplTest {
+@UnitTest(PlaylistSongService.class)
+class PlaylistSongServiceTest {
 
 	// Test Utilities
 
@@ -25,11 +23,11 @@ class PlaylistSongServiceImplTest {
 	@BeforeEach
 	void setUp() {
 		PlaylistSongRepository repository = mock(PlaylistSongRepository.class);
-		service = new PlaylistSongServiceImpl(repository, mock(SongService.class));
+		service = new PlaylistSongService(repository, mock(SongService.class));
 	}
 
 	/**
-	 * @see PlaylistSongServiceImpl#add(PlaylistSong)
+	 * @see PlaylistSongService#add(PlaylistSong)
 	 */
 	@Nested
 	class Create {
