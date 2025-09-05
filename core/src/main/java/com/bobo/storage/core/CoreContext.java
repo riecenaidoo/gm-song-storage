@@ -3,8 +3,6 @@ package com.bobo.storage.core;
 import static java.lang.annotation.ElementType.TYPE;
 
 import com.bobo.semantic.ModuleContext;
-import com.bobo.storage.core.domain.DomainEntity;
-import com.bobo.storage.core.resource.EntityRepository;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -22,7 +20,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Retention(RetentionPolicy.RUNTIME)
 @Import(CoreConfig.class)
 @ComponentScan(basePackageClasses = CoreContext.class)
-@EntityScan(basePackageClasses = DomainEntity.class)
-@EnableJpaRepositories(basePackageClasses = EntityRepository.class)
+@EntityScan(basePackageClasses = CoreContext.class)
+@EnableJpaRepositories(basePackageClasses = CoreContext.class)
 @EnableTransactionManagement
 public @interface CoreContext {}
