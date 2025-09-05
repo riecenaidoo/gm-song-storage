@@ -14,7 +14,7 @@ public class SongService implements Create<Song>, Read<Song> {
 
 	private final SongRepository songs;
 
-	public SongService(SongRepository songs) {
+	SongService(SongRepository songs) {
 		this.songs = songs;
 	}
 

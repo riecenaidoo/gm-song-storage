@@ -13,7 +13,7 @@ public class PlaylistService implements Create<Playlist>, Read<Playlist> {
 
 	private final PlaylistRepository playlists;
 
-	public PlaylistService(PlaylistRepository playlistRepository) {
+	PlaylistService(PlaylistRepository playlistRepository) {
 		this.playlists = playlistRepository;
 	}
 

@@ -23,7 +23,7 @@ public class PlaylistSongService implements Create<PlaylistSong>, Read<PlaylistS
 
 	private final SongService songs;
 
-	public PlaylistSongService(PlaylistSongRepository playlistSongs, SongService songs) {
+	PlaylistSongService(PlaylistSongRepository playlistSongs, SongService songs) {
 		this.playlistSongs = playlistSongs;
 		this.songs = songs;
 	}
