@@ -7,6 +7,8 @@ import com.bobo.storage.core.song.Song;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A {@link Song} within a {@link Playlist}.
@@ -16,6 +18,8 @@ import java.util.Objects;
  */
 @Entity
 public class PlaylistSong extends DomainEntity {
+
+	private static final Logger log = LoggerFactory.getLogger(PlaylistSong.class);
 
 	@ManyToOne(optional = false)
 	private Playlist playlist;
@@ -68,7 +72,7 @@ public class PlaylistSong extends DomainEntity {
 		return playlist;
 	}
 
-	protected void setPlaylist(Playlist playlist) {
+	void setPlaylist(Playlist playlist) {
 		this.playlist = playlist;
 	}
 
@@ -76,12 +80,12 @@ public class PlaylistSong extends DomainEntity {
 		return song;
 	}
 
-	protected void setSong(Song song) {
+	void setSong(Song song) {
 		this.song = song;
 	}
 
-	public void migrate(Song to) {
-		// TODO consider what the validation would be.
-		this.song = to;
+	void migrate(Song to) {
+		log.info("{} migrated from {} to {}.", this.log(), song.log(), to.log());
+		setSong(to);
 	}
 }
