@@ -1,6 +1,6 @@
 package com.bobo.storage.core.playlist;
 
-import com.bobo.storage.core.resource.EntityRepository;
+import com.bobo.storage.core.semantic.EntityRepository;
 import java.util.Collection;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.lang.NonNull;
