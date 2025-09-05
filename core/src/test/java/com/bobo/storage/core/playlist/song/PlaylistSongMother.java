@@ -1,8 +1,8 @@
 package com.bobo.storage.core.playlist.song;
 
-import com.bobo.storage.core.domain.EntityMother;
 import com.bobo.storage.core.playlist.Playlist;
 import com.bobo.storage.core.playlist.PlaylistMother;
+import com.bobo.storage.core.semantic.EntityMother;
 import com.bobo.storage.core.song.Song;
 import com.bobo.storage.core.song.SongMother;
 import java.util.Objects;

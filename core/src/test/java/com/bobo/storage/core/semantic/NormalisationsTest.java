@@ -1,6 +1,6 @@
-package com.bobo.storage.core.domain;
+package com.bobo.storage.core.semantic;
 
-import static com.bobo.storage.core.domain.Normalisations.*;
+import static com.bobo.storage.core.semantic.Normalisations.*;
 
 import com.bobo.semantic.UnitTest;
 import java.util.function.Function;

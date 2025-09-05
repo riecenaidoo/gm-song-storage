@@ -1,7 +1,6 @@
 package com.bobo.storage.core.semantic;
 
 import com.bobo.semantic.TechnicalID;
-import com.bobo.storage.core.domain.DomainEntity;
 
 /**
  * Capable of creating a resource.

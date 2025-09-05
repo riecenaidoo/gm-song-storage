@@ -1,4 +1,4 @@
-package com.bobo.storage.core.domain;
+package com.bobo.storage.core.semantic;
 
 import com.bobo.semantic.Mother;
 import java.util.function.Supplier;

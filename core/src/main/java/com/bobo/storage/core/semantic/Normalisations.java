@@ -1,4 +1,4 @@
-package com.bobo.storage.core.domain;
+package com.bobo.storage.core.semantic;
 
 import java.util.Objects;
 import java.util.function.Function;

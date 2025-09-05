@@ -1,7 +1,7 @@
 package com.bobo.storage.scheduling;
 
-import com.bobo.storage.core.domain.DomainEntity;
 import com.bobo.storage.core.lookup.SongLookupService;
+import com.bobo.storage.core.semantic.DomainEntity;
 import com.bobo.storage.core.song.Song;
 import com.bobo.storage.core.song.SongService;
 import java.util.Collection;

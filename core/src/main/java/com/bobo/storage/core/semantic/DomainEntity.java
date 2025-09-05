@@ -1,4 +1,4 @@
-package com.bobo.storage.core.domain;
+package com.bobo.storage.core.semantic;
 
 import com.bobo.semantic.TechnicalID;
 import jakarta.persistence.*;
@@ -11,6 +11,8 @@ import java.util.Objects;
  *
  * <p>{@code DomainEntities} are expected to enforce their domain invariants and expose meaningful
  * behavior, ensuring the integrity and consistency of the domain model.
+ *
+ * <p>Fields should be declared in order of importance to the concept being modeled.
  */
 @MappedSuperclass
 public abstract class DomainEntity implements TechnicalID<Integer> {

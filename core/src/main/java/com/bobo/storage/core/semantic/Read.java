@@ -1,6 +1,5 @@
 package com.bobo.storage.core.semantic;
 
-import com.bobo.storage.core.domain.DomainEntity;
 import java.util.Collection;
 import java.util.Optional;
 

@@ -3,8 +3,8 @@ package com.bobo.storage.core;
 import static java.lang.annotation.ElementType.TYPE;
 
 import com.bobo.semantic.ModuleContext;
-import com.bobo.storage.core.domain.DomainEntity;
 import com.bobo.storage.core.resource.EntityRepository;
+import com.bobo.storage.core.semantic.DomainEntity;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;

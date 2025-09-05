@@ -1,6 +1,6 @@
 package com.bobo.storage.core.playlist;
 
-import com.bobo.storage.core.domain.EntityMother;
+import com.bobo.storage.core.semantic.EntityMother;
 import java.util.Objects;
 import java.util.Random;
 import java.util.function.Supplier;

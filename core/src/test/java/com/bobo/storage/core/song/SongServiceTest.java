@@ -3,7 +3,7 @@ package com.bobo.storage.core.song;
 import static org.mockito.Mockito.*;
 
 import com.bobo.semantic.UnitTest;
-import com.bobo.storage.core.domain.EntityMother;
+import com.bobo.storage.core.semantic.EntityMother;
 import java.util.Optional;
 import java.util.Random;
 import org.junit.jupiter.api.*;
