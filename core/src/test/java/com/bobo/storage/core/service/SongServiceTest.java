@@ -13,9 +13,9 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-@UnitTest(SongServiceImpl.class)
+@UnitTest(SongService.class)
 @ExtendWith(MockitoExtension.class)
-class SongServiceImplTest {
+class SongServiceTest {
 
 	private SongRepository repository;
 
@@ -30,11 +30,11 @@ class SongServiceImplTest {
 	@BeforeEach
 	void setUp() {
 		repository = mock(SongRepository.class);
-		service = new SongServiceImpl(repository);
+		service = new SongService(repository);
 	}
 
 	/**
-	 * @see SongServiceImpl#add(Song)
+	 * @see SongService#add(Song)
 	 */
 	@Nested
 	class Create {
