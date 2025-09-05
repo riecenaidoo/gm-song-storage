@@ -3,13 +3,13 @@ package com.bobo.storage.core.lookup;
 import com.bobo.semantic.TechnicalID;
 import com.bobo.storage.core.playlist.song.PlaylistSong;
 import com.bobo.storage.core.playlist.song.PlaylistSongService;
+import com.bobo.storage.core.semantic.CoreService;
 import com.bobo.storage.core.song.Song;
 import com.bobo.storage.core.song.SongService;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -29,7 +29,7 @@ import org.springframework.web.reactive.function.client.WebClient;
  *       a different provider—is available.
  * </ul>
  */
-@Service
+@CoreService
 public class SongLookupService {
 
 	private static final Logger log = LoggerFactory.getLogger(SongLookupService.class);

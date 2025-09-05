@@ -1,16 +1,16 @@
 package com.bobo.storage.core.song;
 
 import com.bobo.storage.core.lookup.SongLookupService;
+import com.bobo.storage.core.semantic.CoreService;
 import com.bobo.storage.core.semantic.Create;
 import com.bobo.storage.core.semantic.DomainEntity;
 import com.bobo.storage.core.semantic.Read;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
+@CoreService
 public class SongService implements Create<Song>, Read<Song> {
 
 	private final SongRepository songs;

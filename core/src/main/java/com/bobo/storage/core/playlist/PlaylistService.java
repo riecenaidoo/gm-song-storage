@@ -1,14 +1,14 @@
 package com.bobo.storage.core.playlist;
 
+import com.bobo.storage.core.semantic.CoreService;
 import com.bobo.storage.core.semantic.Create;
 import com.bobo.storage.core.semantic.Read;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
+@CoreService
 public class PlaylistService implements Create<Playlist>, Read<Playlist> {
 
 	private final PlaylistRepository playlists;

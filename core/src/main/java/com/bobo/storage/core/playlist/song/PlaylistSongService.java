@@ -1,6 +1,7 @@
 package com.bobo.storage.core.playlist.song;
 
 import com.bobo.storage.core.playlist.Playlist;
+import com.bobo.storage.core.semantic.CoreService;
 import com.bobo.storage.core.semantic.Create;
 import com.bobo.storage.core.semantic.DomainEntity;
 import com.bobo.storage.core.semantic.Read;
@@ -11,10 +12,9 @@ import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
+@CoreService
 public class PlaylistSongService implements Create<PlaylistSong>, Read<PlaylistSong> {
 
 	private static final Logger log = LoggerFactory.getLogger(PlaylistSongService.class);
