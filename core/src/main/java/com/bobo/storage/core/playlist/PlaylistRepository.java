@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
  * @implSpec {@link EntityRepository}
  */
 @Repository
-public interface PlaylistRepository
+interface PlaylistRepository
 		extends EntityRepository<Playlist, Integer>, CrudRepository<Playlist, Integer> {
 
 	@NonNull <S extends Playlist> Collection<S> saveAll(@NonNull Iterable<S> entities);
