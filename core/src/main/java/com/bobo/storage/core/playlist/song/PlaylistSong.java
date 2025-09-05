@@ -1,6 +1,7 @@
-package com.bobo.storage.core.domain;
+package com.bobo.storage.core.playlist.song;
 
 import com.bobo.semantic.TechnicalID;
+import com.bobo.storage.core.domain.DomainEntity;
 import com.bobo.storage.core.playlist.Playlist;
 import com.bobo.storage.core.song.Song;
 import jakarta.persistence.Entity;

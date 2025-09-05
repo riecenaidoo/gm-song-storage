@@ -1,11 +1,9 @@
-package com.bobo.storage.core.resource.query;
+package com.bobo.storage.core.playlist.song;
 
 import com.bobo.semantic.IntegrationTest;
-import com.bobo.storage.core.domain.*;
 import com.bobo.storage.core.playlist.Playlist;
 import com.bobo.storage.core.playlist.PlaylistMother;
 import com.bobo.storage.core.playlist.PlaylistRepository;
-import com.bobo.storage.core.resource.PlaylistSongRepository;
 import com.bobo.storage.core.song.Song;
 import com.bobo.storage.core.song.SongMother;
 import com.bobo.storage.core.song.SongRepository;

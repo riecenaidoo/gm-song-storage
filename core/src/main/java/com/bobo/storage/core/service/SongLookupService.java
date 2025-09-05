@@ -1,8 +1,9 @@
 package com.bobo.storage.core.service;
 
 import com.bobo.semantic.TechnicalID;
-import com.bobo.storage.core.domain.PlaylistSong;
 import com.bobo.storage.core.domain.Provider;
+import com.bobo.storage.core.playlist.song.PlaylistSong;
+import com.bobo.storage.core.playlist.song.PlaylistSongService;
 import com.bobo.storage.core.song.Song;
 import com.bobo.storage.core.song.SongService;
 import java.util.Optional;

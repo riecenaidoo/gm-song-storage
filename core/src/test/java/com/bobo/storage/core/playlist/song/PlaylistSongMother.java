@@ -1,5 +1,6 @@
-package com.bobo.storage.core.domain;
+package com.bobo.storage.core.playlist.song;
 
+import com.bobo.storage.core.domain.EntityMother;
 import com.bobo.storage.core.playlist.Playlist;
 import com.bobo.storage.core.playlist.PlaylistMother;
 import com.bobo.storage.core.song.Song;
@@ -43,7 +44,7 @@ public class PlaylistSongMother implements EntityMother<PlaylistSong> {
 		Song song =
 				Objects.isNull(songs) ? (songs = new SongMother(random).withIds()).get() : songs.get();
 
-		playlistSong.setId(id);
+		EntityMother.setId(playlistSong, id);
 		playlistSong.setPlaylist(playlist);
 		playlistSong.setSong(song);
 

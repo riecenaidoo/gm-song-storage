@@ -1,6 +1,6 @@
 package com.bobo.storage.web.api.v2.response;
 
-import com.bobo.storage.core.domain.PlaylistSong;
+import com.bobo.storage.core.playlist.song.PlaylistSong;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
