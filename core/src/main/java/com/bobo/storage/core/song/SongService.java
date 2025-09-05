@@ -1,6 +1,5 @@
 package com.bobo.storage.core.song;
 
-import com.bobo.storage.core.lookup.SongLookupService;
 import com.bobo.storage.core.semantic.CoreService;
 import com.bobo.storage.core.semantic.Create;
 import com.bobo.storage.core.semantic.DomainEntity;
@@ -55,7 +54,7 @@ public class SongService implements Create<Song>, Read<Song> {
 	 * @return a {@link Collection} of all {@link Song} resources that are eligible for a lookup;
 	 *     never null.
 	 * @see Song#lookedUp()
-	 * @see SongLookupService
+	 * @see LookupService
 	 * @apiNote In future, we will accept a {@code limit} parameter to control the return size.
 	 * @implSpec {@link Read#get()}
 	 * @implNote In future, we will mark songs as eligible for a lookup, after a configurable period

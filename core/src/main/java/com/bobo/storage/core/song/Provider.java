@@ -1,7 +1,6 @@
-package com.bobo.storage.core.lookup;
+package com.bobo.storage.core.song;
 
 import com.bobo.storage.core.semantic.AccessForTesting;
-import com.bobo.storage.core.song.Song;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -30,7 +29,7 @@ import reactor.core.publisher.Mono;
  *
  * @see <a href="https://oembed.com/#section7.1">oEmbed > 7.1 Providers</a>
  */
-public enum Provider {
+enum Provider {
 	YOUTUBE("https://www.youtube.com/oembed"),
 	DEEZER("https://api.deezer.com/oembed"),
 	SPOTIFY("https://open.spotify.com/oembed");
@@ -73,7 +72,7 @@ public enum Provider {
 	 *
 	 * @return true if information about the Song was found.
 	 */
-	public static boolean lookup(Song song, WebClient webClient) {
+	static boolean lookup(Song song, WebClient webClient) {
 		URL url = song.toUrl();
 		for (Provider provider : values()) {
 			Optional<OEmbedResponse> metadata = provider.queryProvider(url, webClient);

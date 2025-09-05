@@ -1,7 +1,7 @@
 package com.bobo.storage.scheduling;
 
-import com.bobo.storage.core.lookup.SongLookupService;
 import com.bobo.storage.core.semantic.DomainEntity;
+import com.bobo.storage.core.song.LookupService;
 import com.bobo.storage.core.song.Song;
 import com.bobo.storage.core.song.SongService;
 import java.util.Collection;
@@ -20,9 +20,9 @@ public class JobSchedule {
 
 	private final SongService songs;
 
-	private final SongLookupService lookupService;
+	private final LookupService lookupService;
 
-	public JobSchedule(SongService songs, SongLookupService lookupService) {
+	public JobSchedule(SongService songs, LookupService lookupService) {
 		this.songs = songs;
 		this.lookupService = lookupService;
 	}

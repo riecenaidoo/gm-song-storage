@@ -1,7 +1,6 @@
-package com.bobo.storage.core.lookup;
+package com.bobo.storage.core.song;
 
 import com.bobo.semantic.IntegrationTest;
-import com.bobo.storage.core.song.Song;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ExtendWith;

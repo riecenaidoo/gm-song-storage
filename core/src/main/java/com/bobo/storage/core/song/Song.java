@@ -287,7 +287,7 @@ public class Song extends DomainEntity {
 	 * @see #url
 	 * @see #lastLookup
 	 */
-	public HttpStatusCode poll(WebClient client) {
+	HttpStatusCode poll(WebClient client) {
 		URI uri = toUri();
 		ClientResponse response =
 				client
@@ -295,7 +295,7 @@ public class Song extends DomainEntity {
 						.uri(uri)
 						.exchangeToMono(Mono::just)
 						.block(Duration.ofSeconds(5)); // TODO allow configuration
-		assert response != null; // exchangeToMono(Mono::just) never null
+		assert response != null : "exchangeToMono(Mono::just) never null";
 		lookedUp();
 		if (response.statusCode().is3xxRedirection()) {
 			URI redirectionLocation = response.headers().asHttpHeaders().getLocation();

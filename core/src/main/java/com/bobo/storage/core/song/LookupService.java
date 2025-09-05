@@ -1,11 +1,9 @@
-package com.bobo.storage.core.lookup;
+package com.bobo.storage.core.song;
 
 import com.bobo.semantic.TechnicalID;
 import com.bobo.storage.core.playlist.song.PlaylistSong;
 import com.bobo.storage.core.playlist.song.PlaylistSongService;
 import com.bobo.storage.core.semantic.CoreService;
-import com.bobo.storage.core.song.Song;
-import com.bobo.storage.core.song.SongService;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,11 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
 /**
- * Coordinates with {@link PlaylistSong} during {@link Song} lookups.
+ * Performs {@link Song} lookups, coordinating with other services, where necessary.
  *
- * <p>Performs coordination with the {@link PlaylistSongService} during lookup operations. While
- * each service manages CRUD operations independently, a {@code Song} lookup may trigger a merge
- * between two {@code Song} entities.
+ * <p>While each service manages CRUD operations independently, a {@link Song} lookup may trigger a
+ * merge between two {@link Song} entities, which requires coordination with any related entities.
  *
  * <p>Merging occurs when:
  *
@@ -26,13 +23,13 @@ import org.springframework.web.reactive.function.client.WebClient;
  *   <li>The host of the {@code Song} URL responds with a 3xx Redirection request whose location is
  *       a URL already associated with another {@code Song}.
  *   <li>The original URL is permanently unavailable, but a replacement {@code Song}—typically from
- *       a different provider—is available.
+ *       a different {@link Provider}—is available.
  * </ul>
  */
 @CoreService
-public class SongLookupService {
+public class LookupService {
 
-	private static final Logger log = LoggerFactory.getLogger(SongLookupService.class);
+	private static final Logger log = LoggerFactory.getLogger(LookupService.class);
 
 	private final WebClient webClient;
 
@@ -40,8 +37,7 @@ public class SongLookupService {
 
 	private final PlaylistSongService playlistSongs;
 
-	public SongLookupService(
-			WebClient webClient, SongService songs, PlaylistSongService playlistSongs) {
+	public LookupService(WebClient webClient, SongService songs, PlaylistSongService playlistSongs) {
 		this.webClient = webClient;
 		this.songs = songs;
 		this.playlistSongs = playlistSongs;

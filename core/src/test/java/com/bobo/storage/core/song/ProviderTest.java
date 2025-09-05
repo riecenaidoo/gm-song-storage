@@ -1,4 +1,4 @@
-package com.bobo.storage.core.lookup;
+package com.bobo.storage.core.song;
 
 import com.bobo.semantic.UnitTest;
 import java.net.URI;
