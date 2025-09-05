@@ -1,4 +1,4 @@
-package com.bobo.storage.core.domain;
+package com.bobo.storage.core.lookup;
 
 import com.bobo.semantic.UnitTest;
 import java.net.URI;
