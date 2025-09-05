@@ -2,7 +2,7 @@ package com.bobo.storage.core.resource;
 
 import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.domain.PlaylistSong;
-import com.bobo.storage.core.domain.Song;
+import com.bobo.storage.core.song.Song;
 import java.util.Collection;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

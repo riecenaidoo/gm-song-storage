@@ -1,9 +1,10 @@
-package com.bobo.storage.core.domain;
+package com.bobo.storage.core.song;
 
 import static com.bobo.storage.core.domain.Normalisations.nullIf;
 import static com.bobo.storage.core.domain.Normalisations.skipIfNull;
 import static com.bobo.storage.core.domain.Normalisations.truncateToSize;
 
+import com.bobo.storage.core.domain.DomainEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import java.net.MalformedURLException;

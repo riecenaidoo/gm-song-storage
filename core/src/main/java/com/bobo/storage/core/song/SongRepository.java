@@ -1,6 +1,6 @@
-package com.bobo.storage.core.resource;
+package com.bobo.storage.core.song;
 
-import com.bobo.storage.core.domain.Song;
+import com.bobo.storage.core.resource.EntityRepository;
 import java.util.Collection;
 import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;

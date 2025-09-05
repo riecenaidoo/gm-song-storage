@@ -1,5 +1,6 @@
 package com.bobo.storage.core.domain;
 
+import com.bobo.storage.core.song.Song;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.net.MalformedURLException;
 import java.net.URI;

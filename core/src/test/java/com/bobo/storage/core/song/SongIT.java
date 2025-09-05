@@ -1,4 +1,4 @@
-package com.bobo.storage.core.domain;
+package com.bobo.storage.core.song;
 
 import com.bobo.semantic.IntegrationTest;
 import java.util.stream.Stream;

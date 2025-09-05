@@ -1,6 +1,7 @@
 package com.bobo.storage.core.domain;
 
 import com.bobo.semantic.TechnicalID;
+import com.bobo.storage.core.song.Song;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import java.util.Objects;

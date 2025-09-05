@@ -1,12 +1,9 @@
-package com.bobo.storage.core.service;
+package com.bobo.storage.core.song;
 
 import static org.mockito.Mockito.*;
 
 import com.bobo.semantic.UnitTest;
 import com.bobo.storage.core.domain.EntityMother;
-import com.bobo.storage.core.domain.Song;
-import com.bobo.storage.core.domain.SongMother;
-import com.bobo.storage.core.resource.SongRepository;
 import java.util.Optional;
 import java.util.Random;
 import org.junit.jupiter.api.*;

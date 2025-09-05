@@ -6,6 +6,7 @@ import com.bobo.semantic.UnitTest;
 import com.bobo.storage.core.domain.PlaylistSong;
 import com.bobo.storage.core.domain.PlaylistSongMother;
 import com.bobo.storage.core.resource.PlaylistSongRepository;
+import com.bobo.storage.core.song.SongService;
 import java.util.Random;
 import org.junit.jupiter.api.*;
 

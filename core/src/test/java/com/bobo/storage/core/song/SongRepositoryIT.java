@@ -1,9 +1,6 @@
-package com.bobo.storage.core.resource.query;
+package com.bobo.storage.core.song;
 
 import com.bobo.semantic.IntegrationTest;
-import com.bobo.storage.core.domain.Song;
-import com.bobo.storage.core.domain.SongMother;
-import com.bobo.storage.core.resource.SongRepository;
 import java.util.Random;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

@@ -9,6 +9,7 @@ import com.bobo.semantic.IntegrationTest;
 import com.bobo.storage.core.domain.*;
 import com.bobo.storage.core.service.PlaylistService;
 import com.bobo.storage.core.service.PlaylistSongService;
+import com.bobo.storage.core.song.SongMother;
 import com.bobo.storage.web.WebTestApplication;
 import com.bobo.storage.web.api.v2.request.SongsCreateRequest;
 import com.bobo.storage.web.api.v2.response.PlaylistSongResponse;

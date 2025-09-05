@@ -1,9 +1,9 @@
 package com.bobo.storage.scheduling;
 
 import com.bobo.storage.core.domain.DomainEntity;
-import com.bobo.storage.core.domain.Song;
 import com.bobo.storage.core.service.SongLookupService;
-import com.bobo.storage.core.service.SongService;
+import com.bobo.storage.core.song.Song;
+import com.bobo.storage.core.song.SongService;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;

@@ -1,6 +1,8 @@
 package com.bobo.storage.core.domain;
 
 import com.bobo.semantic.UnitTest;
+import com.bobo.storage.core.song.Song;
+import com.bobo.storage.core.song.SongMother;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;

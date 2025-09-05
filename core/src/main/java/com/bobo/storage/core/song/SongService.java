@@ -1,10 +1,9 @@
-package com.bobo.storage.core.service;
+package com.bobo.storage.core.song;
 
 import com.bobo.storage.core.domain.DomainEntity;
-import com.bobo.storage.core.domain.Song;
-import com.bobo.storage.core.resource.SongRepository;
 import com.bobo.storage.core.semantic.Create;
 import com.bobo.storage.core.semantic.Read;
+import com.bobo.storage.core.service.SongLookupService;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;

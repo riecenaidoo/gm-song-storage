@@ -1,5 +1,6 @@
-package com.bobo.storage.core.domain;
+package com.bobo.storage.core.song;
 
+import com.bobo.storage.core.domain.EntityMother;
 import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Objects;
@@ -58,7 +59,7 @@ public class SongMother implements EntityMother<Song> {
 		String artist = Objects.isNull(artists) ? null : artists.get();
 		String thumbnailUrl = Objects.isNull(thumbnailUrls) ? null : thumbnailUrls.get();
 
-		song.setId(id);
+		EntityMother.setId(song, id);
 		song.setUrl(url);
 		song.setLastLookup(lastLookup);
 		song.setTitle(title);
