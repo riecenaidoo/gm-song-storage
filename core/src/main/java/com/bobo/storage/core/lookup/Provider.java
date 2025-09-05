@@ -1,5 +1,6 @@
 package com.bobo.storage.core.lookup;
 
+import com.bobo.storage.core.semantic.AccessForTesting;
 import com.bobo.storage.core.song.Song;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.net.MalformedURLException;
@@ -51,11 +52,13 @@ public enum Provider {
 	}
 
 	/** Given default access to expose for testing. */
+	@AccessForTesting(AccessForTesting.Modifier.PACKAGE_PRIVATE)
 	URL getEndpoint() {
 		return endpoint;
 	}
 
 	/** Given default access to expose for testing. */
+	@AccessForTesting(AccessForTesting.Modifier.PACKAGE_PRIVATE)
 	URL getQuery(URL url) {
 		try {
 			return URI.create(endpoint + "?url=" + url + "&format=json").toURL();

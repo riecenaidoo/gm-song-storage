@@ -1,5 +1,7 @@
 package com.bobo.storage.core.semantic;
 
+import static com.bobo.storage.core.semantic.AccessForTesting.*;
+
 import com.bobo.semantic.TechnicalID;
 import jakarta.persistence.*;
 import java.util.Collection;
@@ -64,13 +66,12 @@ public abstract class DomainEntity implements TechnicalID<Integer> {
 	 * The {@link TechnicalID} of a {@link DomainEntity} is managed exclusively by the persistence
 	 * provider.
 	 *
-	 * <p>This mutator exists solely for internal use in testing scenarios.
-	 *
 	 * @param id the technical identifier to assign to this {@link Entity}
 	 * @see TechnicalID#getId()
 	 * @implNote Should be marked {@code final}, but the JPA provider (Hibernate) proxies the mutators
 	 *     for lazy-loading operations.
 	 */
+	@AccessForTesting(Modifier.PACKAGE_PRIVATE)
 	void setId(Integer id) {
 		this.id = id;
 	}

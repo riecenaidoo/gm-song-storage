@@ -2,6 +2,7 @@ package com.bobo.storage.core.playlist.song;
 
 import com.bobo.semantic.TechnicalID;
 import com.bobo.storage.core.playlist.Playlist;
+import com.bobo.storage.core.semantic.AccessForTesting;
 import com.bobo.storage.core.semantic.DomainEntity;
 import com.bobo.storage.core.song.Song;
 import jakarta.persistence.Entity;
@@ -72,6 +73,7 @@ public class PlaylistSong extends DomainEntity {
 		return playlist;
 	}
 
+	@AccessForTesting(AccessForTesting.Modifier.PACKAGE_PRIVATE)
 	void setPlaylist(Playlist playlist) {
 		this.playlist = playlist;
 	}
@@ -80,6 +82,7 @@ public class PlaylistSong extends DomainEntity {
 		return song;
 	}
 
+	@AccessForTesting(AccessForTesting.Modifier.PACKAGE_PRIVATE)
 	void setSong(Song song) {
 		this.song = song;
 	}

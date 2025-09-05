@@ -1,9 +1,11 @@
 package com.bobo.storage.core.song;
 
+import static com.bobo.storage.core.semantic.AccessForTesting.*;
 import static com.bobo.storage.core.semantic.Normalisations.nullIf;
 import static com.bobo.storage.core.semantic.Normalisations.skipIfNull;
 import static com.bobo.storage.core.semantic.Normalisations.truncateToSize;
 
+import com.bobo.storage.core.semantic.AccessForTesting;
 import com.bobo.storage.core.semantic.DomainEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -244,11 +246,10 @@ public class Song extends DomainEntity {
 	 *     requires verification.
 	 *     <p>The only valid case for mutating the reference is to follow {@code 3xx Redirection}
 	 *     responses from the host of the URL.
-	 *     <p>The access level for this mutator is widened to {@code package-private} solely for
-	 *     internal use in testing scenarios.
 	 * @see #url
 	 * @see #lastLookup
 	 */
+	@AccessForTesting(Modifier.PACKAGE_PRIVATE)
 	void setUrl(String url) {
 		url = validatedUrl(url);
 		if (url.equals(this.url)) return;
@@ -313,20 +314,18 @@ public class Song extends DomainEntity {
 	}
 
 	/**
-	 * This accessor exists solely for internal use in testing scenarios.
-	 *
 	 * @see #lastLookup
 	 */
+	@AccessForTesting(Modifier.PACKAGE_PRIVATE)
 	LocalDateTime getLastLookup() {
 		return lastLookup;
 	}
 
 	/**
-	 * This mutator exists solely for internal use in testing scenarios.
-	 *
 	 * @param lastLookup nullable.
 	 * @see #lastLookup
 	 */
+	@AccessForTesting(Modifier.PACKAGE_PRIVATE)
 	void setLastLookup(LocalDateTime lastLookup) {
 		this.lastLookup = lastLookup;
 	}
