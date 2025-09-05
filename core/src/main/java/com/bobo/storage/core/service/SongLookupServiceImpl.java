@@ -1,11 +1,8 @@
-package com.bobo.storage.core.service.impl;
+package com.bobo.storage.core.service;
 
 import com.bobo.semantic.TechnicalID;
 import com.bobo.storage.core.domain.Provider;
 import com.bobo.storage.core.domain.Song;
-import com.bobo.storage.core.service.PlaylistSongService;
-import com.bobo.storage.core.service.SongLookupService;
-import com.bobo.storage.core.service.SongService;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

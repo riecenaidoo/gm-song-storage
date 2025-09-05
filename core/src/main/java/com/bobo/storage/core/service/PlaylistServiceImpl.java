@@ -1,8 +1,7 @@
-package com.bobo.storage.core.service.impl;
+package com.bobo.storage.core.service;
 
 import com.bobo.storage.core.domain.Playlist;
 import com.bobo.storage.core.resource.PlaylistRepository;
-import com.bobo.storage.core.service.PlaylistService;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
