@@ -51,13 +51,11 @@ public enum Provider {
 		}
 	}
 
-	/** Given default access to expose for testing. */
 	@AccessForTesting(AccessForTesting.Modifier.PACKAGE_PRIVATE)
 	URL getEndpoint() {
 		return endpoint;
 	}
 
-	/** Given default access to expose for testing. */
 	@AccessForTesting(AccessForTesting.Modifier.PACKAGE_PRIVATE)
 	URL getQuery(URL url) {
 		try {
