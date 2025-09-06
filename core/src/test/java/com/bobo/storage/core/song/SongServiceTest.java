@@ -8,13 +8,15 @@ import java.util.Optional;
 import java.util.Random;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @UnitTest(SongService.class)
 @ExtendWith(MockitoExtension.class)
 class SongServiceTest {
 
-	private SongRepository repository;
+	@Mock private SongRepository repository;
 
 	// Test Utilities
 
@@ -22,13 +24,7 @@ class SongServiceTest {
 
 	// Test Targets
 
-	private SongService service;
-
-	@BeforeEach
-	void setUp() {
-		repository = mock(SongRepository.class);
-		service = new SongService(repository);
-	}
+	@InjectMocks private SongService service;
 
 	/**
 	 * @see SongService#add(Song)
