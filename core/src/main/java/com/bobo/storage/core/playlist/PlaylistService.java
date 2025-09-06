@@ -1,5 +1,6 @@
 package com.bobo.storage.core.playlist;
 
+import com.bobo.storage.core.semantic.AccessForTesting;
 import com.bobo.storage.core.semantic.CoreService;
 import com.bobo.storage.core.semantic.Create;
 import com.bobo.storage.core.semantic.Read;
@@ -13,6 +14,7 @@ public class PlaylistService implements Create<Playlist>, Read<Playlist> {
 
 	private final PlaylistRepository playlists;
 
+	@AccessForTesting(AccessForTesting.Modifier.PACKAGE_PRIVATE)
 	PlaylistService(PlaylistRepository playlistRepository) {
 		this.playlists = playlistRepository;
 	}
