@@ -11,6 +11,9 @@ import org.springframework.data.repository.Repository;
  * <p>An {@link EntityRepository} controls access to persistent stores, and marks the resource layer
  * of {@link com.bobo.storage.core}.
  *
+ * <p>Only an {@link EntityService}, for the same {@link DomainEntity}, may declare a dependency on
+ * this {@link EntityRepository}.
+ *
  * @apiNote Instances of this repository should be treated as collective nouns representing their
  *     entity type. e.g.
  *     <pre>

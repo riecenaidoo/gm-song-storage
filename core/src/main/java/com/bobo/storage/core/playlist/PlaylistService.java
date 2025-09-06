@@ -2,6 +2,7 @@ package com.bobo.storage.core.playlist;
 
 import com.bobo.storage.core.semantic.CoreService;
 import com.bobo.storage.core.semantic.Create;
+import com.bobo.storage.core.semantic.EntityService;
 import com.bobo.storage.core.semantic.Read;
 import java.util.Collection;
 import java.util.Objects;
@@ -9,7 +10,7 @@ import java.util.Optional;
 import org.springframework.transaction.annotation.Transactional;
 
 @CoreService
-public class PlaylistService implements Create<Playlist>, Read<Playlist> {
+public class PlaylistService implements EntityService<Playlist>, Create<Playlist>, Read<Playlist> {
 
 	private final PlaylistRepository playlists;
 

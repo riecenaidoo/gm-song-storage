@@ -13,12 +13,8 @@ import org.springframework.stereotype.Service;
  *
  * <p>Marks the service layer of {@link com.bobo.storage.core}.
  *
- * @implSpec
- *     <p>Method definitions should be grouped by CRUD operation. Within each group, singular
- *     operations should be defined before batch operations. Method order and parameter lists should
- *     reflect the field order of the associated entity (see {@link DomainEntity}).
- *     <p>These classes may be aware of other layers or technical concerns, but must not depend on
- *     them.
+ * @implSpec These classes may be aware of other layers or technical concerns, but must not depend
+ *     on them.
  */
 @Service
 @Documented
