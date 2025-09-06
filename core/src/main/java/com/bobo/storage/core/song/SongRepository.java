@@ -10,8 +10,7 @@ import org.springframework.stereotype.Repository;
  * @implSpec {@link EntityRepository}
  */
 @Repository
-public interface SongRepository
-		extends EntityRepository<Song, Integer>, CrudRepository<Song, Integer> {
+interface SongRepository extends EntityRepository<Song, Integer>, CrudRepository<Song, Integer> {
 
 	Optional<Song> findByUrl(String url);
 

@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * Outside of the declaring class, it should not be called in application code.
  */
 @Documented
-@Target(ElementType.METHOD)
+@Target({ElementType.CONSTRUCTOR, ElementType.METHOD})
 public @interface AccessForTesting {
 
 	/**

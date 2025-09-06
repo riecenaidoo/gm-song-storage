@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
  * @implSpec {@link EntityRepository}
  */
 @Repository
-public interface PlaylistSongRepository
+interface PlaylistSongRepository
 		extends EntityRepository<PlaylistSong, Integer>, CrudRepository<PlaylistSong, Integer> {
 
 	Collection<PlaylistSong> findAllByPlaylist(Playlist playlist);

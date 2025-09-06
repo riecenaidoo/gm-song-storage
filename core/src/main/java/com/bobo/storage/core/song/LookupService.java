@@ -3,6 +3,8 @@ package com.bobo.storage.core.song;
 import com.bobo.semantic.TechnicalID;
 import com.bobo.storage.core.playlist.song.PlaylistSong;
 import com.bobo.storage.core.playlist.song.PlaylistSongService;
+import com.bobo.storage.core.semantic.AccessForTesting;
+import com.bobo.storage.core.semantic.AccessForTesting.Modifier;
 import com.bobo.storage.core.semantic.CoreService;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -37,7 +39,8 @@ public class LookupService {
 
 	private final PlaylistSongService playlistSongs;
 
-	public LookupService(WebClient webClient, SongService songs, PlaylistSongService playlistSongs) {
+	@AccessForTesting(Modifier.PACKAGE_PRIVATE)
+	LookupService(WebClient webClient, SongService songs, PlaylistSongService playlistSongs) {
 		this.webClient = webClient;
 		this.songs = songs;
 		this.playlistSongs = playlistSongs;
