@@ -4,6 +4,7 @@ import com.bobo.storage.core.playlist.Playlist;
 import com.bobo.storage.core.semantic.CoreService;
 import com.bobo.storage.core.semantic.Create;
 import com.bobo.storage.core.semantic.DomainEntity;
+import com.bobo.storage.core.semantic.EntityService;
 import com.bobo.storage.core.semantic.Read;
 import com.bobo.storage.core.song.Song;
 import com.bobo.storage.core.song.SongService;
@@ -15,7 +16,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 @CoreService
-public class PlaylistSongService implements Create<PlaylistSong>, Read<PlaylistSong> {
+public class PlaylistSongService
+		implements EntityService<PlaylistSong>, Create<PlaylistSong>, Read<PlaylistSong> {
 
 	private static final Logger log = LoggerFactory.getLogger(PlaylistSongService.class);
 
@@ -23,7 +25,7 @@ public class PlaylistSongService implements Create<PlaylistSong>, Read<PlaylistS
 
 	private final SongService songs;
 
-	public PlaylistSongService(PlaylistSongRepository playlistSongs, SongService songs) {
+	PlaylistSongService(PlaylistSongRepository playlistSongs, SongService songs) {
 		this.playlistSongs = playlistSongs;
 		this.songs = songs;
 	}

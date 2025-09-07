@@ -3,10 +3,10 @@ package com.bobo.storage.core.playlist.song;
 import com.bobo.semantic.IntegrationTest;
 import com.bobo.storage.core.playlist.Playlist;
 import com.bobo.storage.core.playlist.PlaylistMother;
-import com.bobo.storage.core.playlist.PlaylistRepository;
+import com.bobo.storage.core.playlist.PlaylistTestRepository;
 import com.bobo.storage.core.song.Song;
 import com.bobo.storage.core.song.SongMother;
-import com.bobo.storage.core.song.SongRepository;
+import com.bobo.storage.core.song.SongTestRepository;
 import java.util.Collection;
 import java.util.Random;
 import org.junit.jupiter.api.Assertions;
@@ -23,9 +23,9 @@ class PlaylistSongRepositoryIT {
 
 	private final Random random = new Random();
 
-	private final PlaylistRepository playlistRepository;
+	private final PlaylistTestRepository playlistRepository;
 
-	private final SongRepository songRepository;
+	private final SongTestRepository songRepository;
 
 	// Test Targets
 
@@ -34,8 +34,8 @@ class PlaylistSongRepositoryIT {
 	@Autowired
 	PlaylistSongRepositoryIT(
 			PlaylistSongRepository repository,
-			PlaylistRepository playlistRepository,
-			SongRepository songRepository) {
+			PlaylistTestRepository playlistRepository,
+			SongTestRepository songRepository) {
 		this.repository = repository;
 		this.playlistRepository = playlistRepository;
 		this.songRepository = songRepository;

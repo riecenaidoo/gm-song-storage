@@ -37,7 +37,7 @@ public class LookupService {
 
 	private final PlaylistSongService playlistSongs;
 
-	public LookupService(WebClient webClient, SongService songs, PlaylistSongService playlistSongs) {
+	LookupService(WebClient webClient, SongService songs, PlaylistSongService playlistSongs) {
 		this.webClient = webClient;
 		this.songs = songs;
 		this.playlistSongs = playlistSongs;

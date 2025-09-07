@@ -3,6 +3,7 @@ package com.bobo.storage.core.song;
 import com.bobo.storage.core.semantic.CoreService;
 import com.bobo.storage.core.semantic.Create;
 import com.bobo.storage.core.semantic.DomainEntity;
+import com.bobo.storage.core.semantic.EntityService;
 import com.bobo.storage.core.semantic.Read;
 import java.util.Collection;
 import java.util.Objects;
@@ -10,11 +11,11 @@ import java.util.Optional;
 import org.springframework.transaction.annotation.Transactional;
 
 @CoreService
-public class SongService implements Create<Song>, Read<Song> {
+public class SongService implements EntityService<Song>, Create<Song>, Read<Song> {
 
 	private final SongRepository songs;
 
-	public SongService(SongRepository songs) {
+	SongService(SongRepository songs) {
 		this.songs = songs;
 	}
 
